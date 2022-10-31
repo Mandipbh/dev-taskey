@@ -1,17 +1,16 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, SafeAreaView} from 'react-native';
 import React from 'react';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {theme} from '../../utils';
 
-const HomeScreen = () => {
+const StatisticsScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <Text>HomeScreen</Text>
+      <Text>Statistics Screen</Text>
     </SafeAreaView>
   );
 };
 
-export default HomeScreen;
+export default StatisticsScreen;
 
 const styles = StyleSheet.create({
   container: {
