@@ -27,19 +27,24 @@ class HomeScreen extends Component {
       <TouchableOpacity
         style={{
           height: 100,
-          backgroundColor: isActive ? 'blue' : item.backgroundColor,
-          alignItems: 'center',
-          justifyContent: 'center',
+          borderColor: isActive ? 'blue' : item.backgroundColor,
+          // alignItems: 'center',
+          // justifyContent: 'center',
+          borderWidth: scale(2),
+          marginVertical: scale(2),
+          borderRadius: scale(8),
         }}
         onLongPress={move}
         onPressOut={moveEnd}>
         <Text
           style={{
             fontWeight: 'bold',
-            color: 'white',
-            fontSize: 32,
+            color: theme.colors.black,
+            fontSize: scale(16),
+            textAlign: 'center',
+            marginTop: scale(5),
           }}>
-          {item.label}
+          {`DEVELOPMENT FOLDER ->  ${item.label}`}
         </Text>
       </TouchableOpacity>
     );
