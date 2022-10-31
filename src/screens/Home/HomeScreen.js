@@ -52,9 +52,17 @@ class HomeScreen extends Component {
           <View style={styles.headerContainer}>
             <Icon name="timer-outline" size={scale(25)} />
             <View style={styles.row}>
-              <Icon name="chevron-left" size={scale(25)} />
-              <Label title="CRONO TASKS" />
-              <Icon name="chevron-right" size={scale(25)} />
+              <Icon name="chevron-left" size={scale(35)} />
+              <View>
+                <Title title="CRONO TASKS" />
+                <Label title="total = 200 min" />
+              </View>
+
+              <Icon name="chevron-right" size={scale(35)} />
+            </View>
+            <View style={[styles.row, {justifyContent: 'space-between'}]}>
+              <Label title="Today " />
+              <Icon name="calendar" size={scale(25)} />
             </View>
           </View>
           <DraggableFlatList
@@ -79,9 +87,12 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     height: scale(55),
-    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   row: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
 });
