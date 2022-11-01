@@ -62,6 +62,6 @@ export default SignUp;
 const styles = StyleSheet.create({
   backIcon: {
     left: 10,
-    top: 5,
+    top: 15,
   },
 });
