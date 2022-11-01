@@ -29,7 +29,7 @@ class HomeScreen extends Component {
           height: 100,
           borderColor: isActive ? 'blue' : item.backgroundColor,
           // alignItems: 'center',
-          // justifyContent: 'center',
+          justifyContent: 'center',
           borderWidth: scale(2),
           marginVertical: scale(2),
           borderRadius: scale(8),

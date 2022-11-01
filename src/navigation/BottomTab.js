@@ -3,7 +3,7 @@ import {Home, Setting, Statistics, CreateTask} from '../screens';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
-import {theme} from '../utils';
+import {scale, theme} from '../utils';
 
 const Tab = createBottomTabNavigator();
 
@@ -13,6 +13,12 @@ const BottomTab = () => {
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
+        tabBarStyle: {
+          position: 'absolute',
+          backgroundColor: theme.colors.black,
+          paddingTop: scale(20),
+          borderRadius: scale(15),
+        },
       }}>
       <Tab.Screen
         name="Home"
@@ -22,8 +28,8 @@ const BottomTab = () => {
             return (
               <AntDesign
                 name="home"
-                size={25}
-                color={focused ? theme.colors.black : theme.colors.gray}
+                size={scale(19)}
+                color={focused ? theme.colors.white : theme.colors.gray}
               />
             );
           },
@@ -38,8 +44,8 @@ const BottomTab = () => {
             return (
               <Entypo
                 name="bar-graph"
-                size={25}
-                color={focused ? theme.colors.black : theme.colors.gray}
+                size={scale(19)}
+                color={focused ? theme.colors.white : theme.colors.gray}
               />
             );
           },
@@ -54,8 +60,8 @@ const BottomTab = () => {
             return (
               <AntDesign
                 name="pluscircleo"
-                size={25}
-                color={focused ? theme.colors.black : theme.colors.gray}
+                size={scale(19)}
+                color={focused ? theme.colors.white : theme.colors.gray}
               />
             );
           },
@@ -69,8 +75,8 @@ const BottomTab = () => {
             return (
               <AntDesign
                 name="setting"
-                size={25}
-                color={focused ? theme.colors.black : theme.colors.gray}
+                size={scale(19)}
+                color={focused ? theme.colors.white : theme.colors.gray}
               />
             );
           },
