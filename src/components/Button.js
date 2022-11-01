@@ -11,14 +11,12 @@ import {
 import {scale, theme} from '../utils';
 import {Label} from './index';
 import ICON from 'react-native-vector-icons/Ionicons';
-const Button = (props) => {
-  const {onPress, style, title, titleStyle,  Icon} =
-    props;
+const Button = props => {
+  const {onPress, style, title, titleStyle, Icon} = props;
   return (
     <TouchableOpacity
       onPress={onPress}
       style={[styles.buttoncontainer, styles.shadow, style]}>
-     
       {Icon && (
         <ICON
           name={Icon}
@@ -32,20 +30,18 @@ const Button = (props) => {
   );
 };
 
-
-
 const styles = StyleSheet.create({
   buttoncontainer: {
     justifyContent: 'center',
     marginHorizontal: scale(35),
     backgroundColor: theme.colors.white,
-    width: theme.SCREENWIDTH - scale(70),
+    width: theme.SCREENWIDTH - scale(30),
     alignSelf: 'center',
     borderRadius: scale(18),
     alignItems: 'center',
     marginBottom: scale(13),
     flexDirection: 'row',
-    height: theme.SCREENHEIGHT * 0.068,
+    height: theme.SCREENHEIGHT * 0.06,
   },
   buttonImage: {
     width: scale(20),
@@ -56,8 +52,9 @@ const styles = StyleSheet.create({
   },
   buttontxt: {
     fontSize: scale(15),
-    color: theme.colors.black,
+    color: theme.colors.white,
     // fontFamily: theme.fonts.muktaSemiBold,
+    fontWeight: '500',
   },
   title: {color: theme.colors.blue, textAlign: 'center'},
   shadow: {
@@ -70,7 +67,6 @@ const styles = StyleSheet.create({
     shadowRadius: 1,
     elevation: 1,
   },
-
 });
 
 export default Button;

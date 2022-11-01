@@ -13,6 +13,9 @@ const theme = {
     // RobatoMedium: 'Roboto-Medium',
   },
   colors: {
+    primary: '#3396FF',
+    primary1: '#00D8FF',
+    primary2: '#016BFD',
     white: '#FFFFFF',
     black: '#000000',
     gray: '#9E9E9E',

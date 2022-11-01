@@ -51,7 +51,6 @@ const BottomTab = () => {
           },
         }}
       />
-
       <Tab.Screen
         name="CreateFolder"
         component={CreateFolder}

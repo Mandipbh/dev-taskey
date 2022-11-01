@@ -6,13 +6,15 @@ import {NavigationContainer} from '@react-navigation/native';
 import BottomTab from './src/navigation/BottomTab';
 import {StyleSheet, Text, View, SafeAreaView} from 'react-native';
 import {theme} from './src/utils';
+import MainStack from './src/navigation/MainStack';
 
 const App = () => {
   return (
     <NavigationContainer>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <BottomTab />
+          {/* <BottomTab /> */}
+          <MainStack />
         </PersistGate>
       </Provider>
     </NavigationContainer>
