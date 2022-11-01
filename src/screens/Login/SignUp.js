@@ -11,11 +11,14 @@ import {CommonStyles} from './CommonStyles';
 import {useNavigation} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {theme} from '../../utils';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const SignUp = () => {
   const navigation = useNavigation();
   return (
-    <>
+    <KeyboardAwareScrollView
+      style={CommonStyles.container}
+      showsVerticalScrollIndicator={false}>
       <SafeAreaView style={CommonStyles.container}>
         <AntDesign
           name="left"
@@ -53,7 +56,7 @@ const SignUp = () => {
           </View>
         </View>
       </SafeAreaView>
-    </>
+    </KeyboardAwareScrollView>
   );
 };
 

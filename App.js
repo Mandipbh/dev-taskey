@@ -4,8 +4,6 @@ import {store, persistor} from './src/redux/Store';
 import {PersistGate} from 'redux-persist/integration/react';
 import {NavigationContainer} from '@react-navigation/native';
 import BottomTab from './src/navigation/BottomTab';
-import {StyleSheet, Text, View, SafeAreaView} from 'react-native';
-import {theme} from './src/utils';
 import MainStack from './src/navigation/MainStack';
 
 const App = () => {

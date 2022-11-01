@@ -9,7 +9,7 @@ export const CommonStyles = StyleSheet.create({
   },
   TitleTextStyle: {fontSize: 28, fontWeight: '400'},
   container: {
-    flex: 1,
+    // flex: 1,
     backgroundColor: theme.colors.white,
   },
   secondContainer: {
