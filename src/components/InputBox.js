@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    height: theme.SCREENHEIGHT * 0.068,
+    // height: theme.SCREENHEIGHT * 0.068,
     // textAlign: 'center',
     paddingHorizontal: scale(8),
     fontSize: scale(14),

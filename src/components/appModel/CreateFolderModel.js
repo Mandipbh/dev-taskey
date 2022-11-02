@@ -1,90 +1,69 @@
+import React, {useState} from 'react';
 import {
   StyleSheet,
   View,
-  SafeAreaView,
+  Modal,
+  Platform,
   TouchableOpacity,
-  ScrollView,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import AntDesign from 'react-native-vector-icons/Feather';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Icon from 'react-native-vector-icons/Feather';
 import LottieView from 'lottie-react-native';
-import {moderatedScale, scale, theme} from '../../utils';
-import {Label, Title} from '../../components/Label';
-import {CreateFolderModel, InputBox} from '../../components';
-import CommonHeader from '../../components/CommonHeader';
-import ColorPickerModel from '../../components/appModel/ColorPickerModel';
-import {folders, metaData, typeData} from '../../utils/mockData';
+import {scale, theme} from '../../utils';
+import InputBox from '../InputBox';
+import {Title, Label} from '../Label';
+import {metaData, typeData} from '../../utils/mockData';
+import ColorPickerModel from './ColorPickerModel';
 
-const CreateTaskScreen = props => {
+const CreateFolderModel = props => {
+  const {isVisible, close, title, subTitle} = props;
   const [type, setType] = useState(0);
   const [selMeta, setMeta] = useState(0);
   const [colorPicker, setColorPicker] = useState(false);
   const [selColor, setColor] = useState(null);
-  const [open, setOpen] = useState(false);
-  const [newFolderM, setnewFolderM] = useState(false);
-  const [selectedFolder, setSelFolder] = useState(null);
-  const [title, setTitle] = useState('');
-  const [desc, setDesc] = useState('');
-
-  // const {editData} = props?.route?.params;
+  const [folderName, setFolderName] = useState(null);
   const handleCloseClolorpicker = c => {
     setColor(c);
     setColorPicker(false);
   };
-  const handleOptions = folderName => {
-    setSelFolder(folderName);
-    setTimeout(() => {
-      setOpen(false);
-    }, 350);
+  const handleSave = () => {
+    close(selColor, folderName);
   };
-  useEffect(() => {
-    if (props?.route?.params?.editData) {
-      const editData = props?.route?.params;
-      setTitle(editData?.title);
-      setDesc(editData?.desc);
-      setColor(editData.color);
-    }
-  }, []);
   return (
-    <SafeAreaView style={styles.container}>
+    <Modal
+      transparent={true}
+      animationType={'none'}
+      visible={isVisible}
+      style={{margin: 0, flex: 1}}>
       <View style={styles.container}>
-        <CommonHeader
-          headerTitle={
-            props?.route?.params?.editData ? 'Edit task' : 'Create new task'
-          }
-          iconName="save"
-          IconType={AntDesign}
-          IconColor={theme.colors.primary2}
-        />
-
+        <View style={styles.headerView}>
+          <AntDesign
+            name="left"
+            size={scale(22)}
+            color={theme.colors.primary2}
+            onPress={close}
+          />
+          <Title title="Create Folder" />
+          <Icon
+            size={scale(22)}
+            color={theme.colors.primary2}
+            name="save"
+            onPress={handleSave}
+          />
+        </View>
         <View style={styles.secondCon}>
           <View style={styles.row}>
-            <Label title="Title" style={styles.label} />
+            <Label title="Name" style={styles.label} />
             <InputBox
-              placeholder="Task name"
-              value={title}
+              placeholder="Folder name"
+              onChangeText={txt => {
+                setFolderName(txt);
+              }}
               style={styles.input}
-              onChangeText={txt => {
-                setTitle(txt);
-              }}
             />
           </View>
         </View>
-        <View style={styles.secondCon}>
-          <View style={styles.row}>
-            <Label title="Details" style={styles.label} />
-            <InputBox
-              placeholder="Task description"
-              value={desc}
-              style={styles.inputdesc}
-              multiline={true}
-              onChangeText={txt => {
-                setDesc(txt);
-              }}
-            />
-          </View>
-        </View>
+
         <View style={styles.secondCon}>
           <View style={styles.row}>
             <Label title="Type" style={styles.label} />
@@ -206,15 +185,6 @@ const CreateTaskScreen = props => {
             </View>
             <></>
           </View>
-          {selMeta === 1 && (
-            <View style={styles.amount}>
-              <Label title="Amount" />
-              <InputBox
-                style={{width: theme.SCREENWIDTH * 0.2, height: scale(30)}}
-                placeholder="1 min"
-              />
-            </View>
-          )}
           <View style={styles.devider} />
         </View>
         <View style={styles.secondCon}>
@@ -241,105 +211,61 @@ const CreateTaskScreen = props => {
               />
             </View>
           </View>
-
-          <View style={styles.devider} />
-        </View>
-        <View style={styles.secondCon}>
-          <View style={[styles.row, {justifyContent: 'space-between'}]}>
-            <View style={styles.row}>
-              <Label title="Folder " style={styles.label} />
-              <TouchableOpacity
-                style={styles.folder}
-                onPress={() => {
-                  setOpen(true);
-                }}>
-                <Icon name={open ? 'menu-up' : 'menu-down'} size={scale(25)} />
-                <Label
-                  title={
-                    selectedFolder === null
-                      ? 'Globle list folder'
-                      : selectedFolder
-                  }
-                />
-              </TouchableOpacity>
-            </View>
-
-            <TouchableOpacity
-              style={styles.row}
-              onPress={() => {
-                setnewFolderM(true);
-              }}>
-              <Icon
-                name="folder-outline"
-                size={scale(25)}
-                style={{marginLeft: scale(20)}}
-              />
-              <Label title="New" style={[styles.label]} />
-            </TouchableOpacity>
-          </View>
-          {open && (
-            <ScrollView style={styles.optionsContainer}>
-              {folders.map((f, i) => {
-                return (
-                  <TouchableOpacity
-                    key={i.toString()}
-                    style={styles.optionView}
-                    onPress={() => {
-                      handleOptions(f.name);
-                    }}>
-                    <Label title={f.name} />
-                  </TouchableOpacity>
-                );
-              })}
-            </ScrollView>
-          )}
         </View>
       </View>
       <ColorPickerModel
         isVisible={colorPicker}
         close={handleCloseClolorpicker}
       />
-      <CreateFolderModel
-        isVisible={newFolderM}
-        close={() => {
-          setnewFolderM(false);
-        }}
-      />
-    </SafeAreaView>
+    </Modal>
   );
 };
 
-export default CreateTaskScreen;
-
 const styles = StyleSheet.create({
+  modalBackground: {
+    flex: 1,
+    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+  },
+  label: {
+    textAlign: 'center',
+    color: theme.colors.black,
+    fontSize: scale(14),
+    fontWeight: '600',
+  },
+
+  headerView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: scale(50),
+    borderBottomWidth: scale(0.2),
+    paddingHorizontal: scale(15),
+  },
   container: {
     flex: 1,
+    width: '100%',
+    // padding: 45,
+    paddingTop: Platform.OS === 'ios' ? scale(30) : scale(5),
     backgroundColor: theme.colors.white,
-    paddingHorizontal: moderatedScale(15),
+    margin: 0,
+    // paddingHorizontal: scale(10),
   },
-  subtitle: {
-    marginTop: scale(5),
+  subTitleView: {
+    paddingVertical: scale(20),
+  },
+  secondCon: {
+    padding: scale(20),
   },
   row: {
     flexDirection: 'row',
     // justifyContent: 'center',
     alignItems: 'center',
   },
-  secondCon: {
-    marginTop: scale(20),
-  },
-  label: {
-    fontSize: scale(14),
-    fontWeight: '600',
-  },
   input: {
-    width: theme.SCREENWIDTH * 0.76,
-    marginLeft: scale(25),
-  },
-  inputdesc: {
-    width: theme.SCREENWIDTH * 0.76,
-    // marginLeft: scale(25),
-    height: scale(100),
+    width: theme.SCREENWIDTH * 0.74,
+    marginLeft: scale(15),
   },
   checkBoxCon: {
     height: scale(18),
@@ -384,37 +310,6 @@ const styles = StyleSheet.create({
     marginLeft: scale(10),
     // marginRight: scale(30),
   },
-  folder: {
-    width: theme.SCREENWIDTH * 0.42,
-    borderWidth: scale(1),
-    height: scale(30),
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-    marginLeft: scale(10),
-    borderRadius: scale(5),
-  },
-  circule: {
-    borderWidth: scale(2),
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: scale(50),
-    height: scale(50),
-    borderRadius: scale(40),
-    alignSelf: 'center',
-  },
-  optionsContainer: {
-    marginLeft: theme.SCREENWIDTH * 0.22,
-    marginVertical: scale(5),
-    height: theme.SCREENHEIGHT * 0.2,
-  },
-  optionView: {
-    height: scale(20),
-  },
-  amount: {
-    marginTop: scale(15),
-    marginLeft: theme.SCREENWIDTH * 0.15,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
 });
+
+export default CreateFolderModel;

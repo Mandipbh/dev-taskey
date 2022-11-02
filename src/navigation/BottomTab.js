@@ -9,7 +9,7 @@ import {scale, theme} from '../utils';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
-const Tabs = () => {
+const BottomTab = () => {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -60,7 +60,7 @@ const Tabs = () => {
           tabBarIcon: ({focused}) => {
             return (
               <AntDesign
-                name="pluscircleo"
+                name="folderopen"
                 size={scale(19)}
                 color={focused ? theme.colors.white : theme.colors.gray}
               />
@@ -84,17 +84,6 @@ const Tabs = () => {
         }}
       />
     </Tab.Navigator>
-  );
-};
-
-const BottomTab = () => {
-  return (
-    <NavigationContainer independent={true}>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Tabs" component={Tabs} />
-        <Stack.Screen name="CreateTask" component={CreateTask} />
-      </Stack.Navigator>
-    </NavigationContainer>
   );
 };
 
