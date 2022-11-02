@@ -8,19 +8,7 @@ const RoundIcon = props => {
   const {style, onPress, name, animation} = props;
   return (
     <Animatable.View animation={animation}>
-      <TouchableOpacity
-        onPress={onPress}
-        style={[
-          {
-            backgroundColor: theme.colors.purpal,
-            width: 60,
-            height: 60,
-            borderRadius: 30,
-            justifyContent: 'center',
-            alignItems: 'center',
-          },
-          style,
-        ]}>
+      <TouchableOpacity onPress={onPress} style={[styles.btnStyle, style]}>
         <AntDesign name={name} size={30} color="white" style={{}} />
       </TouchableOpacity>
     </Animatable.View>
@@ -29,4 +17,13 @@ const RoundIcon = props => {
 
 export default RoundIcon;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  btnStyle: {
+    backgroundColor: theme.colors.black,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
