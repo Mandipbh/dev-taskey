@@ -1,4 +1,4 @@
-import {Modal, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import React, {Children} from 'react';
 import * as Animatable from 'react-native-animatable';
 import {theme} from '../utils';

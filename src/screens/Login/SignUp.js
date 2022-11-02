@@ -1,10 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  SafeAreaView,
-  TouchableOpacity,
-} from 'react-native';
+import {StyleSheet, View, SafeAreaView, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {Button, Label, TextInput, Title} from '../../components';
 import {CommonStyles} from './CommonStyles';
@@ -31,7 +25,7 @@ const SignUp = () => {
           <Title title="Create Account" style={CommonStyles.TitleTextStyle} />
         </View>
         <View style={CommonStyles.secondContainer}>
-          <Text style={CommonStyles.secondTitle}>Sign Up</Text>
+          <Title style={CommonStyles.secondTitle} title="Sign Up" />
           <TextInput
             LabelIcon="user"
             Labeltitle="Your user Name"
@@ -51,7 +45,7 @@ const SignUp = () => {
           <View style={CommonStyles.navTxtContainer}>
             <Label title="Already a user?" />
             <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-              <Text style={CommonStyles.navTxt}>Login</Text>
+              <Label style={CommonStyles.navTxt} title="Login" />
             </TouchableOpacity>
           </View>
         </View>

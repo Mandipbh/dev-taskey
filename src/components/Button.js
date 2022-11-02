@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Platform,
-  View,
-  Image,
-} from 'react-native';
+import {TouchableOpacity, StyleSheet} from 'react-native';
 
 import {scale, theme} from '../utils';
 import {Label} from './index';
@@ -25,7 +18,7 @@ const Button = props => {
           style={{left: scale(2)}}
         />
       )}
-      <Text style={[styles.buttontxt, titleStyle]}>{title}</Text>
+      <Label style={[styles.buttontxt, titleStyle]} title={title} />
     </TouchableOpacity>
   );
 };

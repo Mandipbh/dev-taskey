@@ -22,7 +22,7 @@ const SignIn = () => {
           <Title title="Welcome Back" style={CommonStyles.TitleTextStyle} />
         </View>
         <View style={CommonStyles.secondContainer}>
-          <Text style={CommonStyles.secondTitle}>Login</Text>
+          <Title style={CommonStyles.secondTitle} title="Login" />
           <TextInput
             LabelIcon="user"
             Labeltitle="User Name/Email"
@@ -37,7 +37,7 @@ const SignIn = () => {
           <View style={CommonStyles.navTxtContainer}>
             <Label title="Are you a new User ?" />
             <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-              <Text style={CommonStyles.navTxt}>Sign Up</Text>
+              <Label style={CommonStyles.navTxt} title="Sign Up" />
             </TouchableOpacity>
           </View>
         </View>
