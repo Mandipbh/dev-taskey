@@ -88,14 +88,13 @@ const CreateTaskScreen = () => {
         <View style={styles.secondCon}>
           <View style={styles.row}>
             <Label title="Type" style={styles.label} />
-            <View style={[styles.row, {marginLeft: scale(5)}]}>
+            <View style={styles.row}>
               {typeData?.map((t, i) => {
                 return (
                   <View
                     key={i.toString()}
                     style={{
-                      marginHorizontal: theme.SCREENWIDTH * 0.04,
-                      justifyContent: 'center',
+                      marginHorizontal: theme.SCREENWIDTH * 0.06,
                     }}>
                     <LottieView
                       source={{
@@ -150,13 +149,14 @@ const CreateTaskScreen = () => {
         <View style={styles.secondCon}>
           <View style={[styles.row]}>
             <Label title="Meta" style={styles.label} />
-            <View style={[styles.row]}>
+            <View style={styles.row}>
               {metaData?.map((t, i) => {
                 return (
                   <View
                     style={{
-                      marginHorizontal: theme.SCREENWIDTH * 0.05,
-                      width: theme.SCREENWIDTH * 0.25,
+                      // marginHorizontal: theme.SCREENWIDTH * 0.1,
+                      // width: theme.SCREENWIDTH * 0.2,
+                      paddingHorizontal: scale(20),
                     }}>
                     <LottieView
                       source={{
@@ -209,28 +209,26 @@ const CreateTaskScreen = () => {
           <View style={styles.devider} />
         </View>
         <View style={styles.secondCon}>
-          <View style={[styles.row, {justifyContent: 'space-between'}]}>
+          <View style={styles.row}>
             <Label title="Icon " style={styles.label} />
 
-            <TouchableOpacity
-              style={[styles.iconPic, {marginLeft: scale(-30)}]}
-            />
-            <View style={[styles.row, {justifyContent: 'space-between'}]}>
-              <Label title="Color   " style={styles.label} />
+            <TouchableOpacity style={[styles.iconPic]} />
+          </View>
+          <View style={[styles.row, {marginTop: scale(7)}]}>
+            <Label title="Color   " style={styles.label} />
 
-              <TouchableOpacity
-                style={[
-                  styles.colorPicker,
-                  {
-                    backgroundColor:
-                      selColor !== null ? selColor : theme.colors.primary1,
-                  },
-                ]}
-                onPress={() => {
-                  setColorPicker(true);
-                }}
-              />
-            </View>
+            <TouchableOpacity
+              style={[
+                styles.colorPicker,
+                {
+                  backgroundColor:
+                    selColor !== null ? selColor : theme.colors.primary1,
+                },
+              ]}
+              onPress={() => {
+                setColorPicker(true);
+              }}
+            />
           </View>
           <View style={styles.devider} />
         </View>
@@ -320,8 +318,8 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   input: {
-    width: theme.SCREENWIDTH * 0.75,
-    marginLeft: scale(20),
+    width: theme.SCREENWIDTH * 0.76,
+    marginLeft: scale(25),
   },
   checkBoxCon: {
     height: scale(18),
@@ -355,13 +353,16 @@ const styles = StyleSheet.create({
     borderRadius: scale(15),
     borderColor: theme.colors.black,
     borderWidth: scale(1),
+    marginLeft: scale(20),
   },
   colorPicker: {
     width: theme.SCREENWIDTH * 0.2,
     height: scale(22),
     backgroundColor: '#dff8',
-    borderWidth: scale(1.5),
-    marginRight: scale(30),
+    borderWidth: scale(1),
+    borderRadius: scale(5),
+    marginLeft: scale(10),
+    // marginRight: scale(30),
   },
   folder: {
     width: theme.SCREENWIDTH * 0.42,
@@ -370,7 +371,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    marginLeft: scale(5),
+    marginLeft: scale(10),
     borderRadius: scale(5),
   },
   circule: {
@@ -385,6 +386,7 @@ const styles = StyleSheet.create({
   optionsContainer: {
     marginLeft: theme.SCREENWIDTH * 0.22,
     marginVertical: scale(5),
+    height: theme.SCREENHEIGHT * 0.2,
   },
   optionView: {
     height: scale(20),
