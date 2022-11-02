@@ -1,9 +1,10 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 
-const FullScreenModal = () => {
+const FullScreenModal = props => {
+  const {show, close} = props;
   return (
-    <View style={{backgroundColor: 'white', flex: 3}}>
+    <View style={{backgroundColor: 'white', flex: 1}}>
       <Text>FullScreenModal</Text>
     </View>
   );

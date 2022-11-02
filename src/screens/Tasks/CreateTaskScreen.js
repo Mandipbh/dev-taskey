@@ -1,26 +1,46 @@
-import {StyleSheet, View, SafeAreaView, TouchableOpacity} from 'react-native';
-import React from 'react';
+import {
+  StyleSheet,
+  View,
+  SafeAreaView,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
+import React, {useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import AntDesign from 'react-native-vector-icons/Feather';
+import LottieView from 'lottie-react-native';
 import {moderatedScale, scale, theme} from '../../utils';
 import {Label, Title} from '../../components/Label';
 import {InputBox} from '../../components';
+import CommonHeader from '../../components/CommonHeader';
+import ColorPickerModel from '../../components/appModel/ColorPickerModel';
+import {folders} from '../../utils/mockData';
 
 const CreateTaskScreen = () => {
+  const [type, setType] = useState(1);
+  const [selMeta, setMeta] = useState(1);
+  const [colorPicker, setColorPicker] = useState(false);
+  const [selColor, setColor] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [selectedFolder, setSelFolder] = useState(null);
   const typeData = [
     {
       title: 'Crono',
       icon: 'timer-outline',
       id: 1,
+      url: 'https://assets10.lottiefiles.com/packages/lf20_ag0f5tt4.json',
     },
     {
       title: 'Timer',
       icon: 'timer-sand',
       id: 2,
+      url: 'https://assets3.lottiefiles.com/packages/lf20_4yofoa5q.json',
     },
     {
       title: 'Counter',
       icon: 'counter',
       id: 3,
+      url: 'https://assets4.lottiefiles.com/packages/lf20_8sjqrjby.json',
     },
   ];
   const metaData = [
@@ -28,40 +48,158 @@ const CreateTaskScreen = () => {
       title: 'Achievement',
       icon: 'certificate',
       id: 1,
+      url: 'https://assets8.lottiefiles.com/packages/lf20_xeUyRVC1G3.json',
     },
     {
       title: 'Registry',
       icon: 'notebook',
       id: 2,
+      url: 'https://assets9.lottiefiles.com/packages/lf20_ikyhq0rk.json',
     },
   ];
+  const handleCloseClolorpicker = c => {
+    console.log('color ', c);
+    setColor(c);
+    setColorPicker(false);
+  };
+  const handleOptions = folderName => {
+    setSelFolder(folderName);
+    setTimeout(() => {
+      setOpen(false);
+    }, 350);
+  };
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
-        <Title title="Create Task" />
-        <Label
-          style={styles.subtitle}
-          title="Create a task to control your time investment and registry your achievement "
+        <CommonHeader
+          headerTitle="Create new task"
+          iconName="save"
+          IconType={AntDesign}
+          IconColor={theme.colors.primary2}
         />
+
         <View style={styles.secondCon}>
           <View style={styles.row}>
-            <Label title="Set name" style={styles.label} />
+            <Label title="Title" style={styles.label} />
             <InputBox placeholder="Task name" style={styles.input} />
           </View>
         </View>
+
         <View style={styles.secondCon}>
           <View style={styles.row}>
             <Label title="Type" style={styles.label} />
-            <View style={[styles.row, {marginLeft: theme.SCREENWIDTH * 0.08}]}>
+            <View style={styles.row}>
               {typeData?.map((t, i) => {
                 return (
-                  <View style={{marginHorizontal: theme.SCREENWIDTH * 0.05}}>
-                    <Icon name={t.icon} size={scale(30)} />
-                    <View style={styles.row}>
-                      <TouchableOpacity style={styles.checkBoxCon}>
-                        <View style={styles.check} />
+                  <View
+                    key={i.toString()}
+                    style={{
+                      marginHorizontal: theme.SCREENWIDTH * 0.06,
+                    }}>
+                    <LottieView
+                      source={{
+                        uri: t.url,
+                      }}
+                      autoPlay
+                      loop={type === t.id ? true : false}
+                      style={{
+                        height: scale(40),
+                        // marginLeft: scale(-6),
+                      }}
+                    />
+                    <View style={[styles.row, {alignItems: 'center'}]}>
+                      <TouchableOpacity
+                        style={styles.checkBoxCon}
+                        onPress={() => {
+                          setType(t.id);
+                        }}>
+                        <View
+                          style={[
+                            styles.check,
+                            {
+                              backgroundColor:
+                                type === t.id
+                                  ? theme.colors.primary
+                                  : theme.colors.white,
+                            },
+                          ]}
+                        />
                       </TouchableOpacity>
-                      <Label title={t.title} style={styles.checkboxLbl} />
+                      <Label
+                        title={t.title}
+                        style={[
+                          styles.checkboxLbl,
+                          {
+                            fontWeight: type === t.id ? '700' : '300',
+                            color:
+                              type === t.id
+                                ? theme.colors.primary
+                                : theme.colors.black,
+                          },
+                        ]}
+                      />
+                    </View>
+                  </View>
+                );
+              })}
+            </View>
+          </View>
+          <View style={styles.devider} />
+        </View>
+        <View style={styles.secondCon}>
+          <View style={[styles.row]}>
+            <Label title="Meta" style={styles.label} />
+            <View style={styles.row}>
+              {metaData?.map((t, i) => {
+                return (
+                  <View
+                    style={{
+                      // marginHorizontal: theme.SCREENWIDTH * 0.1,
+                      // width: theme.SCREENWIDTH * 0.2,
+                      paddingHorizontal: scale(20),
+                    }}>
+                    <LottieView
+                      source={{
+                        uri: t.url,
+                      }}
+                      autoPlay
+                      loop={selMeta === t.id ? true : false}
+                      style={{
+                        height: scale(35),
+                        marginLeft: scale(-6),
+                      }}
+                    />
+                    <View style={styles.row}>
+                      <TouchableOpacity
+                        style={styles.checkBoxCon}
+                        onPress={() => {
+                          setMeta(t.id);
+                        }}>
+                        <View
+                          style={[
+                            styles.check,
+                            {
+                              backgroundColor:
+                                selMeta === t.id
+                                  ? theme.colors.primary
+                                  : theme.colors.white,
+                            },
+                          ]}
+                        />
+                      </TouchableOpacity>
+                      <Label
+                        title={t.title}
+                        style={[
+                          styles.checkboxLbl,
+                          {
+                            fontWeight: selMeta === t.id ? '700' : '300',
+                            color:
+                              selMeta === t.id
+                                ? theme.colors.primary
+                                : theme.colors.black,
+                          },
+                        ]}
+                      />
                     </View>
                   </View>
                 );
@@ -72,56 +210,86 @@ const CreateTaskScreen = () => {
         </View>
         <View style={styles.secondCon}>
           <View style={styles.row}>
-            <Label title="Meta" style={styles.label} />
-            <View style={[styles.row, {marginLeft: theme.SCREENWIDTH * 0.08}]}>
-              {metaData?.map((t, i) => {
+            <Label title="Icon " style={styles.label} />
+
+            <TouchableOpacity style={[styles.iconPic]} />
+          </View>
+          <View style={[styles.row, {marginTop: scale(7)}]}>
+            <Label title="Color   " style={styles.label} />
+
+            <TouchableOpacity
+              style={[
+                styles.colorPicker,
+                {
+                  backgroundColor:
+                    selColor !== null ? selColor : theme.colors.primary1,
+                },
+              ]}
+              onPress={() => {
+                setColorPicker(true);
+              }}
+            />
+          </View>
+          <View style={styles.devider} />
+        </View>
+        <View style={styles.secondCon}>
+          <View style={[styles.row, {justifyContent: 'space-between'}]}>
+            <View style={styles.row}>
+              <Label title="Folder " style={styles.label} />
+              <TouchableOpacity
+                style={styles.folder}
+                onPress={() => {
+                  setOpen(true);
+                }}>
+                <Icon name={open ? 'menu-up' : 'menu-down'} size={scale(25)} />
+                <Label
+                  title={
+                    selectedFolder === null
+                      ? 'Globle list folder'
+                      : selectedFolder
+                  }
+                />
+              </TouchableOpacity>
+            </View>
+
+            <TouchableOpacity style={styles.row}>
+              <Icon
+                name="folder-outline"
+                size={scale(25)}
+                style={{marginLeft: scale(20)}}
+              />
+              <Label title="New" style={[styles.label]} />
+            </TouchableOpacity>
+          </View>
+          {open && (
+            <ScrollView style={styles.optionsContainer}>
+              {folders.map((f, i) => {
                 return (
-                  <View style={{marginHorizontal: theme.SCREENWIDTH * 0.05}}>
-                    <Icon name={t.icon} size={scale(30)} />
-                    <View style={styles.row}>
-                      <TouchableOpacity style={styles.checkBoxCon}>
-                        <View style={styles.check} />
-                      </TouchableOpacity>
-                      <Label title={t.title} style={styles.checkboxLbl} />
-                    </View>
-                  </View>
+                  <TouchableOpacity
+                    key={i.toString()}
+                    style={styles.optionView}
+                    onPress={() => {
+                      handleOptions(f.name);
+                    }}>
+                    <Label title={f.name} />
+                  </TouchableOpacity>
                 );
               })}
-            </View>
-          </View>
-          <View style={styles.devider} />
+            </ScrollView>
+          )}
+
+          {/* <View style={styles.devider} /> */}
         </View>
-        <View style={styles.secondCon}>
-          <View style={[styles.row, {justifyContent: 'space-between'}]}>
-            <Label title="Icon " style={styles.label} />
-            <TouchableOpacity style={styles.iconPic} />
-            <Label title="Color" style={styles.label} />
-            <TouchableOpacity style={styles.colorPicker} />
-          </View>
-          <View style={styles.devider} />
-        </View>
-        <View style={styles.secondCon}>
-          <View style={[styles.row, {justifyContent: 'space-between'}]}>
-            <Label title="Folder " style={styles.label} />
-            <TouchableOpacity style={styles.folder}>
-              <Icon name="menu-down" size={scale(25)} />
-              <Label title={'Globle list folder'} />
-            </TouchableOpacity>
-            <Icon
-              name="folder-outline"
-              size={scale(25)}
-              style={{marginLeft: scale(20)}}
-            />
-            <Label title="New" style={[styles.label]} />
-          </View>
-          <View style={styles.devider} />
-        </View>
-        <View style={styles.secondCon}>
+        {/* <View style={styles.secondCon}>
           <View style={styles.circule}>
             <Icon name="play" size={scale(40)} color="green" />
           </View>
-        </View>
+        </View> */}
       </View>
+      <ColorPickerModel
+        isVisible={colorPicker}
+        close={handleCloseClolorpicker}
+      />
     </SafeAreaView>
   );
 };
@@ -146,12 +314,12 @@ const styles = StyleSheet.create({
     marginTop: scale(20),
   },
   label: {
-    fontSize: scale(13.5),
+    fontSize: scale(14),
     fontWeight: '600',
-    textAlign: 'justify',
   },
   input: {
-    width: theme.SCREENWIDTH * 0.7,
+    width: theme.SCREENWIDTH * 0.76,
+    marginLeft: scale(25),
   },
   checkBoxCon: {
     height: scale(18),
@@ -185,22 +353,26 @@ const styles = StyleSheet.create({
     borderRadius: scale(15),
     borderColor: theme.colors.black,
     borderWidth: scale(1),
+    marginLeft: scale(20),
   },
   colorPicker: {
     width: theme.SCREENWIDTH * 0.2,
     height: scale(22),
     backgroundColor: '#dff8',
-    borderWidth: scale(1.5),
-    marginRight: scale(30),
+    borderWidth: scale(1),
+    borderRadius: scale(5),
+    marginLeft: scale(10),
+    // marginRight: scale(30),
   },
   folder: {
     width: theme.SCREENWIDTH * 0.42,
     borderWidth: scale(1),
-    height: scale(25),
+    height: scale(30),
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
-    marginLeft: scale(20),
+    marginLeft: scale(10),
+    borderRadius: scale(5),
   },
   circule: {
     borderWidth: scale(2),
@@ -210,5 +382,13 @@ const styles = StyleSheet.create({
     height: scale(50),
     borderRadius: scale(40),
     alignSelf: 'center',
+  },
+  optionsContainer: {
+    marginLeft: theme.SCREENWIDTH * 0.22,
+    marginVertical: scale(5),
+    height: theme.SCREENHEIGHT * 0.2,
+  },
+  optionView: {
+    height: scale(20),
   },
 });

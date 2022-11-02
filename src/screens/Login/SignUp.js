@@ -41,7 +41,13 @@ const SignUp = () => {
             Labeltitle="password"
             placeholder="Enter your password"
           />
-          <Button style={CommonStyles.btn} title="SignUp" />
+          <Button
+            style={CommonStyles.btn}
+            title="SignUp"
+            onPress={() => {
+              navigation.navigate('Tabs');
+            }}
+          />
           <View style={CommonStyles.navTxtContainer}>
             <Label title="Already a user?" />
             <TouchableOpacity onPress={() => navigation.navigate('Login')}>

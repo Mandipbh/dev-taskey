@@ -33,7 +33,13 @@ const SignIn = () => {
             Labeltitle="password"
             placeholder="Enter your password"
           />
-          <Button style={CommonStyles.btn} title="Login" />
+          <Button
+            style={CommonStyles.btn}
+            title="Login"
+            onPress={() => {
+              navigation.navigate('Tabs');
+            }}
+          />
           <View style={CommonStyles.navTxtContainer}>
             <Label title="Are you a new User ?" />
             <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>

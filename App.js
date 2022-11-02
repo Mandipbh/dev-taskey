@@ -11,7 +11,6 @@ const App = () => {
     <NavigationContainer>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          {/* <BottomTab /> */}
           <MainStack />
         </PersistGate>
       </Provider>

@@ -3,11 +3,13 @@ import {Home, Setting, Statistics, CreateTask, CreateFolder} from '../screens';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {scale, theme} from '../utils';
 
 const Tab = createBottomTabNavigator();
-
-const BottomTab = () => {
+const Stack = createNativeStackNavigator();
+const Tabs = () => {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -82,6 +84,17 @@ const BottomTab = () => {
         }}
       />
     </Tab.Navigator>
+  );
+};
+
+const BottomTab = () => {
+  return (
+    <NavigationContainer independent={true}>
+      <Stack.Navigator screenOptions={{headerShown: false}}>
+        <Stack.Screen name="Tabs" component={Tabs} />
+        <Stack.Screen name="CreateTask" component={CreateTask} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 
