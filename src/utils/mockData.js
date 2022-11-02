@@ -1,3 +1,14 @@
+export const tabs = [
+  {
+    title: 'Type',
+    id: '0',
+  },
+  {
+    title: 'Status',
+    id: '1',
+  },
+];
+
 const folders = [
   {
     id: 0,
@@ -28,6 +39,7 @@ const tasksData = [
     color: '#ffddff',
     folder: 'global',
     desc: 'Lorem ipsum may be used as a placeholder before final copy is available.',
+    type: 'Crono',
   },
   {
     id: 1,
@@ -35,6 +47,7 @@ const tasksData = [
     color: '#22ffdd',
     folder: 'frontend',
     desc: 'Lorem ipsum may be used as a placeholder before final copy is available.',
+    type: 'Crono',
   },
   {
     id: 2,
@@ -42,6 +55,7 @@ const tasksData = [
     color: '#22ff',
     folder: 'frontend',
     desc: 'Lorem ipsum may be used as a placeholder before final copy is available.',
+    type: 'Timer',
   },
   {
     id: 3,
@@ -49,6 +63,7 @@ const tasksData = [
     color: '#ffdd11',
     folder: 'backend',
     desc: 'Lorem ipsum may be used as a placeholder before final copy is available.',
+    type: 'Counter',
   },
   {
     id: 4,
@@ -56,6 +71,7 @@ const tasksData = [
     color: '#ff6688',
     folder: 'frontend',
     desc: 'Lorem ipsum may be used as a placeholder before final copy is available.',
+    type: 'Crono',
   },
   {
     id: 6,
@@ -63,6 +79,82 @@ const tasksData = [
     color: '#45ff',
     folder: 'full-stack',
     desc: 'Lorem ipsum may be used as a placeholder before final copy is available.',
+    type: 'Timer',
+  },
+];
+
+export const taskstype = [
+  {
+    id: 1,
+    type: 'Crono',
+    data: [
+      {
+        id: 1,
+        title: 'Lorem ipsum',
+        color: '#ffddff',
+        folder: 'global',
+        desc: 'Lorem ipsum may be used as a placeholder before final copy is available.',
+        type: 'Crono',
+        status: 'completed',
+      },
+      {
+        id: 2,
+        title: 'Lorem ipsum',
+        color: '#22ffdd',
+        folder: 'frontend',
+        desc: 'Lorem ipsum may be used as a placeholder before final copy is available.',
+        type: 'Crono',
+        status: 'completed',
+      },
+    ],
+  },
+  {
+    id: 2,
+    type: 'Timer',
+    data: [
+      {
+        id: 1,
+        title: 'Lorem ipsum',
+        color: '#22ff',
+        folder: 'frontend',
+        desc: 'Lorem ipsum may be used as a placeholder before final copy is available.',
+        type: 'Timer',
+        status: 'Failed',
+      },
+      {
+        id: 2,
+        title: 'Lorem ipsum',
+        color: '#45ff',
+        folder: 'full-stack',
+        desc: 'Lorem ipsum may be used as a placeholder before final copy is available.',
+        type: 'Timer',
+        status: 'inProgress',
+      },
+    ],
+  },
+  {
+    id: 3,
+    type: 'Counter',
+    data: [
+      {
+        id: 1,
+        title: 'Lorem ipsum',
+        color: '#ffdd11',
+        folder: 'backend',
+        desc: 'Lorem ipsum may be used as a placeholder before final copy is available.',
+        type: 'Counter',
+        status: 'completed',
+      },
+      {
+        id: 2,
+        title: 'Lorem ipsum',
+        color: '#45ff',
+        folder: 'full-stack',
+        desc: 'Lorem ipsum may be used as a placeholder before final copy is available.',
+        type: 'Timer',
+        status: 'Failed',
+      },
+    ],
   },
 ];
 
