@@ -13,22 +13,26 @@ const folders = [
   {
     id: 0,
     name: 'Global List Folder',
-    color: '#000000',
+    color: '#ffddf1',
+    notes: 11,
   },
   {
     id: 1,
     name: 'Front-end Folder',
-    color: '#000000',
+    color: '#ddff3d',
+    notes: 5,
   },
   {
     id: 2,
     name: 'Back-end Folder',
-    color: '#000000',
+    color: '#dd1fdf',
+    notes: 3,
   },
   {
     id: 3,
     name: 'full-stack Folder',
-    color: '#000000',
+    color: '#8339de',
+    notes: 22,
   },
 ];
 
@@ -158,4 +162,39 @@ export const taskstype = [
   },
 ];
 
-export {folders, tasksData};
+const typeData = [
+  {
+    title: 'Crono',
+    icon: 'timer-outline',
+    id: 1,
+    url: 'https://assets10.lottiefiles.com/packages/lf20_ag0f5tt4.json',
+  },
+  {
+    title: 'Timer',
+    icon: 'timer-sand',
+    id: 2,
+    url: 'https://assets3.lottiefiles.com/packages/lf20_4yofoa5q.json',
+  },
+  {
+    title: 'Counter',
+    icon: 'counter',
+    id: 3,
+    url: 'https://assets4.lottiefiles.com/packages/lf20_8sjqrjby.json',
+  },
+];
+const metaData = [
+  {
+    title: 'Achievement',
+    icon: 'certificate',
+    id: 1,
+    url: 'https://assets8.lottiefiles.com/packages/lf20_xeUyRVC1G3.json',
+  },
+  {
+    title: 'Registry',
+    icon: 'notebook',
+    id: 2,
+    url: 'https://assets9.lottiefiles.com/packages/lf20_ikyhq0rk.json',
+  },
+];
+
+export {folders, tasksData, metaData, typeData};

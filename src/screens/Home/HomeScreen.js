@@ -3,12 +3,10 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import React, {useState} from 'react';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon1 from 'react-native-vector-icons/Foundation';
 import Icon2 from 'react-native-vector-icons/Feather';
 import {Label, Title} from '../../components';
@@ -27,7 +25,11 @@ const HomeScreen = () => {
         style={[
           styles.taskCard,
           {borderColor: item.color, borderWidth: scale(1)},
-        ]}>
+        ]}
+        key={index}
+        onPress={() => {
+          navigation.navigate('TaskDetails', {note: item});
+        }}>
         <Title title={item.title} />
         <Label title={item.desc} />
         <View style={styles.cardBottom}>
@@ -102,7 +104,11 @@ const HomeScreen = () => {
           </ScrollView>
         </View>
         <View>
-          <Label title={'Tasks'} style={styles.subt} />
+          <View style={styles.dataCon}>
+            <Label title={'Tasks'} style={styles.subt} />
+            <Icon2 name="calendar" size={scale(22)} />
+          </View>
+
           <FlatList
             style={{height: theme.SCREENHEIGHT * 0.67}}
             contentContainerStyle={{
@@ -193,5 +199,10 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: scale(14),
     marginBottom: scale(5),
+  },
+  dataCon: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });
