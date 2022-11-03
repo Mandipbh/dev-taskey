@@ -49,7 +49,7 @@ const HomeScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
-        <View style={[styles.headerContainer, styles.shadow]}>
+        <View style={styles.headerContainer}>
           <Icon1
             name="clipboard-notes"
             size={scale(27)}
@@ -69,63 +69,65 @@ const HomeScreen = () => {
             <Icon2 name="bell" size={scale(25)} color={theme.colors.primary} />
           </View>
         </View>
-        <View>
-          <ScrollView
-            horizontal
-            style={styles.tabViewCon}
-            showsHorizontalScrollIndicator={false}>
-            {folderData.map((f, i) => {
-              return (
-                <TouchableOpacity
-                  onPress={() => {
-                    setSelectedFolder(f.id);
-                  }}
-                  style={[
-                    styles.tabView,
-                    {
-                      backgroundColor:
-                        f.id === selectedFolder
-                          ? theme.colors.black
-                          : theme.colors.white,
-                    },
-                  ]}>
-                  <Label
-                    title={f.name}
-                    style={{
-                      color:
-                        f.id === selectedFolder
-                          ? theme.colors.white
-                          : theme.colors.black,
+        <View style={styles.mainCOntainer}>
+          <View>
+            <ScrollView
+              horizontal
+              style={styles.tabViewCon}
+              showsHorizontalScrollIndicator={false}>
+              {folderData.map((f, i) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      setSelectedFolder(f.id);
                     }}
-                  />
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
-        </View>
-        <View>
-          <View style={styles.dataCon}>
-            <Label title={'Tasks'} style={styles.subt} />
-            <Icon2 name="calendar" size={scale(22)} />
+                    style={[
+                      styles.tabView,
+                      {
+                        backgroundColor:
+                          f.id === selectedFolder
+                            ? theme.colors.black
+                            : theme.colors.white,
+                      },
+                    ]}>
+                    <Label
+                      title={f.name}
+                      style={{
+                        color:
+                          f.id === selectedFolder
+                            ? theme.colors.white
+                            : theme.colors.black,
+                      }}
+                    />
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
           </View>
+          <View>
+            <View style={styles.dataCon}>
+              <Label title={'Tasks'} style={styles.subt} />
+              <Icon2 name="calendar" size={scale(22)} />
+            </View>
 
-          <FlatList
-            style={{height: theme.SCREENHEIGHT * 0.67}}
-            contentContainerStyle={{
-              paddingVertical: scale(10),
-              paddingBottom: theme.SCREENHEIGHT * 0.03,
-            }}
-            data={tasksData}
-            renderItem={rendertasks}
-            showsVerticalScrollIndicator={false}
-          />
-          <RoundIcon
-            style={styles.roundIcon}
-            name={'plus'}
-            onPress={() => {
-              navigation.navigate('CreateTask');
-            }}
-          />
+            <FlatList
+              style={{height: theme.SCREENHEIGHT * 0.67}}
+              contentContainerStyle={{
+                paddingVertical: scale(10),
+                paddingBottom: theme.SCREENHEIGHT * 0.03,
+              }}
+              data={tasksData}
+              renderItem={rendertasks}
+              showsVerticalScrollIndicator={false}
+            />
+            <RoundIcon
+              style={styles.roundIcon}
+              name={'plus'}
+              onPress={() => {
+                navigation.navigate('CreateTask');
+              }}
+            />
+          </View>
         </View>
       </View>
     </SafeAreaView>
@@ -138,7 +140,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.white,
-    paddingHorizontal: moderatedScale(15),
   },
   headerContainer: {
     height: scale(55),
@@ -147,6 +148,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     borderBottomWidth: scale(0.2),
     borderColor: theme.colors.gray,
+    paddingHorizontal: scale(15),
   },
   row: {
     flexDirection: 'row',
@@ -204,5 +206,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  mainCOntainer: {
+    paddingHorizontal: scale(13),
   },
 });

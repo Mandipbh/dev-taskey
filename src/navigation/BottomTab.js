@@ -5,6 +5,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {scale, theme} from '../utils';
 import StatisticsStack from './StatisticsStack';
+import {Platform} from 'react-native';
 
 const Tab = createBottomTabNavigator();
 
@@ -17,8 +18,9 @@ const BottomTab = () => {
         tabBarStyle: {
           position: 'absolute',
           backgroundColor: theme.colors.black,
-          paddingTop: scale(20),
-          borderRadius: scale(15),
+          paddingTop: Platform.OS === 'ios' ? scale(20) : 0,
+          borderTopLeftRadius: scale(15),
+          borderTopRightRadius: scale(15),
         },
       }}>
       <Tab.Screen
