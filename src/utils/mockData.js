@@ -198,7 +198,7 @@ const metaData = [
   },
 ];
 
-export const chips = [
+const chips = [
   {
     label: 'Crono Task',
     tintColor: '#00A3DB',
