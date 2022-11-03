@@ -18,15 +18,15 @@ import {RadioButton} from 'react-native-paper';
 const chips = [
   {
     label: 'scalable',
-    id: '1',
+    id: '0',
   },
   {
     label: 'Timer Task',
-    id: '2',
+    id: '1',
   },
   {
     label: 'One minutes',
-    id: '3',
+    id: '2',
   },
   {
     label: 'Only months',
