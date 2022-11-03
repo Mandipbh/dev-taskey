@@ -40,7 +40,7 @@ const CreateTaskScreen = props => {
   };
   useEffect(() => {
     if (props?.route?.params?.editData) {
-      const editData = props?.route?.params;
+      const {editData} = props?.route?.params;
       setTitle(editData?.title);
       setDesc(editData?.desc);
       setColor(editData.color);
