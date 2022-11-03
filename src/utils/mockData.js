@@ -182,6 +182,7 @@ const typeData = [
     url: 'https://assets4.lottiefiles.com/packages/lf20_8sjqrjby.json',
   },
 ];
+
 const metaData = [
   {
     title: 'Achievement',
@@ -197,4 +198,22 @@ const metaData = [
   },
 ];
 
-export {folders, tasksData, metaData, typeData};
+export const chips = [
+  {
+    label: 'Crono Task',
+    tintColor: '#00A3DB',
+    id: '1',
+  },
+  {
+    label: 'Timer Task',
+    tintColor: '#834895',
+    id: '2',
+  },
+  {
+    label: 'Counter Task',
+    tintColor: '#F0672C',
+    id: '3',
+  },
+];
+
+export {folders, tasksData, metaData, typeData, chips};

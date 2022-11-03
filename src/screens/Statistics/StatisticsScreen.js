@@ -4,40 +4,29 @@ import {
   View,
   SafeAreaView,
   TouchableOpacity,
-  Dimensions,
   FlatList,
+  ScrollView,
+  Platform,
 } from 'react-native';
 import React, {useState} from 'react';
 import {scale, theme} from '../../utils';
 import CommonHeader from '../../components/CommonHeader';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {chartConfigs, tabs, tasksData, taskstype} from '../../utils/mockData';
-import {PieChart} from 'react-native-chart-kit';
+import {chips, tabs, taskstype} from '../../utils/mockData';
 import CustomChart from '../../components/CustomChart';
 import {Dropdown} from 'react-native-element-dropdown';
-
-export const chips = [
-  {
-    label: 'Crono Task',
-    tintColor: '#00A3DB',
-    id: '1',
-  },
-  {
-    label: 'Timer Task',
-    tintColor: '#834895',
-    id: '2',
-  },
-  {
-    label: 'Counter Task',
-    tintColor: '#F0672C',
-    id: '3',
-  },
-];
+import {Label} from '../../components';
+import Calendar from 'react-native-calendars/src/calendar';
+import {useNavigation} from '@react-navigation/native';
 
 const StatisticsScreen = () => {
   const [value, setvalue] = useState(null);
   const [selectedTab, setSelectedTab] = useState('Type');
   const [selectedChip, setSelectedChip] = useState('1');
+  const [isChecked, setChecked] = useState(false);
+  const [myDate, setMyDate] = useState('');
+  const navigation = useNavigation();
+
   const typeCount = taskstype.map(i => i.data.length * 10);
   const statusCount = taskstype.map(i => i.data.map(i => i.status).length * 10);
 
@@ -72,64 +61,134 @@ const StatisticsScreen = () => {
     );
   };
 
+  function onDayPress({...date}) {
+    setMyDate(date.dateString);
+  }
+
   return (
     <SafeAreaView style={styles.container}>
-      <CommonHeader IconType={AntDesign} />
-      <View style={styles.tabView}>
-        {tabs.map((item, index) => {
-          return (
-            <TouchableOpacity
-              onPress={() => {
-                setSelectedTab(item.title);
-                console.log(item.title);
-              }}
-              key={item.id}
-              style={[
-                styles.tabStyle,
-                {
-                  backgroundColor:
-                    selectedTab === item.title
-                      ? theme.colors.black
-                      : theme.colors.gray1,
-                },
-              ]}>
-              <Text
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{marginBottom: scale(45), backgroundColor: theme.colors.white}}>
+        <CommonHeader IconType={AntDesign} />
+
+        <View style={styles.tabView}>
+          {tabs.map((item, index) => {
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  setSelectedTab(item.title);
+                  console.log(item.title);
+                }}
+                key={item.id}
                 style={[
-                  styles.tabTxt,
-                  [
-                    {
-                      color:
-                        selectedTab === item.title
-                          ? theme.colors.white
-                          : theme.colors.black,
-                    },
-                  ],
+                  styles.tabStyle,
+                  {
+                    backgroundColor:
+                      selectedTab === item.title
+                        ? theme.colors.black
+                        : theme.colors.gray1,
+                  },
                 ]}>
-                {item.title}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
-      <View style={styles.chartview}>
-        <CustomChart Yourdata={statusCount} />
-      </View>
-      <View style={styles.chipsView}>
-        <FlatList
+                <Text
+                  style={[
+                    styles.tabTxt,
+                    [
+                      {
+                        color:
+                          selectedTab === item.title
+                            ? theme.colors.white
+                            : theme.colors.black,
+                      },
+                    ],
+                  ]}>
+                  {item.title}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+
+        <View style={styles.chartview}>
+          <CustomChart Yourdata={statusCount} />
+        </View>
+
+        <View style={styles.chipsView}>
+          <FlatList
+            data={chips}
+            renderItem={renderChips}
+            keyExtractor={item => item.id}
+            horizontal
+          />
+        </View>
+
+        <Dropdown
+          placeholder="Select Type of Task"
+          style={styles.Dropdown}
           data={chips}
-          renderItem={renderChips}
-          keyExtractor={item => item.id}
-          horizontal
+          labelField="label"
+          valueField="id"
+          onChange={item => setvalue(item.value1)}
         />
-      </View>
-      <Dropdown
-        placeholder="Select Type of Task"
-        style={styles.Dropdown}
-        data={chips}
-        labelField="label"
-        valueField="id"
-        onChange={item => setvalue(item.value1)}
-      />
+
+        <TouchableOpacity
+          style={[
+            styles.Dropdown,
+            {
+              paddingVertical: scale(16),
+              paddingHorizontal: scale(15),
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            },
+          ]}
+          onPress={() => setChecked(!isChecked)}>
+          <Label title="Select Time Range" style={{fontSize: 16}} />
+          <AntDesign name="down" />
+        </TouchableOpacity>
+        {isChecked ? (
+          <Calendar
+            style={{marginTop: scale(20), marginHorizontal: scale(30)}}
+            onDayPress={onDayPress}
+            theme={{
+              textDayFontWeight: '400',
+              arrowColor: theme.colors.primary,
+              todayTextColor: theme.colors.primary,
+            }}
+            markingType={'custom'}
+            markedDates={{
+              [myDate]: {
+                customStyles: {
+                  container: {
+                    backgroundColor: theme.colors.primary,
+                  },
+                  text: {
+                    color: 'white',
+                    fontWeight: 'bold',
+                  },
+                },
+              },
+            }}
+          />
+        ) : null}
+        {console.log(myDate)}
+
+        <TouchableOpacity
+          style={[
+            styles.Dropdown,
+            {
+              paddingVertical: scale(16),
+              paddingHorizontal: scale(15),
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            },
+          ]}
+          onPress={() => navigation.navigate('TaskDiscription')}>
+          <Label title="Task Details" style={{fontSize: 16}} />
+          <AntDesign name="right" />
+        </TouchableOpacity>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -173,15 +232,34 @@ const styles = StyleSheet.create({
     width: 120,
     height: 34,
     marginHorizontal: 5,
+    marginTop: 5,
   },
   Dropdown: {
-    // borderWidth: 0.5,
-    borderRadius: 5,
-    // borderColor: 'gray',
+    borderRadius: 15,
     paddingHorizontal: 15,
     paddingVertical: 10,
     marginTop: 15,
-    marginHorizontal: 20,
+    marginHorizontal: 15,
     backgroundColor: theme.colors.gray1,
+    borderWidth: Platform.OS === 'android' ? 0.8 : 0.3,
+    borderColor: theme.colors.gray,
+  },
+  detailSection: {
+    backgroundColor: theme.colors.gray1,
+    marginTop: scale(10),
+    marginHorizontal: scale(15),
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    padding: scale(20),
+  },
+  detailTitle: {
+    backgroundColor: theme.colors.white,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  accordianDetail: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: scale(10),
   },
 });

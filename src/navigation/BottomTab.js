@@ -1,14 +1,13 @@
 import React from 'react';
-import {Home, Setting, Statistics, CreateTask, CreateFolder} from '../screens';
+import {Home, Setting, CreateFolder} from '../screens';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {scale, theme} from '../utils';
+import StatisticsStack from './StatisticsStack';
 
 const Tab = createBottomTabNavigator();
-const Stack = createNativeStackNavigator();
+
 const BottomTab = () => {
   return (
     <Tab.Navigator
@@ -39,8 +38,8 @@ const BottomTab = () => {
       />
 
       <Tab.Screen
-        name="Statistics"
-        component={Statistics}
+        name="StatisticsStack"
+        component={StatisticsStack}
         options={{
           tabBarIcon: ({focused}) => {
             return (
@@ -53,6 +52,7 @@ const BottomTab = () => {
           },
         }}
       />
+
       <Tab.Screen
         name="CreateFolder"
         component={CreateFolder}
@@ -68,6 +68,7 @@ const BottomTab = () => {
           },
         }}
       />
+
       <Tab.Screen
         name="Settings"
         component={Setting}

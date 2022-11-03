@@ -1,19 +1,15 @@
 import React from 'react';
-import {View, StyleSheet, Text} from 'react-native';
-// import {useThemeAwareObject} from '../theme';
+import {View, StyleSheet} from 'react-native';
 import {PieChart} from 'react-native-svg-charts';
 
 const CustomChart = ({Yourdata}) => {
   const data = Yourdata;
-  //   const styles = useThemeAwareObject(makeStyles);
 
   const randomColor = () =>
     ('#' + ((Math.random() * 0xffffff) << 0).toString(16) + '000000').slice(
       0,
       7,
     );
-
-  const color = ['#4287f5', '#73a5f5', '#c0d7fa'];
 
   const pieData = data
     .filter(value => value > 0)
@@ -29,19 +25,11 @@ const CustomChart = ({Yourdata}) => {
   return (
     <View style={styles.container}>
       <PieChart
-        innerRadius={'40%'}
-        // labelRadius={100}
+        innerRadius={'3%'}
         style={{height: 200, borderRadius: 10}}
         data={pieData}
-        // fillColor={'purple'}
       />
-      <View style={styles.labelContainer}>
-        {/* <Text style={styles.label}>
-          500.32<Text style={styles.currency}>EGP</Text>
-        </Text>
-        <Text style={styles.subLabel}>Spending</Text> */}
-        {console.log(randomColor())}
-      </View>
+      <View style={styles.labelContainer}>{console.log(randomColor())}</View>
     </View>
   );
 };
