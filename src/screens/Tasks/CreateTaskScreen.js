@@ -57,10 +57,9 @@ const CreateTaskScreen = props => {
           IconType={AntDesign}
           IconColor={theme.colors.primary2}
         />
-
-        <View style={styles.secondCon}>
-          <View style={styles.row}>
-            <Label title="Title" style={styles.label} />
+        <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
+          <View style={styles.secondCon}>
+            <Label title="Title :" style={styles.label} />
             <InputBox
               placeholder="Task name"
               value={title}
@@ -70,10 +69,8 @@ const CreateTaskScreen = props => {
               }}
             />
           </View>
-        </View>
-        <View style={styles.secondCon}>
-          <View style={styles.row}>
-            <Label title="Details" style={styles.label} />
+          <View style={styles.secondCon}>
+            <Label title="Details :" style={styles.label} />
             <InputBox
               placeholder="Task description"
               value={desc}
@@ -84,216 +81,220 @@ const CreateTaskScreen = props => {
               }}
             />
           </View>
-        </View>
-        <View style={styles.secondCon}>
-          <View style={styles.row}>
-            <Label title="Type" style={styles.label} />
+          <View style={styles.secondCon}>
             <View style={styles.row}>
-              {typeData?.map((t, i) => {
-                return (
-                  <View
-                    key={i.toString()}
-                    style={{
-                      marginHorizontal: theme.SCREENWIDTH * 0.06,
-                    }}>
-                    <LottieView
-                      source={{
-                        uri: t.url,
-                      }}
-                      autoPlay
-                      loop={type === t.id ? true : false}
+              <Label title="Type :" style={styles.label} />
+              <View style={styles.row}>
+                {typeData?.map((t, i) => {
+                  return (
+                    <View
+                      key={i.toString()}
                       style={{
-                        height: scale(40),
-                        // marginLeft: scale(-6),
-                      }}
-                    />
-                    <View style={[styles.row, {alignItems: 'center'}]}>
-                      <TouchableOpacity
-                        style={styles.checkBoxCon}
-                        onPress={() => {
-                          setType(t.id);
-                        }}>
-                        <View
+                        marginHorizontal: scale(20),
+                      }}>
+                      <LottieView
+                        source={{
+                          uri: t.url,
+                        }}
+                        autoPlay
+                        loop={type === t.id ? true : false}
+                        style={{
+                          height: scale(40),
+                          // marginLeft: scale(-6),
+                        }}
+                      />
+                      <View style={[styles.row, {alignItems: 'center'}]}>
+                        <TouchableOpacity
+                          style={styles.checkBoxCon}
+                          onPress={() => {
+                            setType(t.id);
+                          }}>
+                          <View
+                            style={[
+                              styles.check,
+                              {
+                                backgroundColor:
+                                  type === t.id
+                                    ? theme.colors.primary
+                                    : theme.colors.white,
+                              },
+                            ]}
+                          />
+                        </TouchableOpacity>
+                        <Label
+                          title={t.title}
                           style={[
-                            styles.check,
+                            styles.checkboxLbl,
                             {
-                              backgroundColor:
+                              fontWeight: type === t.id ? '700' : '300',
+                              color:
                                 type === t.id
                                   ? theme.colors.primary
-                                  : theme.colors.white,
+                                  : theme.colors.black,
                             },
                           ]}
                         />
-                      </TouchableOpacity>
-                      <Label
-                        title={t.title}
-                        style={[
-                          styles.checkboxLbl,
-                          {
-                            fontWeight: type === t.id ? '700' : '300',
-                            color:
-                              type === t.id
-                                ? theme.colors.primary
-                                : theme.colors.black,
-                          },
-                        ]}
-                      />
+                      </View>
                     </View>
-                  </View>
-                );
-              })}
+                  );
+                })}
+              </View>
             </View>
+            <View style={styles.devider} />
           </View>
-          <View style={styles.devider} />
-        </View>
-        <View style={styles.secondCon}>
-          <View style={[styles.row]}>
-            <Label title="Meta" style={styles.label} />
-            <View style={styles.row}>
-              {metaData?.map((t, i) => {
-                return (
-                  <View
-                    style={{
-                      paddingHorizontal: scale(20),
-                    }}
-                    key={i.toString()}>
-                    <LottieView
-                      source={{
-                        uri: t.url,
-                      }}
-                      autoPlay
-                      loop={selMeta === t.id ? true : false}
+          <View style={styles.secondCon}>
+            <View style={[styles.row]}>
+              <Label title="Meta :" style={styles.label} />
+              <View style={styles.row}>
+                {metaData?.map((t, i) => {
+                  return (
+                    <View
                       style={{
-                        height: scale(35),
-                        marginLeft: scale(-6),
+                        paddingHorizontal: scale(20),
                       }}
-                    />
-                    <View style={styles.row}>
-                      <TouchableOpacity
-                        style={styles.checkBoxCon}
-                        onPress={() => {
-                          setMeta(t.id);
-                        }}>
-                        <View
+                      key={i.toString()}>
+                      <LottieView
+                        source={{
+                          uri: t.url,
+                        }}
+                        autoPlay
+                        loop={selMeta === t.id ? true : false}
+                        style={{
+                          height: scale(35),
+                          marginLeft: scale(-6),
+                        }}
+                      />
+                      <View style={styles.row}>
+                        <TouchableOpacity
+                          style={styles.checkBoxCon}
+                          onPress={() => {
+                            setMeta(t.id);
+                          }}>
+                          <View
+                            style={[
+                              styles.check,
+                              {
+                                backgroundColor:
+                                  selMeta === t.id
+                                    ? theme.colors.primary
+                                    : theme.colors.white,
+                              },
+                            ]}
+                          />
+                        </TouchableOpacity>
+                        <Label
+                          title={t.title}
                           style={[
-                            styles.check,
+                            styles.checkboxLbl,
                             {
-                              backgroundColor:
+                              fontWeight: selMeta === t.id ? '700' : '300',
+                              color:
                                 selMeta === t.id
                                   ? theme.colors.primary
-                                  : theme.colors.white,
+                                  : theme.colors.black,
                             },
                           ]}
                         />
-                      </TouchableOpacity>
-                      <Label
-                        title={t.title}
-                        style={[
-                          styles.checkboxLbl,
-                          {
-                            fontWeight: selMeta === t.id ? '700' : '300',
-                            color:
-                              selMeta === t.id
-                                ? theme.colors.primary
-                                : theme.colors.black,
-                          },
-                        ]}
-                      />
+                      </View>
                     </View>
-                  </View>
-                );
-              })}
+                  );
+                })}
+              </View>
+              <></>
             </View>
-            <></>
-          </View>
-          {selMeta === 1 && (
-            <View style={styles.amount}>
-              <Label title="Amount" />
-              <InputBox
-                style={{width: theme.SCREENWIDTH * 0.2, height: scale(30)}}
-                placeholder="1 min"
-              />
-            </View>
-          )}
-          <View style={styles.devider} />
-        </View>
-        <View style={styles.secondCon}>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <View style={styles.row}>
-              <Label title="Icon " style={styles.label} />
-
-              <TouchableOpacity style={[styles.iconPic]} />
-            </View>
-            <View style={[styles.row, {marginTop: scale(7)}]}>
-              <Label title="Color   " style={styles.label} />
-
-              <TouchableOpacity
-                style={[
-                  styles.colorPicker,
-                  {
-                    backgroundColor:
-                      selColor !== null ? selColor : theme.colors.primary1,
-                  },
-                ]}
-                onPress={() => {
-                  setColorPicker(true);
-                }}
-              />
-            </View>
-          </View>
-
-          <View style={styles.devider} />
-        </View>
-        <View style={styles.secondCon}>
-          <View style={[styles.row, {justifyContent: 'space-between'}]}>
-            <View style={styles.row}>
-              <Label title="Folder " style={styles.label} />
-              <TouchableOpacity
-                style={styles.folder}
-                onPress={() => {
-                  setOpen(true);
-                }}>
-                <Icon name={open ? 'menu-up' : 'menu-down'} size={scale(25)} />
-                <Label
-                  title={
-                    selectedFolder === null
-                      ? 'Globle list folder'
-                      : selectedFolder
-                  }
+            {selMeta === 1 && (
+              <View style={styles.amount}>
+                <Label title="Amount :" />
+                <InputBox
+                  style={{width: theme.SCREENWIDTH * 0.2, height: scale(30)}}
+                  placeholder="1 min"
                 />
+              </View>
+            )}
+            <View style={styles.devider} />
+          </View>
+          <View style={styles.secondCon}>
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <View style={styles.row}>
+                <Label title="Icon :" style={styles.label} />
+
+                <TouchableOpacity style={[styles.iconPic]} />
+              </View>
+              <View style={[styles.row, {marginTop: scale(7)}]}>
+                <Label title="Color :" style={styles.label} />
+
+                <TouchableOpacity
+                  style={[
+                    styles.colorPicker,
+                    {
+                      backgroundColor:
+                        selColor !== null ? selColor : theme.colors.primary1,
+                    },
+                  ]}
+                  onPress={() => {
+                    setColorPicker(true);
+                  }}
+                />
+              </View>
+            </View>
+
+            <View style={styles.devider} />
+          </View>
+          <View style={styles.secondCon}>
+            <View style={[styles.row, {justifyContent: 'space-between'}]}>
+              <View style={styles.row}>
+                <Label title="Folder " style={styles.label} />
+                <TouchableOpacity
+                  style={styles.folder}
+                  onPress={() => {
+                    setOpen(true);
+                  }}>
+                  <Icon
+                    name={open ? 'menu-up' : 'menu-down'}
+                    size={scale(25)}
+                  />
+                  <Label
+                    title={
+                      selectedFolder === null
+                        ? 'Globle list folder'
+                        : selectedFolder
+                    }
+                  />
+                </TouchableOpacity>
+              </View>
+
+              <TouchableOpacity
+                style={styles.row}
+                onPress={() => {
+                  setnewFolderM(true);
+                }}>
+                <Icon
+                  name="folder-outline"
+                  size={scale(25)}
+                  style={{marginLeft: scale(20)}}
+                />
+                <Label title="New" style={[styles.label]} />
               </TouchableOpacity>
             </View>
-
-            <TouchableOpacity
-              style={styles.row}
-              onPress={() => {
-                setnewFolderM(true);
-              }}>
-              <Icon
-                name="folder-outline"
-                size={scale(25)}
-                style={{marginLeft: scale(20)}}
-              />
-              <Label title="New" style={[styles.label]} />
-            </TouchableOpacity>
+            {open && (
+              <ScrollView style={styles.optionsContainer}>
+                {folders.map((f, i) => {
+                  return (
+                    <TouchableOpacity
+                      key={i.toString()}
+                      style={styles.optionView}
+                      onPress={() => {
+                        handleOptions(f.name);
+                      }}>
+                      <Label title={f.name} />
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
+            )}
           </View>
-          {open && (
-            <ScrollView style={styles.optionsContainer}>
-              {folders.map((f, i) => {
-                return (
-                  <TouchableOpacity
-                    key={i.toString()}
-                    style={styles.optionView}
-                    onPress={() => {
-                      handleOptions(f.name);
-                    }}>
-                    <Label title={f.name} />
-                  </TouchableOpacity>
-                );
-              })}
-            </ScrollView>
-          )}
-        </View>
+        </ScrollView>
       </View>
       <ColorPickerModel
         isVisible={colorPicker}
@@ -315,7 +316,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.white,
-    paddingHorizontal: moderatedScale(15),
+    paddingHorizontal: scale(13),
   },
   subtitle: {
     marginTop: scale(5),
@@ -333,13 +334,15 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   input: {
-    width: theme.SCREENWIDTH * 0.76,
-    marginLeft: scale(25),
+    width: '100%',
+    marginLeft: scale(0),
+    marginTop: scale(5),
   },
   inputdesc: {
-    width: theme.SCREENWIDTH * 0.76,
-    // marginLeft: scale(25),
+    width: '100%',
+    marginLeft: scale(0),
     height: scale(100),
+    marginTop: scale(5),
   },
   checkBoxCon: {
     height: scale(18),
