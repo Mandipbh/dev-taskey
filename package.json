@@ -27,6 +27,7 @@
     "react-native-draggable-dynamic-flatlist": "^1.0.4",
     "react-native-element-dropdown": "^2.3.1",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
+    "react-native-paper": "^4.12.5",
     "react-native-pie-chart": "^2.0.2",
     "react-native-safe-area-context": "^4.4.1",
     "react-native-screens": "^3.18.2",
