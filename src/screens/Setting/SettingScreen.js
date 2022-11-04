@@ -76,7 +76,10 @@ const SettingScreen = () => {
           onChange={item => setvalue(item.value1)}
         />
 
-        <Accordian title="Default Range of Time" style={{marginTop: scale(15)}}>
+        <Accordian
+          title="Default Range of Time"
+          leftContent={<AntDesign name="down" />}
+          style={{marginTop: scale(15)}}>
           <View style={styles.CheckBoxInventory}>
             <View style={styles.checkboxContainer}>
               <RadioButton.Android
@@ -97,7 +100,7 @@ const SettingScreen = () => {
               <Text>All time</Text>
             </View>
           </View>
-          ß{console.log('your selected time Range', checked)}
+          {console.log('your selected time Range', checked)}
         </Accordian>
 
         <Accordian title="Social">
