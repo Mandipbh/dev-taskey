@@ -5,6 +5,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
+  Platform,
 } from 'react-native';
 import React, {useState} from 'react';
 import {scale, theme} from '../../utils';
@@ -14,6 +15,7 @@ import {Label, Title} from '../../components/Label';
 import {Dropdown} from 'react-native-element-dropdown';
 import Accordian from '../../components/Accordian';
 import {RadioButton} from 'react-native-paper';
+import {useNavigation} from '@react-navigation/native';
 
 const chips = [
   {
@@ -55,13 +57,16 @@ function ShareBtn(props) {
 }
 
 const SettingScreen = () => {
+  const navigation = useNavigation();
   const [checked, setChecked] = useState('Today');
   const [value, setvalue] = useState(null);
   return (
     <SafeAreaView style={styles.container}>
       <CommonHeader IconType={AntDesign} />
       <ScrollView
-        style={{marginBottom: scale(40)}}
+        style={{
+          marginBottom: theme.SCREENHEIGHT * 0.1,
+        }}
         showsVerticalScrollIndicator={false}>
         <View style={{paddingHorizontal: scale(15), marginTop: scale(10)}}>
           <Title title="General" />
@@ -78,7 +83,7 @@ const SettingScreen = () => {
 
         <Accordian
           title="Default Range of Time"
-          leftContent={<AntDesign name="down" />}
+          // leftContent={<AntDesign name="down" />}
           style={{marginTop: scale(15)}}>
           <View style={styles.CheckBoxInventory}>
             <View style={styles.checkboxContainer}>
@@ -130,7 +135,10 @@ const SettingScreen = () => {
           </View>
         </Accordian>
 
-        <Accordian title="Contact" leftContent={<AntDesign name="down" />}>
+        <Accordian
+          title="Contact"
+          // leftContent={<AntDesign name="down" />}
+        >
           <View
             style={{
               flexDirection: 'row',
@@ -151,6 +159,13 @@ const SettingScreen = () => {
           </View>
         </Accordian>
       </ScrollView>
+      <TouchableOpacity
+        style={styles.btn}
+        onPress={() => {
+          navigation.replace('LoginStack');
+        }}>
+        <Label title={'Logout'} style={styles.logout} />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -203,5 +218,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: scale(7),
     borderRadius: 10,
+  },
+  btn: {
+    position: 'absolute',
+    bottom: scale(100),
+    // left: scale(15),
+    alignSelf: 'center',
+  },
+  logout: {
+    color: theme.colors.red,
+    fontSize: scale(15),
+    fontWeight: '600',
   },
 });

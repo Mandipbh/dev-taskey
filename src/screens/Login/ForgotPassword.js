@@ -1,13 +1,19 @@
-import {StyleSheet, View, SafeAreaView, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  TouchableOpacity,
+} from 'react-native';
 import React from 'react';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import {Button, Label, TextInput, Title} from '../../components';
 import {CommonStyles} from './CommonStyles';
 import {useNavigation} from '@react-navigation/native';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import {theme} from '../../utils';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {scale, theme} from '../../utils';
 
-const SignUp = () => {
+const ForgotPassword = () => {
   const navigation = useNavigation();
   return (
     <KeyboardAwareScrollView
@@ -22,49 +28,33 @@ const SignUp = () => {
           color={theme.colors.primary}
         />
         <View style={CommonStyles.TitleStyle}>
-          <Title title="Create Account" style={CommonStyles.TitleTextStyle} />
+          <Title title="Forgot password" style={CommonStyles.TitleTextStyle} />
         </View>
         <View style={CommonStyles.secondContainer}>
-          <Title style={CommonStyles.secondTitle} title="Sign Up" />
+          <Title style={CommonStyles.secondTitle} title="Forget password" />
           <TextInput
             LabelIcon="user"
-            Labeltitle="Your user Name"
-            placeholder="Enter your username"
-          />
-          <TextInput
-            LabelIcon="mail"
-            Labeltitle="Your email"
+            Labeltitle="Email"
             placeholder="Enter your email"
           />
-          <TextInput
-            LabelIcon="lock"
-            Labeltitle="password"
-            placeholder="Enter your password"
-          />
+
           <Button
             style={CommonStyles.btn}
-            title="SignUp"
+            title="Submit"
             onPress={() => {
-              navigation.navigate('Tabs');
+              navigation.navigate('Login');
             }}
           />
-          <View style={CommonStyles.navTxtContainer}>
-            <Label title="Already a user?" />
-            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-              <Label style={CommonStyles.navTxt} title="Login" />
-            </TouchableOpacity>
-          </View>
         </View>
       </SafeAreaView>
     </KeyboardAwareScrollView>
   );
 };
 
-export default SignUp;
-
+export default ForgotPassword;
 const styles = StyleSheet.create({
   backIcon: {
-    marginLeft: 10,
-    marginTop: 15,
+    marginLeft: scale(10),
+    marginTop: scale(15),
   },
 });

@@ -10,6 +10,7 @@ import {Button, Label, TextInput, Title} from '../../components';
 import {CommonStyles} from './CommonStyles';
 import {useNavigation} from '@react-navigation/native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {scale} from '../../utils';
 
 const SignIn = () => {
   const navigation = useNavigation();
@@ -46,6 +47,11 @@ const SignIn = () => {
               <Label style={CommonStyles.navTxt} title="Sign Up" />
             </TouchableOpacity>
           </View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Forgot')}
+            style={styles.forgetPass}>
+            <Label style={styles.navTxt} title="Forget Passowrd ?" />
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </KeyboardAwareScrollView>
@@ -53,4 +59,12 @@ const SignIn = () => {
 };
 
 export default SignIn;
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  navTxt: {
+    textAlign: 'center',
+    fontSize: scale(14),
+  },
+  forgetPass: {
+    marginTop: scale(8),
+  },
+});

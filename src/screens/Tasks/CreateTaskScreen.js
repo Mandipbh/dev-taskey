@@ -9,7 +9,7 @@ import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/Feather';
 import LottieView from 'lottie-react-native';
-import {moderatedScale, scale, theme} from '../../utils';
+import {scale, theme} from '../../utils';
 import {Label, Title} from '../../components/Label';
 import {CreateFolderModel, InputBox} from '../../components';
 import CommonHeader from '../../components/CommonHeader';
