@@ -13,7 +13,7 @@ const Accordian = props => {
         <View style={styles.titleContainer}>
           <Text style={styles.title}>{title}</Text>
 
-          {/* {showContent ? <AntDesign name="up" /> : <AntDesign name="down" />} */}
+          {showContent ? <AntDesign name="up" /> : <AntDesign name="down" />}
 
           <Text style={styles.title}>{leftContent}</Text>
         </View>
