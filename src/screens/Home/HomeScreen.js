@@ -5,12 +5,13 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
+  Image,
 } from 'react-native';
 import React, {useState} from 'react';
 import Icon1 from 'react-native-vector-icons/Foundation';
 import Icon2 from 'react-native-vector-icons/Feather';
 import {Label, Title} from '../../components';
-import {moderatedScale, scale, theme} from '../../utils';
+import {images, scale, theme} from '../../utils';
 import {folders, tasksData} from '../../utils/mockData';
 import RoundIcon from '../../components/RoundIcon';
 import {useNavigation} from '@react-navigation/native';
@@ -19,6 +20,29 @@ const HomeScreen = () => {
   const [folderData, setFolderData] = useState(folders);
   const [selectedFolder, setSelectedFolder] = useState(0);
   const navigation = useNavigation();
+  const [selectedType, setType] = useState(1);
+
+  const taskType = [
+    {
+      id: 1,
+      title: 'CRONO TASKS',
+      totalTime: '200 min',
+      icon: images.stopWatch,
+    },
+    {
+      id: 2,
+      title: 'TIMER TASKS',
+      totalTime: '200 min',
+      icon: images.timer,
+    },
+    {
+      id: 3,
+      title: 'COUNTER TASKS',
+      totalTime: '200 min',
+      icon: images.counter,
+    },
+  ];
+
   const rendertasks = ({item, index}) => {
     return (
       <TouchableOpacity
@@ -46,27 +70,70 @@ const HomeScreen = () => {
       </TouchableOpacity>
     );
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
         <View style={styles.headerContainer}>
-          <Icon1
+          {/* <Icon1
             name="clipboard-notes"
             size={scale(27)}
             color={theme.colors.primary}
-          />
-          <Title title="TASKEY" style={{marginLeft: scale(30)}} />
+          /> */}
+          {/* <Title title="TASKEY" style={{marginLeft: scale(30)}} /> */}
+          <View style={styles.taskContainer}>
+            {taskType?.map((type, index) => {
+              return (
+                type.id === selectedType && (
+                  <>
+                    <Image
+                      source={type.icon}
+                      style={{
+                        height: scale(25),
+                        width: scale(25),
+                        resizeMode: 'contain',
+                      }}
+                    />
+                    <View style={styles.taskCon}>
+                      <Icon2
+                        name="chevron-left"
+                        size={scale(30)}
+                        onPress={() => {
+                          selectedType > 1 ? setType(type.id - 1) : null;
+                        }}
+                      />
+                      <View style={styles.selctCon}>
+                        <Label key={index} title={type?.title} />
+                        <Label
+                          title={`Total = ${type?.totalTime}`}
+                          style={styles.time}
+                        />
+                      </View>
+                      <Icon2
+                        name="chevron-right"
+                        size={scale(30)}
+                        onPress={() => {
+                          selectedType <= 2 ? setType(type.id + 1) : null;
+                        }}
+                      />
+                    </View>
+                  </>
+                )
+              );
+            })}
+          </View>
+
           <View
             style={[
               styles.row,
-              {width: scale(70), justifyContent: 'space-around'},
+              // {width: scale(70), justifyContent: 'space-around'},
             ]}>
+            <Label title={'Today  '} style={{fontWeight: '600'}} />
             <Icon2
-              name="search"
+              name="calendar"
               size={scale(25)}
               color={theme.colors.primary}
             />
-            <Icon2 name="bell" size={scale(25)} color={theme.colors.primary} />
           </View>
         </View>
         <View style={styles.mainCOntainer}>
@@ -209,5 +276,22 @@ const styles = StyleSheet.create({
   },
   mainCOntainer: {
     paddingHorizontal: scale(13),
+  },
+  time: {
+    fontSize: scale(11),
+    alignItems: 'center',
+  },
+  taskCon: {
+    flexDirection: 'row',
+    width: theme.SCREENWIDTH * 0.4,
+    marginLeft: theme.SCREENWIDTH * 0.1,
+  },
+  selctCon: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  taskContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });

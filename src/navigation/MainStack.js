@@ -10,7 +10,7 @@ const Stack = createNativeStackNavigator();
 const MainStack = () => {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name="LoginStack" component={LoginStack} />
+      {/* <Stack.Screen name="LoginStack" component={LoginStack} /> */}
       <Stack.Screen name="Tabs" component={BottomTab} />
       <Stack.Screen name="CreateTask" component={CreateTask} />
       <Stack.Screen name="TaskDetails" component={TaskDetails} />

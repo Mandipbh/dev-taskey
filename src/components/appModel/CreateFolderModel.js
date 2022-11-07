@@ -125,7 +125,7 @@ const CreateFolderModel = props => {
           </View>
           <View style={styles.devider} />
         </View>
-        <View style={styles.secondCon}>
+        {/* <View style={styles.secondCon}>
           <View style={[styles.row]}>
             <Label title="Meta" style={styles.label} />
             <View style={styles.row}>
@@ -186,7 +186,7 @@ const CreateFolderModel = props => {
             <></>
           </View>
           <View style={styles.devider} />
-        </View>
+        </View> */}
         <View style={styles.secondCon}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <View style={styles.row}>
