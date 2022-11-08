@@ -1,5 +1,5 @@
 import React from 'react';
-import {Home, Setting, CreateFolder} from '../screens';
+import {Home, Setting, CreateFolder, CreateTask} from '../screens';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -57,12 +57,12 @@ const BottomTab = () => {
 
       <Tab.Screen
         name="CreateFolder"
-        component={CreateFolder}
+        component={CreateTask}
         options={{
           tabBarIcon: ({focused}) => {
             return (
               <AntDesign
-                name="folderopen"
+                name="plus"
                 size={scale(19)}
                 color={focused ? theme.colors.white : theme.colors.gray}
               />

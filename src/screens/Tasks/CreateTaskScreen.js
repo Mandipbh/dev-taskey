@@ -15,6 +15,7 @@ import {CreateFolderModel, InputBox} from '../../components';
 import CommonHeader from '../../components/CommonHeader';
 import ColorPickerModel from '../../components/appModel/ColorPickerModel';
 import {folders, metaData, typeData} from '../../utils/mockData';
+import {useNavigation} from '@react-navigation/native';
 
 const CreateTaskScreen = props => {
   const [type, setType] = useState(0);
@@ -26,7 +27,7 @@ const CreateTaskScreen = props => {
   const [selectedFolder, setSelFolder] = useState(null);
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
-
+  const navigation = useNavigation();
   // const {editData} = props?.route?.params;
   const handleCloseClolorpicker = c => {
     setColor(c);
@@ -56,6 +57,9 @@ const CreateTaskScreen = props => {
           iconName="save"
           IconType={AntDesign}
           IconColor={theme.colors.primary2}
+          onRightIconPress={() => {
+            navigation.navigate('Home');
+          }}
         />
         <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
           <View style={styles.secondCon}>
@@ -69,7 +73,7 @@ const CreateTaskScreen = props => {
               }}
             />
           </View>
-          <View style={styles.secondCon}>
+          {/* <View style={styles.secondCon}>
             <Label title="Details :" style={styles.label} />
             <InputBox
               placeholder="Task description"
@@ -80,7 +84,7 @@ const CreateTaskScreen = props => {
                 setDesc(txt);
               }}
             />
-          </View>
+          </View> */}
           <View style={styles.secondCon}>
             <View style={styles.row}>
               <Label title="Type :" style={styles.label} />
