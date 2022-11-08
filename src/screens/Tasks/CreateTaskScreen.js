@@ -94,7 +94,8 @@ const CreateTaskScreen = props => {
                     <View
                       key={i.toString()}
                       style={{
-                        marginHorizontal: scale(20),
+                        // marginHorizontal: scale(8),
+                        marginLeft: scale(20),
                       }}>
                       <LottieView
                         source={{
@@ -380,7 +381,7 @@ const styles = StyleSheet.create({
     borderRadius: scale(15),
     borderColor: theme.colors.black,
     borderWidth: scale(1),
-    marginLeft: scale(20),
+    marginLeft: scale(23),
   },
   colorPicker: {
     width: theme.SCREENWIDTH * 0.2,

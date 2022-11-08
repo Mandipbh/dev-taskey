@@ -28,7 +28,7 @@ const Error = props => {
 const styles = StyleSheet.create({
   text: {
     fontSize: scale(14),
-    color: theme.colors.grey,
+    color: theme.colors.black,
   },
   title: {
     color: theme.colors.black,

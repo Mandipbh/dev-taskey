@@ -2,7 +2,7 @@ import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {PieChart} from 'react-native-svg-charts';
 
-const CustomChart = ({Yourdata}) => {
+const CustomChart = ({Yourdata, chartData}) => {
   const data = Yourdata;
 
   const randomColor = () =>
@@ -27,7 +27,7 @@ const CustomChart = ({Yourdata}) => {
       <PieChart
         innerRadius={'3%'}
         style={{height: 200, borderRadius: 10}}
-        data={pieData}
+        data={chartData}
       />
       <View style={styles.labelContainer}>{console.log(randomColor())}</View>
     </View>

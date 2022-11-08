@@ -73,7 +73,8 @@ const CreateFolderModel = props => {
                   <View
                     key={i.toString()}
                     style={{
-                      marginHorizontal: theme.SCREENWIDTH * 0.06,
+                      marginHorizontal: theme.SCREENWIDTH * 0.02,
+                      marginLeft: scale(20),
                     }}>
                     <LottieView
                       source={{

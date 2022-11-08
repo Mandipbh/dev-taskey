@@ -12,11 +12,12 @@ import Icon1 from 'react-native-vector-icons/Foundation';
 import Icon2 from 'react-native-vector-icons/Feather';
 import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/Entypo';
-import {Label, Title} from '../../components';
+import {DatePickerModal, Label, Title} from '../../components';
 import {images, scale, theme} from '../../utils';
 import {folders, tasksData} from '../../utils/mockData';
 import RoundIcon from '../../components/RoundIcon';
 import {useNavigation} from '@react-navigation/native';
+import moment from 'moment';
 
 const HomeScreen = () => {
   const [folderData, setFolderData] = useState(folders);
@@ -24,6 +25,9 @@ const HomeScreen = () => {
   const [openIndex, setOpenIndex] = useState(null);
   const navigation = useNavigation();
   const [selectedType, setType] = useState(1);
+  const [calenderModel, setCalenderModel] = useState(false);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
   const taskType = [
     {
@@ -45,7 +49,16 @@ const HomeScreen = () => {
       icon: images.counter,
     },
   ];
-
+  const handleData = d => {
+    if (d !== null) {
+      const sDate = Object.keys(d)[0];
+      const eDate = Object.keys(d)[3];
+      setStartDate(moment(sDate).format('DD/MM'));
+      setEndDate(moment(eDate).format('DD/MM'));
+      console.log('starting date >> ', moment(sDate).format('DD/MM'));
+      console.log('end date >> ', moment(eDate).format('DD/MM'));
+    }
+  };
   const rendertasks = ({item, index}) => {
     return (
       <>
@@ -288,11 +301,17 @@ const HomeScreen = () => {
               styles.row,
               // {width: scale(70), justifyContent: 'space-around'},
             ]}>
-            <Label title={'Today  '} style={{fontWeight: '600'}} />
+            <Label
+              title={startDate == null ? 'Today  ' : `${startDate}-${endDate} `}
+              style={{fontWeight: '600'}}
+            />
             <Icon2
               name="calendar"
               size={scale(25)}
               color={theme.colors.primary}
+              onPress={() => {
+                setCalenderModel(true);
+              }}
             />
           </View>
         </View>
@@ -357,6 +376,13 @@ const HomeScreen = () => {
           </View>
         </View>
       </View>
+      <DatePickerModal
+        isVisible={calenderModel}
+        close={() => {
+          setCalenderModel(false);
+        }}
+        dateRange={handleData}
+      />
     </SafeAreaView>
   );
 };
