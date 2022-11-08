@@ -10,7 +10,7 @@ import {Button, Label, TextInput, Title} from '../../components';
 import {CommonStyles} from './CommonStyles';
 import {useNavigation} from '@react-navigation/native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {scale} from '../../utils';
+import {scale, theme} from '../../utils';
 
 const SignIn = () => {
   const navigation = useNavigation();
@@ -25,14 +25,17 @@ const SignIn = () => {
         <View style={CommonStyles.secondContainer}>
           <Title style={CommonStyles.secondTitle} title="Login" />
           <TextInput
-            LabelIcon="user"
-            Labeltitle="User Name/Email"
-            placeholder="Enter your username"
+            LabelIcon="mobile1"
+            Labeltitle="Phone Number"
+            placeholder="Enter Phone Number"
           />
+          <TouchableOpacity style={{alignSelf: 'flex-end'}}>
+            <Text style={styles.Sendcode}>Send Code</Text>
+          </TouchableOpacity>
           <TextInput
-            LabelIcon="lock"
-            Labeltitle="password"
-            placeholder="Enter your password"
+            LabelIcon="message1"
+            Labeltitle="OTP"
+            placeholder="Enter OTP"
           />
           <Button
             style={CommonStyles.btn}
@@ -47,11 +50,11 @@ const SignIn = () => {
               <Label style={CommonStyles.navTxt} title="Sign Up" />
             </TouchableOpacity>
           </View>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => navigation.navigate('Forgot')}
             style={styles.forgetPass}>
             <Label style={styles.navTxt} title="Forget Passowrd ?" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </SafeAreaView>
     </KeyboardAwareScrollView>
@@ -66,5 +69,12 @@ const styles = StyleSheet.create({
   },
   forgetPass: {
     marginTop: scale(8),
+  },
+  Sendcode: {
+    color: theme.colors.primary,
+    borderBottomWidth: 1,
+    borderColor: theme.colors.primary,
+    marginBottom: scale(-15),
+    paddingTop: 5,
   },
 });

@@ -216,4 +216,125 @@ const chips = [
   },
 ];
 
-export {folders, tasksData, metaData, typeData, chips};
+const statisticdata = [
+  {
+    id: '1',
+    label: 'Number of Task',
+    value: 10000,
+  },
+  {
+    id: '2',
+    label: 'Total Time',
+    value: 10.0,
+  },
+  {
+    id: '3',
+    label: 'Total Count',
+    value: 9999,
+  },
+];
+
+const statisticdataone = [
+  {
+    id: '1',
+    label: 'Achievement Tasks',
+    value: 4000,
+  },
+  {
+    id: '2',
+    label: 'Completed Tasks',
+    value: 2000,
+  },
+  {
+    id: '3',
+    label: 'Perecentage of Success',
+    value: 50,
+  },
+];
+
+const statisticdatatwo = [
+  {
+    id: '1',
+    label: 'Achievement Tasks in progrees',
+    value: 1500,
+  },
+  {
+    id: '2',
+    label: 'Perecentage of progrees',
+    value: 50,
+  },
+  {
+    id: '3',
+    label: 'Achievement Tasks time',
+    value: 4.0,
+  },
+  {
+    id: '4',
+    label: 'Achievement Tasks Counter',
+    value: 1000,
+  },
+];
+const statisticdatathree = [
+  {
+    id: '1',
+    label: 'Registry Tasks',
+    value: 600,
+  },
+  {
+    id: '2',
+    label: 'Registry Tasks Time',
+    value: 2.0,
+  },
+  {
+    id: '3',
+    label: 'Registry Tasks Counter',
+    value: 500,
+  },
+];
+const colorData = [
+  {
+    key: 1,
+    value: 50,
+    svg: {fill: '#daa520'},
+  },
+  {
+    key: 2,
+    value: 50,
+    svg: {fill: '#ffe4e1'},
+  },
+  {
+    key: 3,
+    value: 40,
+    svg: {fill: '#600080'},
+  },
+];
+const colorDataTwo = [
+  {
+    key: 1,
+    value: 50,
+    svg: {fill: '#4682b4'},
+  },
+  {
+    key: 2,
+    value: 50,
+    svg: {fill: '#ff0000'},
+  },
+  {
+    key: 3,
+    value: 40,
+    svg: {fill: '#008000'},
+  },
+];
+export {
+  folders,
+  tasksData,
+  metaData,
+  typeData,
+  chips,
+  statisticdata,
+  statisticdataone,
+  statisticdatatwo,
+  statisticdatathree,
+  colorData,
+  colorDataTwo,
+};

@@ -1,193 +1,177 @@
 import {
+  Modal,
+  SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
-  View,
-  SafeAreaView,
   TouchableOpacity,
-  FlatList,
-  ScrollView,
-  Platform,
+  View,
 } from 'react-native';
-import React, {useState} from 'react';
-import {scale, theme} from '../../utils';
-import CommonHeader from '../../components/CommonHeader';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import {chips, tabs, taskstype} from '../../utils/mockData';
-import CustomChart from '../../components/CustomChart';
+import React from 'react';
+import Icon from 'react-native-vector-icons/Ionicons';
 import {Dropdown} from 'react-native-element-dropdown';
-import {Label} from '../../components';
+import {useState} from 'react';
 import Calendar from 'react-native-calendars/src/calendar';
-import {useNavigation} from '@react-navigation/native';
+import {scale, theme} from '../../utils';
+import {DatePickerModal} from '../../components';
+import {
+  statisticdata,
+  statisticdataone,
+  statisticdatathree,
+  statisticdatatwo,
+  taskstype,
+  colorData,
+  colorDataTwo,
+} from '../../utils/mockData';
+import CustomChart from '../../components/CustomChart';
 
 const StatisticsScreen = () => {
-  const [value, setvalue] = useState(null);
-  const [selectedTab, setSelectedTab] = useState('Type');
-  const [selectedChip, setSelectedChip] = useState('1');
-  const [isChecked, setChecked] = useState(false);
-  const [myDate, setMyDate] = useState('');
-  const navigation = useNavigation();
+  const data = [
+    {id: 1, label: 'Crono'},
+    {id: 2, label: 'Timer'},
+    {id: 3, label: 'Counter'},
+  ];
 
+  const [value, setvalue] = useState(null);
+  const [staticData, setStaticData] = useState(statisticdata);
+  const [isChecked, setChecked] = useState(false);
+  const handlclose = () => {
+    setChecked(!isChecked);
+  };
   const typeCount = taskstype.map(i => i.data.length * 10);
   const statusCount = taskstype.map(i => i.data.map(i => i.status).length * 10);
-
-  const renderChips = ({item, index}) => {
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          setSelectedChip(item.id);
-        }}
-        style={[
-          styles.chip,
-          {
-            backgroundColor: selectedChip === item.id ? '#4E539E' : '#F1F4FF',
-          },
-        ]}>
-        <View
-          style={{
-            width: 8,
-            height: 8,
-            backgroundColor: selectedChip === item.id ? '#fff' : item.tintColor,
-            borderRadius: 4,
-          }}
-        />
-        <Text
-          style={{
-            marginLeft: 5,
-            color: selectedChip === item.id ? '#fff' : '#131635',
-          }}>
-          {item.label}
-        </Text>
-      </TouchableOpacity>
-    );
-  };
-
-  function onDayPress({...date}) {
-    setMyDate(date.dateString);
-  }
-
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={{
+        backgroundColor: theme.colors.white,
+        flex: 1,
+        paddingHorizontal: scale(13),
+      }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        style={{marginBottom: scale(45), backgroundColor: theme.colors.white}}>
-        <CommonHeader IconType={AntDesign} />
+        contentContainerStyle={{paddingBottom: scale(60)}}>
+        <Text
+          style={{
+            fontSize: 23,
+            fontWeight: '700',
+            color: 'black',
+            alignSelf: 'center',
+            margin: 5,
+          }}>
+          Statistics
+        </Text>
+        <View style={styles.mainView}>
+          <View style={styles.calView}>
+            <Icon name="calendar-outline" size={35} />
+            <Text style={styles.timteText}>Select Time Range</Text>
+          </View>
+          <View>
+            <TouchableOpacity
+              onPress={() => setChecked(!isChecked)}
+              style={styles.selectTime}>
+              <Text style={{textAlign: 'center'}}>Today</Text>
+            </TouchableOpacity>
+            <DatePickerModal isVisible={isChecked} close={handlclose} />
+          </View>
+        </View>
+        <View style={styles.mainView}>
+          <View style={styles.calView}>
+            <Icon name="clipboard-sharp" size={35} />
+            <Text style={styles.timteText}>Select Time Range</Text>
+          </View>
+          <View>
+            <Dropdown
+              placeholder="All"
+              style={styles.Dropdown}
+              data={data}
+              labelField="label"
+              valueField="id"
+              onChange={item => setvalue(item.value)}
+            />
+          </View>
+        </View>
 
-        <View style={styles.tabView}>
-          {tabs.map((item, index) => {
+        <View style={styles.mapView}>
+          {statisticdata.map((f, i) => {
             return (
-              <TouchableOpacity
-                onPress={() => {
-                  setSelectedTab(item.title);
-                  console.log(item.title);
-                }}
-                key={item.id}
-                style={[
-                  styles.tabStyle,
-                  {
-                    backgroundColor:
-                      selectedTab === item.title
-                        ? theme.colors.black
-                        : theme.colors.gray1,
-                  },
-                ]}>
-                <Text
-                  style={[
-                    styles.tabTxt,
-                    [
-                      {
-                        color:
-                          selectedTab === item.title
-                            ? theme.colors.white
-                            : theme.colors.black,
-                      },
-                    ],
-                  ]}>
-                  {item.title}
-                </Text>
-              </TouchableOpacity>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={styles.mapText}>{f.label}</Text>
+                <Text style={styles.mapText}>{f.value}</Text>
+              </View>
             );
           })}
         </View>
 
-        <View style={styles.chartview}>
-          <CustomChart Yourdata={statusCount} />
+        <View style={styles.mapView}>
+          {statisticdataone.map((f, i) => {
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={styles.mapText}>{f.label}</Text>
+                <Text style={styles.mapText}>{f.value}</Text>
+              </View>
+            );
+          })}
         </View>
-
-        <View style={styles.chipsView}>
-          <FlatList
-            data={chips}
-            renderItem={renderChips}
-            keyExtractor={item => item.id}
-            horizontal
-          />
+        <View style={styles.mapView}>
+          {statisticdatatwo.map((f, i) => {
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={styles.mapText}>{f.label}</Text>
+                <Text style={styles.mapText}>{f.value}</Text>
+              </View>
+            );
+          })}
         </View>
-
-        <Dropdown
-          placeholder="Select Type of Task"
-          style={styles.Dropdown}
-          data={chips}
-          labelField="label"
-          valueField="id"
-          onChange={item => setvalue(item.value1)}
-        />
-
-        <TouchableOpacity
-          style={[
-            styles.Dropdown,
-            {
-              paddingVertical: scale(16),
-              paddingHorizontal: scale(15),
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            },
-          ]}
-          onPress={() => setChecked(!isChecked)}>
-          <Label title="Select Time Range" style={{fontSize: 16}} />
-          <AntDesign name="down" />
-        </TouchableOpacity>
-        {isChecked ? (
-          <Calendar
-            style={{marginTop: scale(20), marginHorizontal: scale(30)}}
-            onDayPress={onDayPress}
-            theme={{
-              textDayFontWeight: '400',
-              arrowColor: theme.colors.primary,
-              todayTextColor: theme.colors.primary,
-            }}
-            markingType={'custom'}
-            markedDates={{
-              [myDate]: {
-                customStyles: {
-                  container: {
-                    backgroundColor: theme.colors.primary,
-                  },
-                  text: {
-                    color: 'white',
-                    fontWeight: 'bold',
-                  },
-                },
-              },
-            }}
-          />
-        ) : null}
-        {console.log(myDate)}
-
-        <TouchableOpacity
-          style={[
-            styles.Dropdown,
-            {
-              paddingVertical: scale(16),
-              paddingHorizontal: scale(15),
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            },
-          ]}
-          onPress={() => navigation.navigate('TaskDiscription')}>
-          <Label title="Task Details" style={{fontSize: 16}} />
-          <AntDesign name="right" />
-        </TouchableOpacity>
+        <View style={styles.mapView}>
+          {statisticdatathree.map((f, i) => {
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={styles.mapText}>{f.label}</Text>
+                <Text style={styles.mapText}>{f.value}</Text>
+              </View>
+            );
+          })}
+        </View>
+        <View style={styles.mapView}>
+          {statisticdatathree.map((f, i) => {
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={styles.mapText}>{f.label}</Text>
+                <Text style={styles.mapText}>{f.value}</Text>
+              </View>
+            );
+          })}
+        </View>
+        <View style={styles.chartView}>
+          <View style={styles.innerView}>
+            <CustomChart Yourdata={statusCount} chartData={colorData}  />
+          </View>
+        </View>
+        <View style={styles.chartView}>
+          <View style={styles.innerView}>
+            <CustomChart Yourdata={statusCount} chartData={colorDataTwo} />
+          </View>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -196,70 +180,41 @@ const StatisticsScreen = () => {
 export default StatisticsScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.white,
-  },
-  tabView: {
+  mainView: {
+    padding: 10,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: scale(10),
   },
-  tabStyle: {
-    paddingVertical: scale(8),
-    paddingHorizontal: scale(30),
-    borderRadius: 8,
-    margin: 2,
+  selectTime: {
+    borderWidth: 1,
+    padding: 5,
+    width: theme.SCREENWIDTH * 0.45,
   },
-  tabTxt: {
-    fontSize: 15,
-    fontWeight: '600',
+  timteText: {
+    fontSize: 17,
+    width: '70%',
+    fontWeight: '700',
+    textAlign: 'center',
   },
-  chartview: {
-    marginTop: scale(20),
-  },
-  chipsView: {
-    marginVertical: 10,
-    height: 40,
-  },
-  chip: {
-    borderRadius: 16,
-    paddingVertical: 4,
-    paddingHorizontal: 16,
+  calView: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: 120,
-    height: 34,
-    marginHorizontal: 5,
-    marginTop: 5,
+    width: theme.SCREENWIDTH * 0.4,
   },
   Dropdown: {
-    borderRadius: 15,
     paddingHorizontal: 15,
-    paddingVertical: 10,
-    marginTop: 15,
-    marginHorizontal: 15,
+    width: theme.SCREENWIDTH * 0.45,
     backgroundColor: theme.colors.gray1,
     borderWidth: Platform.OS === 'android' ? 0.8 : 0.3,
-    borderColor: theme.colors.gray,
   },
-  detailSection: {
+  mapView: {marginTop: scale(25), borderBottomWidth: 1, paddingBottom: 5},
+  mapText: {fontWeight: '600', fontSize: 16},
+  chartView: {
     backgroundColor: theme.colors.gray1,
-    marginTop: scale(10),
-    marginHorizontal: scale(15),
-    borderTopLeftRadius: 15,
-    borderTopRightRadius: 15,
-    padding: scale(20),
+    paddingVertical: scale(20),
+    marginVertical: scale(10),
   },
-  detailTitle: {
-    backgroundColor: theme.colors.white,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  accordianDetail: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingTop: scale(10),
+  innerView: {
+    marginLeft: -theme.SCREENWIDTH * 0.3,
   },
 });
