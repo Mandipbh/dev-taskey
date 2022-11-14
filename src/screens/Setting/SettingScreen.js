@@ -159,13 +159,13 @@ const SettingScreen = () => {
           </View>
         </Accordian>
       </ScrollView>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={styles.btn}
         onPress={() => {
           navigation.replace('LoginStack');
         }}>
         <Label title={'Logout'} style={styles.logout} />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </SafeAreaView>
   );
 };
