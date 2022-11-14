@@ -12,7 +12,12 @@ import Icon1 from 'react-native-vector-icons/Foundation';
 import Icon2 from 'react-native-vector-icons/Feather';
 import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/Entypo';
-import {DatePickerModal, Label, Title} from '../../components';
+import {
+  CreateFolderModel,
+  DatePickerModal,
+  Label,
+  Title,
+} from '../../components';
 import {images, scale, theme} from '../../utils';
 import {folders, tasksData} from '../../utils/mockData';
 import RoundIcon from '../../components/RoundIcon';
@@ -22,6 +27,7 @@ import moment from 'moment';
 const HomeScreen = () => {
   const [folderData, setFolderData] = useState(folders);
   const [selectedFolder, setSelectedFolder] = useState(0);
+  const [openFolderModal, setOpenFolderModal] = useState(false);
   const [openIndex, setOpenIndex] = useState(null);
   const navigation = useNavigation();
   const [selectedType, setType] = useState(1);
@@ -72,7 +78,9 @@ const HomeScreen = () => {
           //   navigation.navigate('TaskDetails', {note: item});
           // }}
         >
-          <View style={[styles.taskContainer, {borderColor: item.color}]}>
+          <TouchableOpacity
+            onPress={() => setOpenFolderModal(true)}
+            style={[styles.taskContainer, {borderColor: item.color}]}>
             <Icon2
               name="aperture"
               size={scale(22)}
@@ -84,7 +92,7 @@ const HomeScreen = () => {
             />
             <Label title={item?.totalmins} style={[styles.headerTitle]} />
             <Label title={item?.done} style={[styles.headerTitle]} />
-          </View>
+          </TouchableOpacity>
           <View style={[styles.taskContainer, {borderColor: item.color}]}>
             <Label title={'Status'} style={[styles.headerTitle]} />
             <Label
@@ -117,7 +125,13 @@ const HomeScreen = () => {
                             : item.color,
                         paddingHorizontal: scale(5),
                       },
-                    ]}>
+                    ]}
+                    onPress={() => {
+                      // console.log(titem);
+                      navigation.navigate('CreateFolder', {
+                        editData: titem,
+                      });
+                    }}>
                     <View style={styles.statusView}>
                       {titem.status ? (
                         <Icon1
@@ -383,6 +397,10 @@ const HomeScreen = () => {
         }}
         dateRange={handleData}
       />
+
+      {openFolderModal && (
+        <CreateFolderModel close={() => setOpenFolderModal(false)} />
+      )}
     </SafeAreaView>
   );
 };

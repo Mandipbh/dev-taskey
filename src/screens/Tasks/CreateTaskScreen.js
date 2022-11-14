@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import AntDesign from 'react-native-vector-icons/Feather';
+import Feather from 'react-native-vector-icons/Feather';
 import LottieView from 'lottie-react-native';
 import {scale, theme} from '../../utils';
 import {Label, Title} from '../../components/Label';
@@ -16,6 +16,7 @@ import CommonHeader from '../../components/CommonHeader';
 import ColorPickerModel from '../../components/appModel/ColorPickerModel';
 import {folders, metaData, typeData} from '../../utils/mockData';
 import {useNavigation} from '@react-navigation/native';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const CreateTaskScreen = props => {
   const [type, setType] = useState(0);
@@ -47,6 +48,7 @@ const CreateTaskScreen = props => {
       setColor(editData.color);
     }
   }, []);
+  // console.log(editData);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
@@ -55,11 +57,27 @@ const CreateTaskScreen = props => {
             props?.route?.params?.editData ? 'Edit task' : 'Create new task'
           }
           iconName="save"
-          IconType={AntDesign}
+          IconType={Feather}
           IconColor={theme.colors.primary2}
           onRightIconPress={() => {
             navigation.navigate('Home');
           }}
+          // onLeftIconPress={() => navigation.replace('Tabs')}
+          headerLeft={
+            props?.route?.params?.editData
+              ? () => (
+                  <TouchableOpacity
+                    style={{left: scale(7)}}
+                    onPress={() => {
+                      navigation.replace('Tabs');
+                    }}
+                    // onPress={onLeftIconPress}
+                  >
+                    <AntDesign name="left" size={25} />
+                  </TouchableOpacity>
+                )
+              : null
+          }
         />
         <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
           <View style={styles.secondCon}>
@@ -211,8 +229,9 @@ const CreateTaskScreen = props => {
               <View style={styles.amount}>
                 <Label title="Amount :" />
                 <InputBox
-                  style={{width: theme.SCREENWIDTH * 0.2, height: scale(30)}}
+                  style={{width: theme.SCREENWIDTH * 0.2, height: scale(35)}}
                   placeholder="1 min"
+                  inputStyle={{fontSize: 14}}
                 />
               </View>
             )}
