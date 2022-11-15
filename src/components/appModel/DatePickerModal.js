@@ -40,6 +40,8 @@ const DatePickerModal = props => {
         color: theme.colors.primary1,
       },
     });
+
+    close();
   };
   useEffect(() => {
     dateRange(markedDates);

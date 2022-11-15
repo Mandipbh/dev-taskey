@@ -40,7 +40,7 @@ const tasksData = [
   {
     id: 0,
     color: '#22ffdd',
-    folder: 'DEVELOPMENT FOLDER',
+    folder: 'DEVELOPMENT FOLDER 1',
     type: 'Crono',
     totalmins: '100min',
     done: '50%',
@@ -86,7 +86,7 @@ const tasksData = [
   {
     id: 0,
     color: '#22ffdd',
-    folder: 'DEVELOPMENT FOLDER',
+    folder: 'DEVELOPMENT FOLDER 2',
     type: 'Crono',
     totalmins: '100min',
     done: '50%',
@@ -485,12 +485,38 @@ const Timefolders = [
     value: 91,
     svg: {fill: '#4682b4'},
     type: 'Sport',
+    ischecked: false,
   },
   {
     key: 2,
     value: 9,
-    svg: {fill: '#FFA500'},
+    svg: {fill: '#FF7F50'},
     type: 'Global Timer',
+    ischecked: false,
+  },
+];
+
+const TimerSpecificfolders = [
+  {
+    key: 1,
+    value: 4,
+    svg: {fill: '#4682b4'},
+    type: 'Football',
+    ischecked: false,
+  },
+  {
+    key: 2,
+    value: 72,
+    svg: {fill: '#FF7F50'},
+    type: 'Running',
+    ischecked: false,
+  },
+  {
+    key: 3,
+    value: 24,
+    svg: {fill: 'gray'},
+    type: 'Example',
+    ischecked: false,
   },
 ];
 
@@ -511,4 +537,5 @@ export {
   statisticdataSeven,
   TypeTask_Distribution,
   Timefolders,
+  TimerSpecificfolders,
 };

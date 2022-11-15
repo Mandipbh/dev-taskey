@@ -25,6 +25,7 @@ import RoundIcon from '../../components/RoundIcon';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
+import DraggableFlatList from 'react-native-draggable-dynamic-flatlist';
 
 const HomeScreen = () => {
   const [folderData, setFolderData] = useState(folders);
@@ -37,6 +38,7 @@ const HomeScreen = () => {
   const [legendView, setlegendView] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [data, setData] = useState(tasksData);
 
   const taskType = [
     {
@@ -88,199 +90,172 @@ const HomeScreen = () => {
     }
   };
 
-  const rendertasks = ({item, index}) => {
+  const rendertasks = ({item, index, move, moveEnd, isActive}) => {
     return (
       <>
         <GestureRecognizer
           onSwipe={(direction, state) => onSwipe(direction, state, index)}
           config={config}>
-          <View
-            style={[
-              styles.taskCard,
-              {borderColor: item.color, borderWidth: scale(1)},
-            ]}
-            key={index}
-            // onPress={() => {
-            //   navigation.navigate('TaskDetails', {note: item});
-            // }}
-          >
-            <View style={[styles.taskContainer, {borderColor: item.color}]}>
-              <Icon2
-                name="aperture"
-                size={scale(22)}
-                color={theme.colors.primary2}
-              />
-              <Label
-                title={item?.folder}
-                style={[styles.headerTitle, {width: '60%'}]}
-              />
-              <Label title={item?.totalmins} style={[styles.headerTitle]} />
-              <Label title={item?.done} style={[styles.headerTitle]} />
-            </View>
-            <View style={[styles.taskContainer, {borderColor: item.color}]}>
-              <Label title={'Status'} style={[styles.headerTitle]} />
-              <Label
-                title={'Name'}
-                style={[styles.headerTitle, {width: '35%'}]}
-              />
-              <Label title={'Path'} style={[styles.headerTitle]} />
-              <View style={styles.row}>
-                <Label title={'% '} style={[styles.headerTitle]} />
-                <Icon2 name="folder" size={scale(22)} />
+          <TouchableOpacity onLongPress={move} onPressOut={moveEnd}>
+            <View
+              style={[
+                styles.taskCard,
+                {borderColor: item.color, borderWidth: scale(1)},
+              ]}
+              key={index}
+              // onPress={() => {
+              //   navigation.navigate('TaskDetails', {note: item});
+              // }}
+            >
+              <View style={[styles.taskContainer, {borderColor: item.color}]}>
+                <Icon2
+                  name="aperture"
+                  size={scale(22)}
+                  color={theme.colors.primary2}
+                />
+                <Label
+                  title={item?.folder}
+                  style={[styles.headerTitle, {width: '60%'}]}
+                />
+                <Label title={item?.totalmins} style={[styles.headerTitle]} />
+                <Label title={item?.done} style={[styles.headerTitle]} />
+              </View>
+              <View style={[styles.taskContainer, {borderColor: item.color}]}>
+                <Label title={'Status'} style={[styles.headerTitle]} />
+                <Label
+                  title={'Name'}
+                  style={[styles.headerTitle, {width: '35%'}]}
+                />
+                <Label title={'Path'} style={[styles.headerTitle]} />
+                <View style={styles.row}>
+                  <Label title={'% '} style={[styles.headerTitle]} />
+                  <Icon2 name="folder" size={scale(22)} />
+                </View>
+
+                <Icon2 name="award" size={scale(22)} />
               </View>
 
-              <Icon2 name="award" size={scale(22)} />
+              {item?.tasks && item?.tasks.length > 3 && openIndex !== index
+                ? item?.tasks.slice(0, 3)?.map((titem, tindex) => {
+                    console.log('length ', item?.tasks.length);
+                    return (
+                      <TouchableOpacity
+                        style={[
+                          styles.row,
+                          {
+                            justifyContent: 'space-between',
+                            borderColor: item.color,
+                            borderBottomWidth: scale(0.7),
+                            paddingVertical: scale(3),
+                            borderColor:
+                              item?.tasks.length == tindex + 1
+                                ? theme.colors.transparent
+                                : item.color,
+                            paddingHorizontal: scale(5),
+                          },
+                        ]}>
+                        <View style={styles.statusView}>
+                          {titem.status ? (
+                            <Icon1
+                              name="play"
+                              size={scale(25)}
+                              color={theme.colors.green}
+                            />
+                          ) : (
+                            <Icon2
+                              name="pause"
+                              size={scale(20)}
+                              color={theme.colors.orange}
+                              style={{marginLeft: scale(-5)}}
+                            />
+                          )}
+                          {tindex % 2 ? (
+                            <Icon1
+                              name="social-zerply"
+                              size={scale(20)}
+                              color={theme.colors.green}
+                            />
+                          ) : (
+                            <Icon3
+                              name="clock-time-seven"
+                              size={scale(20)}
+                              color={theme.colors.lightGreen}
+                            />
+                          )}
+                        </View>
+
+                        <Label
+                          title={titem.title}
+                          style={{width: '45%', fontSize: scale(12)}}
+                        />
+                        <View style={styles.staticDetails}>
+                          <Label title={titem?.path} />
+                          <Label title={`${titem?.percentage} %`} />
+                          <Label title={`-`} />
+                        </View>
+                      </TouchableOpacity>
+                    );
+                  })
+                : item?.tasks?.map((titem, tindex) => {
+                    return (
+                      <TouchableOpacity
+                        style={[
+                          styles.row,
+                          {
+                            justifyContent: 'space-between',
+                            borderColor:
+                              item?.tasks.length == tindex + 1
+                                ? theme.colors.transparent
+                                : item.color,
+                            borderBottomWidth: scale(0.7),
+                            paddingVertical: scale(3),
+                            paddingHorizontal: scale(5),
+                          },
+                        ]}>
+                        <View style={styles.statusView}>
+                          {titem.status ? (
+                            <Icon1
+                              name="play"
+                              size={scale(25)}
+                              color={theme.colors.green}
+                            />
+                          ) : (
+                            <Icon2
+                              name="pause"
+                              size={scale(20)}
+                              color={theme.colors.orange}
+                              style={{marginLeft: scale(-5)}}
+                            />
+                          )}
+                          {tindex % 2 ? (
+                            <Icon1
+                              name="social-zerply"
+                              size={scale(20)}
+                              color={theme.colors.green}
+                            />
+                          ) : (
+                            <Icon3
+                              name="clock-time-seven"
+                              size={scale(20)}
+                              color={theme.colors.lightGreen}
+                            />
+                          )}
+                        </View>
+
+                        <Label
+                          title={titem.title}
+                          style={{width: '45%', fontSize: scale(12)}}
+                        />
+                        <View style={styles.staticDetails}>
+                          <Label title={titem?.path} />
+                          <Label title={`${titem?.percentage} %`} />
+                          <Label title={`-`} />
+                        </View>
+                      </TouchableOpacity>
+                    );
+                  })}
             </View>
-
-            {item?.tasks && item?.tasks.length > 3 && openIndex !== index
-              ? item?.tasks.slice(0, 3)?.map((titem, tindex) => {
-                  console.log('length ', item?.tasks.length);
-                  return (
-                    <TouchableOpacity
-                      style={[
-                        styles.row,
-                        {
-                          justifyContent: 'space-between',
-                          borderColor: item.color,
-                          borderBottomWidth: scale(0.7),
-                          paddingVertical: scale(3),
-                          borderColor:
-                            item?.tasks.length == tindex + 1
-                              ? theme.colors.transparent
-                              : item.color,
-                          paddingHorizontal: scale(5),
-                        },
-                      ]}>
-                      <View style={styles.statusView}>
-                        {titem.status ? (
-                          <Icon1
-                            name="play"
-                            size={scale(25)}
-                            color={theme.colors.green}
-                          />
-                        ) : (
-                          <Icon2
-                            name="pause"
-                            size={scale(20)}
-                            color={theme.colors.orange}
-                            style={{marginLeft: scale(-5)}}
-                          />
-                        )}
-                        {tindex % 2 ? (
-                          <Icon1
-                            name="social-zerply"
-                            size={scale(20)}
-                            color={theme.colors.green}
-                          />
-                        ) : (
-                          <Icon3
-                            name="clock-time-seven"
-                            size={scale(20)}
-                            color={theme.colors.lightGreen}
-                          />
-                        )}
-                      </View>
-
-                      <Label
-                        title={titem.title}
-                        style={{width: '45%', fontSize: scale(12)}}
-                      />
-                      <View style={styles.staticDetails}>
-                        <Label title={titem?.path} />
-                        <Label title={`${titem?.percentage} %`} />
-                        <Label title={`-`} />
-                      </View>
-                    </TouchableOpacity>
-                  );
-                })
-              : item?.tasks?.map((titem, tindex) => {
-                  return (
-                    <TouchableOpacity
-                      style={[
-                        styles.row,
-                        {
-                          justifyContent: 'space-between',
-                          borderColor:
-                            item?.tasks.length == tindex + 1
-                              ? theme.colors.transparent
-                              : item.color,
-                          borderBottomWidth: scale(0.7),
-                          paddingVertical: scale(3),
-                          paddingHorizontal: scale(5),
-                        },
-                      ]}>
-                      <View style={styles.statusView}>
-                        {titem.status ? (
-                          <Icon1
-                            name="play"
-                            size={scale(25)}
-                            color={theme.colors.green}
-                          />
-                        ) : (
-                          <Icon2
-                            name="pause"
-                            size={scale(20)}
-                            color={theme.colors.orange}
-                            style={{marginLeft: scale(-5)}}
-                          />
-                        )}
-                        {tindex % 2 ? (
-                          <Icon1
-                            name="social-zerply"
-                            size={scale(20)}
-                            color={theme.colors.green}
-                          />
-                        ) : (
-                          <Icon3
-                            name="clock-time-seven"
-                            size={scale(20)}
-                            color={theme.colors.lightGreen}
-                          />
-                        )}
-                      </View>
-
-                      <Label
-                        title={titem.title}
-                        style={{width: '45%', fontSize: scale(12)}}
-                      />
-                      <View style={styles.staticDetails}>
-                        <Label title={titem?.path} />
-                        <Label title={`${titem?.percentage} %`} />
-                        <Label title={`-`} />
-                      </View>
-                    </TouchableOpacity>
-                  );
-                })}
-          </View>
-          {/* arrow-down-bold */}
-          {/* <View style={[styles.move, {borderColor: item.color}]}>
-            <Icon3
-              name={
-                openIndex == index ? 'arrow-up-bold' : 'arrow-up-bold-outline'
-              }
-              size={scale(20)}
-              onPress={() => {
-                // alert('up');
-                openIndex == index ? setOpenIndex(null) : setOpenIndex(index);
-              }}
-              color={openIndex == index ? item?.color : theme.colors.black}
-            />
-            <Icon3
-              name={
-                item?.tasks.length === 0 || item?.tasks.length === undefined
-                  ? 'arrow-down-bold-outline'
-                  : openIndex !== index
-                  ? 'arrow-down-bold'
-                  : 'arrow-down-bold-outline'
-              }
-              size={scale(20)}
-              onPress={() => {
-                // alert('down');
-                setOpenIndex(index);
-              }}
-              color={openIndex !== index ? item.color : theme.colors.black}
-            />
-          </View> */}
+          </TouchableOpacity>
         </GestureRecognizer>
       </>
     );
@@ -337,7 +312,7 @@ const HomeScreen = () => {
             ]}>
             <Label
               title={startDate == null ? 'Today  ' : `${startDate}-${endDate} `}
-              style={{fontWeight: '600'}}
+              style={{fontWeight: '600', fontSize: scale(10)}}
             />
             <Icon2
               name="calendar"
@@ -362,15 +337,18 @@ const HomeScreen = () => {
               <Icon2 name="calendar" size={scale(22)} />
             </View> */}
 
-            <FlatList
+            <DraggableFlatList
               style={{height: theme.SCREENHEIGHT * 0.67}}
               contentContainerStyle={{
                 paddingVertical: scale(10),
                 paddingBottom: theme.SCREENHEIGHT * 0.04,
               }}
-              data={tasksData}
+              data={data}
               renderItem={rendertasks}
               showsVerticalScrollIndicator={false}
+              keyExtractor={(item, index) => `draggable-item-${item.key}`}
+              scrollPercent={5}
+              onMoveEnd={({data}) => setData(data)}
             />
           </View>
           <View>

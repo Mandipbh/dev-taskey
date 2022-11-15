@@ -1,4 +1,5 @@
 import {
+  FlatList,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -11,13 +12,12 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {Dropdown} from 'react-native-element-dropdown';
 import {useState} from 'react';
 import {scale, theme} from '../../utils';
-import {CheckBox, DatePickerModal, Label, Title} from '../../components';
+import {DatePickerModal, Label} from '../../components';
 import {
   statisticdata,
   statisticdataone,
   statisticdatathree,
   statisticdatatwo,
-  taskstype,
   statisticdataFour,
   statisticdataFive,
   statisticdataSix,
@@ -25,56 +25,49 @@ import {
   TypeTask_Distribution,
   AchievementTasksStatus,
   Timefolders,
+  TimerSpecificfolders,
 } from '../../utils/mockData';
 import CustomChart from '../../components/CustomChart';
 import moment from 'moment';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import CommonHeader from '../../components/CommonHeader';
+import {Checkbox} from 'react-native-paper';
+import ChartSection from '../../components/ChartSection';
+import SelectMultiple from 'react-native-select-multiple';
 
-const ChartSection = props => {
-  const {title, data} = props;
-  return (
-    <View style={styles.chartView}>
-      <Text style={{fontSize: 20}}>{title}</Text>
-      <View style={{flexDirection: 'row', marginTop: scale(10)}}>
-        <CustomChart chartData={data} />
-        <View style={{justifyContent: 'center'}}>
-          {data.map(i => {
-            return (
-              <>
-                <View style={{flexDirection: 'row'}}>
-                  <View
-                    style={[styles.colorBox, {backgroundColor: i.svg.fill}]}
-                  />
-                  <Text>{i.type} Tasks</Text>
-                </View>
-              </>
-            );
-          })}
-        </View>
-      </View>
-    </View>
-  );
-};
+const data = [
+  {id: 0, label: 'Crono'},
+  {id: 1, label: 'Timer'},
+  {id: 2, label: 'Counter'},
+];
+
+const Folderdata = [
+  {id: 0, label: 'folder1'},
+  {id: 1, label: 'folder2'},
+  {id: 2, label: 'folder3'},
+];
+
+const TaskData = [
+  {id: 0, label: 'Task1'},
+  {id: 1, label: 'Task2'},
+  {id: 2, label: 'Task3'},
+];
 
 const StatisticsScreen = () => {
-  const data = [
-    {id: 1, label: 'Crono'},
-    {id: 2, label: 'Timer'},
-    {id: 3, label: 'Counter'},
-  ];
-
   const [value, setvalue] = useState(null);
+  const [foldervalue, setfolderValue] = useState(null);
+  const [taskValue, setTaskValue] = useState(null);
   const [isChecked, setChecked] = useState(false);
   const [checked, setChecke] = useState(true);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [folderchecked, setFolderChecked] = useState(Timefolders);
+  const [folderSpecific_checked, setFolderSpecific_checked] =
+    useState(TimerSpecificfolders);
 
   const handlclose = () => {
     setChecked(!isChecked);
   };
-  const typeCount = taskstype.map(i => i.data.length * 10);
-  // const statusCount = taskstype.map(i => i.data.map(i => i.status).length * 10);
 
   const handleData = d => {
     if (d !== null) {
@@ -85,6 +78,46 @@ const StatisticsScreen = () => {
       console.log('starting date >> ', moment(sDate).format('DD/MM'));
       console.log('end date >> ', moment(eDate).format('DD/MM'));
     }
+  };
+
+  const handlefoldercheck = index => {
+    let tempArray = [...folderchecked];
+    tempArray[index].ischecked = !tempArray[index].ischecked;
+    setFolderChecked(tempArray);
+  };
+
+  const handlefolderSpecific_check = index => {
+    let tempArray = [...folderSpecific_checked];
+    tempArray[index].ischecked = !tempArray[index].ischecked;
+    setFolderSpecific_checked(tempArray);
+  };
+
+  const folderChekbox = ({item, index}) => {
+    console.log('selected Item', item.type, item.ischecked);
+    return (
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <Checkbox.Android
+          color={theme.colors.primary}
+          status={item.ischecked ? 'checked' : 'unchecked'}
+          onPress={() => handlefoldercheck(index)}
+        />
+        <Text>{item.type}</Text>
+      </View>
+    );
+  };
+
+  const folderSpecific_Chekbox = ({item, index}) => {
+    console.log('selected Item', item.type, item.ischecked);
+    return (
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <Checkbox.Android
+          color={theme.colors.primary}
+          status={item.ischecked ? 'checked' : 'unchecked'}
+          onPress={() => handlefolderSpecific_check(index)}
+        />
+        <Text>{item.type}</Text>
+      </View>
+    );
   };
 
   return (
@@ -99,8 +132,6 @@ const StatisticsScreen = () => {
           paddingBottom: scale(60),
           paddingHorizontal: scale(13),
         }}>
-        {/* <Title title="Staticss" style={{alignSelf: 'center'}} /> */}
-
         <CommonHeader headerTitle="Statistics" IconType={AntDesign} />
 
         <View style={styles.mainView}>
@@ -129,7 +160,7 @@ const StatisticsScreen = () => {
         <View style={styles.mainView}>
           <View style={styles.calView}>
             <Icon name="clipboard-sharp" size={scale(22)} />
-            <Label title="Select Time Range" style={styles.label} />
+            <Label title="Select Type of Task" style={styles.label} />
           </View>
           <View>
             <Dropdown
@@ -166,25 +197,13 @@ const StatisticsScreen = () => {
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                 }}>
-                <View style={styles.row}>
-                  {f.CheckBox && (
-                    <CheckBox
-                      checked={checked}
-                      onPress={() => setChecke(!checked)}
-                    />
-                  )}
-                  {f.CheckBox ? (
-                    <Text style={styles.mapText}>{`  ${f.label}`}</Text>
-                  ) : (
-                    <Text style={styles.mapText}>{f.label}</Text>
-                  )}
-                </View>
-
+                <Text style={styles.mapText}>{f.label}</Text>
                 <Text style={styles.mapText}>{f.value}</Text>
               </View>
             );
           })}
         </View>
+
         <View style={styles.mapView}>
           {statisticdatatwo.map((f, i) => {
             return (
@@ -213,6 +232,7 @@ const StatisticsScreen = () => {
             );
           })}
         </View>
+
         <View style={styles.mapView}>
           {statisticdataFour.map((f, i) => {
             return (
@@ -224,12 +244,12 @@ const StatisticsScreen = () => {
                 <View>
                   <Text style={styles.mapText}>{f.label}</Text>
                 </View>
-                {/* <Text style={styles.mapText}>{f.label}</Text> */}
                 <Text style={styles.mapText}>{f.value}</Text>
               </View>
             );
           })}
         </View>
+
         <View style={styles.mapView}>
           {statisticdataFive.map((f, i) => {
             return (
@@ -276,6 +296,7 @@ const StatisticsScreen = () => {
         </View>
 
         <ChartSection
+          style={{marginTop: scale(15)}}
           title="Type Tasks Distribution"
           data={TypeTask_Distribution}
         />
@@ -287,10 +308,29 @@ const StatisticsScreen = () => {
 
         <View style={{marginTop: scale(15)}}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text style={{fontWeight: '600', fontSize: 16}}>Time Folder</Text>
+            <Text style={{fontWeight: '600', fontSize: 16, fontWeight: '600'}}>
+              Time Folder
+            </Text>
             <TouchableOpacity onPress={() => {}}>
               <Text style={{color: 'red'}}>X Remove folder</Text>
             </TouchableOpacity>
+          </View>
+          <FlatList
+            numColumns={2}
+            data={Timefolders}
+            renderItem={folderChekbox}
+            keyExtractor={(item, index) => item.id}
+            columnWrapperStyle={styles.columnWrapperStyle}
+          />
+          <View style={{alignItems: 'center', marginVertical: scale(10)}}>
+            <Dropdown
+              placeholder="Add Folder"
+              style={styles.Dropdown}
+              data={Folderdata}
+              labelField="label"
+              valueField="id"
+              onChange={item => setfolderValue(item.value)}
+            />
           </View>
           <ChartSection title="Timer folders" data={Timefolders} />
         </View>
@@ -304,7 +344,27 @@ const StatisticsScreen = () => {
               <Text style={{color: 'red'}}>X Remove folder</Text>
             </TouchableOpacity>
           </View>
-          <ChartSection title="Timer folders" data={Timefolders} />
+          <FlatList
+            numColumns={2}
+            data={TimerSpecificfolders}
+            renderItem={folderSpecific_Chekbox}
+            keyExtractor={(item, index) => item.id}
+            columnWrapperStyle={styles.columnWrapperStyle}
+          />
+          <View style={{alignItems: 'center', marginVertical: scale(10)}}>
+            <Dropdown
+              placeholder="Add Folder"
+              style={styles.Dropdown}
+              data={TaskData}
+              labelField="label"
+              valueField="id"
+              onChange={item => setTaskValue(item.value)}
+            />
+          </View>
+          <ChartSection
+            title="Timer Sports Folder"
+            data={TimerSpecificfolders}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -339,8 +399,7 @@ const styles = StyleSheet.create({
   Dropdown: {
     paddingHorizontal: 15,
     width: theme.SCREENWIDTH * 0.45,
-    backgroundColor: theme.colors.gray1,
-    borderWidth: Platform.OS === 'android' ? 0.8 : 0.3,
+    borderWidth: Platform.OS === 'android' ? 1 : 0.3,
   },
   mapView: {
     marginTop: scale(25),
@@ -348,7 +407,7 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     borderColor: theme.colors.gray,
   },
-  mapText: {fontWeight: '600', fontSize: 16},
+  mapText: {fontWeight: '400', fontSize: 16},
   chartView: {
     backgroundColor: theme.colors.gray1,
     padding: scale(15),
@@ -372,9 +431,12 @@ const styles = StyleSheet.create({
   },
   colorBox: {
     height: 20,
-    // borderWidth: 1,
     width: 18,
     margin: 2,
     marginHorizontal: 8,
+  },
+  columnWrapperStyle: {
+    justifyContent: 'space-between',
+    marginTop: scale(5),
   },
 });
