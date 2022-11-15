@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
   Image,
+  Platform,
 } from 'react-native';
 import React, {useState} from 'react';
 import Icon1 from 'react-native-vector-icons/Foundation';
@@ -23,6 +24,7 @@ import {folders, tasksData} from '../../utils/mockData';
 import RoundIcon from '../../components/RoundIcon';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
+import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 
 const HomeScreen = () => {
   const [folderData, setFolderData] = useState(folders);
@@ -32,6 +34,7 @@ const HomeScreen = () => {
   const navigation = useNavigation();
   const [selectedType, setType] = useState(1);
   const [calenderModel, setCalenderModel] = useState(false);
+  const [legendView, setlegendView] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
@@ -65,203 +68,220 @@ const HomeScreen = () => {
       console.log('end date >> ', moment(eDate).format('DD/MM'));
     }
   };
+  const config = {
+    velocityThreshold: 0.3,
+    directionalOffsetThreshold: 20,
+  };
+  const onSwipe = (gestureName, gestureState, index) => {
+    const {SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT} = swipeDirections;
+    switch (gestureName) {
+      case SWIPE_UP:
+        openIndex == index ? setOpenIndex(null) : setOpenIndex(index);
+        break;
+      case SWIPE_DOWN:
+        openIndex == index ? setOpenIndex(null) : setOpenIndex(index);
+        break;
+      case SWIPE_LEFT:
+        break;
+      case SWIPE_RIGHT:
+        break;
+    }
+  };
+
   const rendertasks = ({item, index}) => {
     return (
       <>
-        <View
-          style={[
-            styles.taskCard,
-            {borderColor: item.color, borderWidth: scale(1)},
-          ]}
-          key={index}
-          // onPress={() => {
-          //   navigation.navigate('TaskDetails', {note: item});
-          // }}
-        >
-          <TouchableOpacity
-            onPress={() => setOpenFolderModal(true)}
-            style={[styles.taskContainer, {borderColor: item.color}]}>
-            <Icon2
-              name="aperture"
-              size={scale(22)}
-              color={theme.colors.primary2}
-            />
-            <Label
-              title={item?.folder}
-              style={[styles.headerTitle, {width: '60%'}]}
-            />
-            <Label title={item?.totalmins} style={[styles.headerTitle]} />
-            <Label title={item?.done} style={[styles.headerTitle]} />
-          </TouchableOpacity>
-          <View style={[styles.taskContainer, {borderColor: item.color}]}>
-            <Label title={'Status'} style={[styles.headerTitle]} />
-            <Label
-              title={'Name'}
-              style={[styles.headerTitle, {width: '35%'}]}
-            />
-            <Label title={'Path'} style={[styles.headerTitle]} />
-            <View style={styles.row}>
-              <Label title={'% '} style={[styles.headerTitle]} />
-              <Icon2 name="folder" size={scale(22)} />
+        <GestureRecognizer
+          onSwipe={(direction, state) => onSwipe(direction, state, index)}
+          config={config}>
+          <View
+            style={[
+              styles.taskCard,
+              {borderColor: item.color, borderWidth: scale(1)},
+            ]}
+            key={index}
+            // onPress={() => {
+            //   navigation.navigate('TaskDetails', {note: item});
+            // }}
+          >
+            <View style={[styles.taskContainer, {borderColor: item.color}]}>
+              <Icon2
+                name="aperture"
+                size={scale(22)}
+                color={theme.colors.primary2}
+              />
+              <Label
+                title={item?.folder}
+                style={[styles.headerTitle, {width: '60%'}]}
+              />
+              <Label title={item?.totalmins} style={[styles.headerTitle]} />
+              <Label title={item?.done} style={[styles.headerTitle]} />
+            </View>
+            <View style={[styles.taskContainer, {borderColor: item.color}]}>
+              <Label title={'Status'} style={[styles.headerTitle]} />
+              <Label
+                title={'Name'}
+                style={[styles.headerTitle, {width: '35%'}]}
+              />
+              <Label title={'Path'} style={[styles.headerTitle]} />
+              <View style={styles.row}>
+                <Label title={'% '} style={[styles.headerTitle]} />
+                <Icon2 name="folder" size={scale(22)} />
+              </View>
+
+              <Icon2 name="award" size={scale(22)} />
             </View>
 
-            <Icon2 name="award" size={scale(22)} />
+            {item?.tasks && item?.tasks.length > 3 && openIndex !== index
+              ? item?.tasks.slice(0, 3)?.map((titem, tindex) => {
+                  console.log('length ', item?.tasks.length);
+                  return (
+                    <TouchableOpacity
+                      style={[
+                        styles.row,
+                        {
+                          justifyContent: 'space-between',
+                          borderColor: item.color,
+                          borderBottomWidth: scale(0.7),
+                          paddingVertical: scale(3),
+                          borderColor:
+                            item?.tasks.length == tindex + 1
+                              ? theme.colors.transparent
+                              : item.color,
+                          paddingHorizontal: scale(5),
+                        },
+                      ]}>
+                      <View style={styles.statusView}>
+                        {titem.status ? (
+                          <Icon1
+                            name="play"
+                            size={scale(25)}
+                            color={theme.colors.green}
+                          />
+                        ) : (
+                          <Icon2
+                            name="pause"
+                            size={scale(20)}
+                            color={theme.colors.orange}
+                            style={{marginLeft: scale(-5)}}
+                          />
+                        )}
+                        {tindex % 2 ? (
+                          <Icon1
+                            name="social-zerply"
+                            size={scale(20)}
+                            color={theme.colors.green}
+                          />
+                        ) : (
+                          <Icon3
+                            name="clock-time-seven"
+                            size={scale(20)}
+                            color={theme.colors.lightGreen}
+                          />
+                        )}
+                      </View>
+
+                      <Label
+                        title={titem.title}
+                        style={{width: '45%', fontSize: scale(12)}}
+                      />
+                      <View style={styles.staticDetails}>
+                        <Label title={titem?.path} />
+                        <Label title={`${titem?.percentage} %`} />
+                        <Label title={`-`} />
+                      </View>
+                    </TouchableOpacity>
+                  );
+                })
+              : item?.tasks?.map((titem, tindex) => {
+                  return (
+                    <TouchableOpacity
+                      style={[
+                        styles.row,
+                        {
+                          justifyContent: 'space-between',
+                          borderColor:
+                            item?.tasks.length == tindex + 1
+                              ? theme.colors.transparent
+                              : item.color,
+                          borderBottomWidth: scale(0.7),
+                          paddingVertical: scale(3),
+                          paddingHorizontal: scale(5),
+                        },
+                      ]}>
+                      <View style={styles.statusView}>
+                        {titem.status ? (
+                          <Icon1
+                            name="play"
+                            size={scale(25)}
+                            color={theme.colors.green}
+                          />
+                        ) : (
+                          <Icon2
+                            name="pause"
+                            size={scale(20)}
+                            color={theme.colors.orange}
+                            style={{marginLeft: scale(-5)}}
+                          />
+                        )}
+                        {tindex % 2 ? (
+                          <Icon1
+                            name="social-zerply"
+                            size={scale(20)}
+                            color={theme.colors.green}
+                          />
+                        ) : (
+                          <Icon3
+                            name="clock-time-seven"
+                            size={scale(20)}
+                            color={theme.colors.lightGreen}
+                          />
+                        )}
+                      </View>
+
+                      <Label
+                        title={titem.title}
+                        style={{width: '45%', fontSize: scale(12)}}
+                      />
+                      <View style={styles.staticDetails}>
+                        <Label title={titem?.path} />
+                        <Label title={`${titem?.percentage} %`} />
+                        <Label title={`-`} />
+                      </View>
+                    </TouchableOpacity>
+                  );
+                })}
           </View>
-          {item?.tasks && item?.tasks.length > 3 && openIndex !== index
-            ? item?.tasks.slice(0, 3)?.map((titem, tindex) => {
-                console.log('length ', item?.tasks.length);
-                return (
-                  <TouchableOpacity
-                    style={[
-                      styles.row,
-                      {
-                        justifyContent: 'space-between',
-                        borderColor: item.color,
-                        borderBottomWidth: scale(0.7),
-                        paddingVertical: scale(3),
-                        borderColor:
-                          item?.tasks.length == tindex + 1
-                            ? theme.colors.transparent
-                            : item.color,
-                        paddingHorizontal: scale(5),
-                      },
-                    ]}
-                    onPress={() => {
-                      // console.log(titem);
-                      navigation.navigate('CreateFolder', {
-                        editData: titem,
-                      });
-                    }}>
-                    <View style={styles.statusView}>
-                      {titem.status ? (
-                        <Icon1
-                          name="play"
-                          size={scale(25)}
-                          color={theme.colors.green}
-                        />
-                      ) : (
-                        <Icon2
-                          name="pause"
-                          size={scale(20)}
-                          color={theme.colors.orange}
-                          style={{marginLeft: scale(-5)}}
-                        />
-                      )}
-                      {tindex % 2 ? (
-                        <Icon1
-                          name="social-zerply"
-                          size={scale(20)}
-                          color={theme.colors.green}
-                        />
-                      ) : (
-                        <Icon3
-                          name="clock-time-seven"
-                          size={scale(20)}
-                          color={theme.colors.lightGreen}
-                        />
-                      )}
-                    </View>
-
-                    <Label
-                      title={titem.title}
-                      style={{width: '45%', fontSize: scale(12)}}
-                    />
-                    <View style={styles.staticDetails}>
-                      <Label title={titem?.path} />
-                      <Label title={`${titem?.percentage} %`} />
-                      <Label title={`-`} />
-                    </View>
-                  </TouchableOpacity>
-                );
-              })
-            : item?.tasks?.map((titem, tindex) => {
-                return (
-                  <TouchableOpacity
-                    style={[
-                      styles.row,
-                      {
-                        justifyContent: 'space-between',
-                        borderColor:
-                          item?.tasks.length == tindex + 1
-                            ? theme.colors.transparent
-                            : item.color,
-                        borderBottomWidth: scale(0.7),
-                        paddingVertical: scale(3),
-                        paddingHorizontal: scale(5),
-                      },
-                    ]}>
-                    <View style={styles.statusView}>
-                      {titem.status ? (
-                        <Icon1
-                          name="play"
-                          size={scale(25)}
-                          color={theme.colors.green}
-                        />
-                      ) : (
-                        <Icon2
-                          name="pause"
-                          size={scale(20)}
-                          color={theme.colors.orange}
-                          style={{marginLeft: scale(-5)}}
-                        />
-                      )}
-                      {tindex % 2 ? (
-                        <Icon1
-                          name="social-zerply"
-                          size={scale(20)}
-                          color={theme.colors.green}
-                        />
-                      ) : (
-                        <Icon3
-                          name="clock-time-seven"
-                          size={scale(20)}
-                          color={theme.colors.lightGreen}
-                        />
-                      )}
-                    </View>
-
-                    <Label
-                      title={titem.title}
-                      style={{width: '45%', fontSize: scale(12)}}
-                    />
-                    <View style={styles.staticDetails}>
-                      <Label title={titem?.path} />
-                      <Label title={`${titem?.percentage} %`} />
-                      <Label title={`-`} />
-                    </View>
-                  </TouchableOpacity>
-                );
-              })}
-        </View>
-        {/* arrow-down-bold */}
-        <View style={[styles.move, {borderColor: item.color}]}>
-          <Icon3
-            name={
-              openIndex == index ? 'arrow-up-bold' : 'arrow-up-bold-outline'
-            }
-            size={scale(20)}
-            onPress={() => {
-              // alert('up');
-              openIndex == index ? setOpenIndex(null) : setOpenIndex(index);
-            }}
-            color={openIndex == index ? item?.color : theme.colors.black}
-          />
-          <Icon3
-            name={
-              item?.tasks.length === 0 || item?.tasks.length === undefined
-                ? 'arrow-down-bold-outline'
-                : openIndex !== index
-                ? 'arrow-down-bold'
-                : 'arrow-down-bold-outline'
-            }
-            size={scale(20)}
-            onPress={() => {
-              // alert('down');
-              setOpenIndex(index);
-            }}
-            color={openIndex !== index ? item.color : theme.colors.black}
-          />
-        </View>
+          {/* arrow-down-bold */}
+          {/* <View style={[styles.move, {borderColor: item.color}]}>
+            <Icon3
+              name={
+                openIndex == index ? 'arrow-up-bold' : 'arrow-up-bold-outline'
+              }
+              size={scale(20)}
+              onPress={() => {
+                // alert('up');
+                openIndex == index ? setOpenIndex(null) : setOpenIndex(index);
+              }}
+              color={openIndex == index ? item?.color : theme.colors.black}
+            />
+            <Icon3
+              name={
+                item?.tasks.length === 0 || item?.tasks.length === undefined
+                  ? 'arrow-down-bold-outline'
+                  : openIndex !== index
+                  ? 'arrow-down-bold'
+                  : 'arrow-down-bold-outline'
+              }
+              size={scale(20)}
+              onPress={() => {
+                // alert('down');
+                setOpenIndex(index);
+              }}
+              color={openIndex !== index ? item.color : theme.colors.black}
+            />
+          </View> */}
+        </GestureRecognizer>
       </>
     );
   };
@@ -301,7 +321,7 @@ const HomeScreen = () => {
                       name="chevron-right"
                       size={scale(30)}
                       onPress={() => {
-                        selectedType <= 2 ? setType(type.id + 1) : null;
+                        selectedType <= 2 ? setType(type.id + 1) : setType(1);
                       }}
                     />
                   </View>
@@ -330,48 +350,20 @@ const HomeScreen = () => {
           </View>
         </View>
         <View style={styles.mainCOntainer}>
-          {/* <View>
-            <ScrollView
-              horizontal
-              style={styles.tabViewCon}
-              showsHorizontalScrollIndicator={false}>
-              {folderData.map((f, i) => {
-                return (
-                  <TouchableOpacity
-                    onPress={() => {
-                      setSelectedFolder(f.id);
-                    }}
-                    style={[
-                      styles.tabView,
-                      {
-                        backgroundColor:
-                          f.id === selectedFolder
-                            ? theme.colors.black
-                            : theme.colors.white,
-                      },
-                    ]}>
-                    <Label
-                      title={f.name}
-                      style={{
-                        color:
-                          f.id === selectedFolder
-                            ? theme.colors.white
-                            : theme.colors.black,
-                      }}
-                    />
-                  </TouchableOpacity>
-                );
-              })}
-            </ScrollView>
-          </View> */}
-          <View style={{height: theme.SCREENHEIGHT * 0.8}}>
+          <View
+            style={{
+              height:
+                Platform.OS === 'ios'
+                  ? theme.SCREENHEIGHT * 0.71
+                  : theme.SCREENHEIGHT * 0.765,
+            }}>
             {/*   <View style={styles.dataCon}>
               <Label title={'Tasks'} style={styles.subt} />
               <Icon2 name="calendar" size={scale(22)} />
             </View> */}
 
             <FlatList
-              // style={{height: theme.SCREENHEIGHT * 0.67}}
+              style={{height: theme.SCREENHEIGHT * 0.67}}
               contentContainerStyle={{
                 paddingVertical: scale(10),
                 paddingBottom: theme.SCREENHEIGHT * 0.04,
@@ -380,13 +372,35 @@ const HomeScreen = () => {
               renderItem={rendertasks}
               showsVerticalScrollIndicator={false}
             />
-            {/* <RoundIcon
-              style={styles.roundIcon}
-              name={'plus'}
+          </View>
+          <View>
+            <TouchableOpacity
               onPress={() => {
-                navigation.navigate('CreateTask');
+                setlegendView(!legendView);
               }}
-            /> */}
+              style={[
+                styles.row,
+                {
+                  alignSelf: 'center',
+                  bottom: legendView ? scale(-20) : 0,
+                },
+              ]}>
+              <>
+                <Title title="Folder Legend" />
+                <Label
+                  title={legendView ? '(click to show)' : '(click to hide)'}
+                  style={styles.hide}
+                />
+              </>
+            </TouchableOpacity>
+            {!legendView && (
+              <View style={styles.legendtabView}>
+                <Label title="Icon" style={styles.title} />
+                <Label title="Name" style={styles.title} />
+                <Label title="mn aske" style={styles.title} />
+                <Label title="⅒ of tota" style={styles.title} />
+              </View>
+            )}
           </View>
         </View>
       </View>
@@ -495,6 +509,7 @@ const styles = StyleSheet.create({
   selctCon: {
     justifyContent: 'center',
     alignItems: 'center',
+    minWidth: theme.SCREENWIDTH * 0.35,
   },
   taskContainer: {
     flexDirection: 'row',
@@ -530,5 +545,24 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.white,
     alignSelf: 'center',
     marginTop: scale(-25),
+  },
+  legendtabView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: scale(5),
+    borderWidth: scale(2),
+    marginBottom: scale(2),
+    borderTopLeftRadius: scale(10),
+    borderTopRightRadius: scale(10),
+    height: scale(30),
+  },
+  title: {
+    fontSize: scale(12),
+    fontWeight: '600',
+  },
+  hide: {
+    color: theme.colors.gray,
+    fontSize: scale(13),
   },
 });
