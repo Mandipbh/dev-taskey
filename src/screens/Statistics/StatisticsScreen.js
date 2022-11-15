@@ -1,5 +1,4 @@
 import {
-  Modal,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -10,9 +9,7 @@ import {
 import React from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Dropdown} from 'react-native-element-dropdown';
-import {Checkbox} from 'react-native-paper';
 import {useState} from 'react';
-import Calendar from 'react-native-calendars/src/calendar';
 import {scale, theme} from '../../utils';
 import {CheckBox, DatePickerModal, Label, Title} from '../../components';
 import {
@@ -21,11 +18,44 @@ import {
   statisticdatathree,
   statisticdatatwo,
   taskstype,
-  colorData,
-  colorDataTwo,
+  statisticdataFour,
+  statisticdataFive,
+  statisticdataSix,
+  statisticdataSeven,
+  TypeTask_Distribution,
+  AchievementTasksStatus,
+  Timefolders,
 } from '../../utils/mockData';
 import CustomChart from '../../components/CustomChart';
 import moment from 'moment';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import CommonHeader from '../../components/CommonHeader';
+
+const ChartSection = props => {
+  const {title, data} = props;
+  return (
+    <View style={styles.chartView}>
+      <Text style={{fontSize: 20}}>{title}</Text>
+      <View style={{flexDirection: 'row', marginTop: scale(10)}}>
+        <CustomChart chartData={data} />
+        <View style={{justifyContent: 'center'}}>
+          {data.map(i => {
+            return (
+              <>
+                <View style={{flexDirection: 'row'}}>
+                  <View
+                    style={[styles.colorBox, {backgroundColor: i.svg.fill}]}
+                  />
+                  <Text>{i.type} Tasks</Text>
+                </View>
+              </>
+            );
+          })}
+        </View>
+      </View>
+    </View>
+  );
+};
 
 const StatisticsScreen = () => {
   const data = [
@@ -35,16 +65,17 @@ const StatisticsScreen = () => {
   ];
 
   const [value, setvalue] = useState(null);
-  const [staticData, setStaticData] = useState(statisticdata);
   const [isChecked, setChecked] = useState(false);
   const [checked, setChecke] = useState(true);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+
   const handlclose = () => {
     setChecked(!isChecked);
   };
   const typeCount = taskstype.map(i => i.data.length * 10);
-  const statusCount = taskstype.map(i => i.data.map(i => i.status).length * 10);
+  // const statusCount = taskstype.map(i => i.data.map(i => i.status).length * 10);
+
   const handleData = d => {
     if (d !== null) {
       const sDate = Object.keys(d)[0];
@@ -55,6 +86,7 @@ const StatisticsScreen = () => {
       console.log('end date >> ', moment(eDate).format('DD/MM'));
     }
   };
+
   return (
     <SafeAreaView
       style={{
@@ -67,7 +99,9 @@ const StatisticsScreen = () => {
           paddingBottom: scale(60),
           paddingHorizontal: scale(13),
         }}>
-        <Title title="Staticss" style={{alignSelf: 'center'}} />
+        {/* <Title title="Staticss" style={{alignSelf: 'center'}} /> */}
+
+        <CommonHeader headerTitle="Statistics" IconType={AntDesign} />
 
         <View style={styles.mainView}>
           <View style={styles.calView}>
@@ -180,28 +214,97 @@ const StatisticsScreen = () => {
           })}
         </View>
         <View style={styles.mapView}>
-          {statisticdatathree.map((f, i) => {
+          {statisticdataFour.map((f, i) => {
             return (
               <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                 }}>
-                <Text style={styles.mapText}>{`  ${f.label}`}</Text>
+                <View>
+                  <Text style={styles.mapText}>{f.label}</Text>
+                </View>
+                {/* <Text style={styles.mapText}>{f.label}</Text> */}
                 <Text style={styles.mapText}>{f.value}</Text>
               </View>
             );
           })}
         </View>
-        <View style={styles.chartView}>
-          <View style={styles.innerView}>
-            <CustomChart Yourdata={statusCount} chartData={colorData} />
-          </View>
+        <View style={styles.mapView}>
+          {statisticdataFive.map((f, i) => {
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={styles.mapText}>{f.label}</Text>
+                <Text style={styles.mapText}>{f.value}</Text>
+              </View>
+            );
+          })}
         </View>
-        <View style={styles.chartView}>
-          <View style={styles.innerView}>
-            <CustomChart Yourdata={statusCount} chartData={colorDataTwo} />
+
+        <View style={styles.mapView}>
+          {statisticdataSix.map((f, i) => {
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={styles.mapText}>{f.label}</Text>
+                <Text style={styles.mapText}>{f.value}</Text>
+              </View>
+            );
+          })}
+        </View>
+
+        <View style={styles.mapView}>
+          {statisticdataSeven.map((f, i) => {
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={styles.mapText}>{f.label}</Text>
+                <Text style={styles.mapText}>{f.value}</Text>
+              </View>
+            );
+          })}
+        </View>
+
+        <ChartSection
+          title="Type Tasks Distribution"
+          data={TypeTask_Distribution}
+        />
+
+        <ChartSection
+          title="Achievement Tasks Status"
+          data={AchievementTasksStatus}
+        />
+
+        <View style={{marginTop: scale(15)}}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <Text style={{fontWeight: '600', fontSize: 16}}>Time Folder</Text>
+            <TouchableOpacity onPress={() => {}}>
+              <Text style={{color: 'red'}}>X Remove folder</Text>
+            </TouchableOpacity>
           </View>
+          <ChartSection title="Timer folders" data={Timefolders} />
+        </View>
+
+        <View style={{marginTop: scale(15)}}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <Text style={{fontWeight: '600', fontSize: 16}}>
+              Time Specific Folders
+            </Text>
+            <TouchableOpacity onPress={() => {}}>
+              <Text style={{color: 'red'}}>X Remove folder</Text>
+            </TouchableOpacity>
+          </View>
+          <ChartSection title="Timer folders" data={Timefolders} />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -239,12 +342,17 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.gray1,
     borderWidth: Platform.OS === 'android' ? 0.8 : 0.3,
   },
-  mapView: {marginTop: scale(25), borderBottomWidth: 1, paddingBottom: 5},
+  mapView: {
+    marginTop: scale(25),
+    borderBottomWidth: 0.5,
+    paddingBottom: 5,
+    borderColor: theme.colors.gray,
+  },
   mapText: {fontWeight: '600', fontSize: 16},
   chartView: {
     backgroundColor: theme.colors.gray1,
-    paddingVertical: scale(20),
-    marginVertical: scale(10),
+    padding: scale(15),
+    marginVertical: scale(5),
   },
   innerView: {
     marginLeft: -theme.SCREENWIDTH * 0.3,
@@ -255,5 +363,18 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+  },
+  chartTitle: {
+    paddingLeft: scale(15),
+    paddingBottom: scale(15),
+    fontSize: 20,
+    fontWeight: '400',
+  },
+  colorBox: {
+    height: 20,
+    // borderWidth: 1,
+    width: 18,
+    margin: 2,
+    marginHorizontal: 8,
   },
 });

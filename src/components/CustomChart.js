@@ -1,35 +1,36 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {PieChart} from 'react-native-svg-charts';
+import {scale} from '../utils';
 
-const CustomChart = ({Yourdata, chartData}) => {
-  const data = Yourdata;
+const CustomChart = ({chartData}) => {
+  // const data = Yourdata;
 
-  const randomColor = () =>
-    ('#' + ((Math.random() * 0xffffff) << 0).toString(16) + '000000').slice(
-      0,
-      7,
-    );
+  // const randomColor = () =>
+  //   ('#' + ((Math.random() * 0xffffff) << 0).toString(16) + '000000').slice(
+  //     0,
+  //     7,
+  //   );
 
-  const pieData = data
-    .filter(value => value > 0)
-    .map((value, index) => ({
-      value,
-      svg: {
-        fill: randomColor(),
-        onPress: () => console.log('press', index),
-      },
-      key: `pie-${index}`,
-    }));
+  // const pieData = data
+  //   .filter(value => value > 0)
+  //   .map((value, index) => ({
+  //     value,
+  //     svg: {
+  //       fill: randomColor(),
+  //       onPress: () => console.log('press', index),
+  //     },
+  //     key: `pie-${index}`,
+  //   }));
 
   return (
     <View style={styles.container}>
       <PieChart
         innerRadius={'3%'}
-        style={{height: 200, borderRadius: 10}}
+        style={{height: 200, borderRadius: 10, width: 200}}
         data={chartData}
       />
-      <View style={styles.labelContainer}>{console.log(randomColor())}</View>
+      {/* <View style={styles.labelContainer}>{console.log(randomColor())}</View> */}
     </View>
   );
 };

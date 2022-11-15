@@ -302,50 +302,140 @@ const statisticdatathree = [
     value: 500,
   },
 ];
-const colorData = [
+
+const statisticdataFour = [
+  {
+    id: '1',
+    label: 'Deleted Tasks',
+    value: 200,
+    CheckBox: true,
+    isCheckBox: true,
+  },
+  {
+    id: '2',
+    label: 'Failed Tasks',
+    value: 500,
+    CheckBox: true,
+    isCheckBox: true,
+  },
+  {
+    id: '3',
+    label: 'Percentage of failed Tasks',
+    value: '50%',
+  },
+];
+
+const statisticdataFive = [
+  {
+    id: '1',
+    label: 'Total Crono Tasks',
+    value: 2000,
+  },
+  {
+    id: '2',
+    label: 'Percentage of Crono Tasks',
+    value: '20%',
+  },
+];
+
+const statisticdataSix = [
+  {
+    id: '1',
+    label: 'Total Timer Tasks',
+    value: 3000,
+  },
+  {
+    id: '2',
+    label: 'Percentage of Timer Tasks',
+    value: '30%',
+  },
+];
+
+const statisticdataSeven = [
+  {
+    id: '1',
+    label: 'Total Counter Tasks',
+    value: 5000,
+  },
+  {
+    id: '2',
+    label: 'Percentage of Counter Tasks',
+    value: '50%',
+  },
+];
+
+const TypeTask_Distribution = [
   {
     key: 1,
-    value: 50,
+    value: 20,
     svg: {fill: '#daa520'},
+    type: 'crono',
   },
   {
     key: 2,
-    value: 50,
-    svg: {fill: '#ffe4e1'},
+    value: 30,
+    svg: {fill: 'white'},
+    type: 'Timer',
   },
   {
     key: 3,
-    value: 40,
+    value: 50,
     svg: {fill: '#600080'},
+    type: 'Counter',
   },
 ];
-const colorDataTwo = [
+
+const AchievementTasksStatus = [
   {
     key: 1,
     value: 50,
     svg: {fill: '#4682b4'},
+    type: 'Completed',
   },
   {
     key: 2,
-    value: 50,
+    value: 12,
     svg: {fill: '#ff0000'},
+    type: 'Failed',
   },
   {
     key: 3,
-    value: 40,
+    value: 38,
     svg: {fill: '#008000'},
+    type: 'inProgress',
   },
 ];
+
+const Timefolders = [
+  {
+    key: 1,
+    value: 91,
+    svg: {fill: '#4682b4'},
+    type: 'Sport',
+  },
+  {
+    key: 2,
+    value: 9,
+    svg: {fill: '#FFA500'},
+    type: 'Global Timer',
+  },
+];
+
 export {
   folders,
   tasksData,
   metaData,
   typeData,
   chips,
+  AchievementTasksStatus,
   statisticdata,
   statisticdataone,
   statisticdatatwo,
   statisticdatathree,
-  colorData,
-  colorDataTwo,
+  statisticdataFour,
+  statisticdataFive,
+  statisticdataSix,
+  statisticdataSeven,
+  TypeTask_Distribution,
+  Timefolders,
 };
