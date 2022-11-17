@@ -16,12 +16,14 @@ import Icon from 'react-native-vector-icons/Feather';
 import {Label, Title} from '../Label';
 
 const DatePickerModal = props => {
-  const {isVisible, close, dateRange} = props;
+  const {isVisible, close, dateRange, onDayPress, markedDates, onSavePress} =
+    props;
   const [myDate, setMyDate] = useState('');
-  function onDayPress({...date}) {
-    setMyDate(date.dateString);
-  }
-  const [markedDates, setMarkedDates] = useState(null);
+
+  // function onDayPress({...date}) {
+  //   setMyDate(date.dateString);
+  // }
+  // const [markedDates, setMarkedDates] = useState(null);
 
   const handleDayPress = async day => {
     await setMarkedDates({
@@ -29,23 +31,23 @@ const DatePickerModal = props => {
         startingDay: true,
         color: theme.colors.primary1,
       },
-      [moment(day.dateString).add(1, 'days').format('YYYY-MM-DD')]: {
+      [moment(day.dateString).add(1, 'days').format('DD/MM')]: {
         color: theme.colors.primary1,
       },
-      [moment(day.dateString).add(2, 'days').format('YYYY-MM-DD')]: {
+      [moment(day.dateString).add(2, 'days').format('DD/MM')]: {
         color: theme.colors.primary1,
       },
-      [moment(day.dateString).add(3, 'days').format('YYYY-MM-DD')]: {
+      [moment(day.dateString).add(3, 'days').format('DD/MM')]: {
         endingDay: true,
         color: theme.colors.primary1,
       },
     });
 
-    close();
+    // close();
   };
-  useEffect(() => {
-    dateRange(markedDates);
-  }, [markedDates]);
+  // useEffect(() => {
+  //   dateRange(markedDates);
+  // }, [markedDates]);
   return (
     <Modal animationType={'none'} visible={isVisible} onRequestClose={() => {}}>
       <View style={styles.mainView}>
@@ -54,9 +56,21 @@ const DatePickerModal = props => {
         <Icon onPress={close} name="x" size={30} style={styles.cancle} />
       </View>
       <Calendar
-        markedDates={markedDates}
+        onDayPress={onDayPress}
+        monthFormat={'yyyy MMM'}
+        hideDayNames={false}
         markingType={'period'}
-        onDayPress={handleDayPress}
+        markedDates={markedDates}
+        theme={{
+          // selectedDayBackgroundColor: '#646464',
+          // selectedDayTextColor: 'white',
+          // monthTextColor: 'blue',
+          // dayTextColor: 'black',
+          // textMonthFontSize: 18,
+          // textDayHeaderFontSize: 16,
+          // arrowColor: '#e6e6e6',
+          dotColor: 'black',
+        }}
       />
       {/* <Calendar
         style={{marginTop: scale(20)}}
@@ -81,6 +95,12 @@ const DatePickerModal = props => {
           },
         }}
       /> */}
+
+      <TouchableOpacity
+        style={{alignItems: 'center', marginTop: scale(30)}}
+        onPress={onSavePress}>
+        <Text>Save</Text>
+      </TouchableOpacity>
     </Modal>
   );
 };

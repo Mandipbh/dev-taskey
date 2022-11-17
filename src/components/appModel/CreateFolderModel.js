@@ -14,9 +14,10 @@ import InputBox from '../InputBox';
 import {Title, Label} from '../Label';
 import {metaData, typeData} from '../../utils/mockData';
 import ColorPickerModel from './ColorPickerModel';
+import {Item} from 'react-native-paper/lib/typescript/components/List/List';
 
 const CreateFolderModel = props => {
-  const {isVisible, close, title, subTitle} = props;
+  const {isVisible, close, title, subTitle, editFolder} = props;
   const [type, setType] = useState(0);
   const [selMeta, setMeta] = useState(0);
   const [colorPicker, setColorPicker] = useState(false);
@@ -29,6 +30,7 @@ const CreateFolderModel = props => {
   const handleSave = () => {
     close(selColor, folderName);
   };
+  console.log(editFolder);
   return (
     <Modal
       transparent={true}
@@ -43,7 +45,7 @@ const CreateFolderModel = props => {
             color={theme.colors.primary2}
             onPress={close}
           />
-          <Title title="Create Folder" />
+          <Title title="Edit Folder" />
           <Icon
             size={scale(22)}
             color={theme.colors.primary2}
@@ -60,6 +62,7 @@ const CreateFolderModel = props => {
                 setFolderName(txt);
               }}
               style={styles.input}
+              value={editFolder?.folder}
             />
           </View>
         </View>

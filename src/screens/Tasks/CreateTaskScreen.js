@@ -67,7 +67,7 @@ const CreateTaskScreen = props => {
             props?.route?.params?.editData
               ? () => (
                   <TouchableOpacity
-                    style={{left: scale(7)}}
+                    // style={{left: scale(7)}}
                     onPress={() => {
                       navigation.replace('Tabs');
                     }}

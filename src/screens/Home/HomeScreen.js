@@ -23,6 +23,7 @@ import {images, scale, theme} from '../../utils';
 import {folders, tasksData} from '../../utils/mockData';
 import RoundIcon from '../../components/RoundIcon';
 import {useNavigation} from '@react-navigation/native';
+import {Calendar} from 'react-native-calendars';
 import moment from 'moment';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import DraggableFlatList from 'react-native-draggable-dynamic-flatlist';
@@ -39,6 +40,10 @@ const HomeScreen = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [data, setData] = useState(tasksData);
+  const [startDay, setStartDay] = useState(null);
+  const [endDay, setEndDay] = useState(null);
+  const [markedDates, setMarkedDates] = useState(null);
+  const [editFolder, setEditFolder] = useState(null);
 
   const taskType = [
     {
@@ -96,17 +101,20 @@ const HomeScreen = () => {
         <GestureRecognizer
           onSwipe={(direction, state) => onSwipe(direction, state, index)}
           config={config}>
-          <TouchableOpacity onLongPress={move} onPressOut={moveEnd}>
+          <TouchableOpacity
+            onLongPress={move}
+            onPressOut={moveEnd}
+            onPress={() => {
+              setEditFolder(item);
+              // navigation.navigate('TaskDetails', {note: item});
+              setOpenFolderModal(true);
+            }}>
             <View
               style={[
                 styles.taskCard,
                 {borderColor: item.color, borderWidth: scale(1)},
               ]}
-              key={index}
-              // onPress={() => {
-              //   navigation.navigate('TaskDetails', {note: item});
-              // }}
-            >
+              key={index}>
               <View style={[styles.taskContainer, {borderColor: item.color}]}>
                 <Icon2
                   name="aperture"
@@ -153,7 +161,10 @@ const HomeScreen = () => {
                                 : item.color,
                             paddingHorizontal: scale(5),
                           },
-                        ]}>
+                        ]}
+                        onPress={() =>
+                          navigation.navigate('CreateTask', {editData: titem})
+                        }>
                         <View style={styles.statusView}>
                           {titem.status ? (
                             <Icon1
@@ -272,8 +283,8 @@ const HomeScreen = () => {
                   <Image
                     source={type.icon}
                     style={{
-                      height: scale(25),
-                      width: scale(25),
+                      height: type.id === 2 ? scale(28) : scale(35),
+                      width: type.id === 2 ? scale(28) : scale(35),
                       resizeMode: 'contain',
                     }}
                   />
@@ -282,7 +293,9 @@ const HomeScreen = () => {
                       name="chevron-left"
                       size={scale(30)}
                       onPress={() => {
-                        selectedType > 1 ? setType(type.id - 1) : null;
+                        selectedType > 1
+                          ? setType(type.id - 1)
+                          : setType(type.id + 2);
                       }}
                     />
                     <View style={styles.selctCon}>
@@ -311,7 +324,7 @@ const HomeScreen = () => {
               // {width: scale(70), justifyContent: 'space-around'},
             ]}>
             <Label
-              title={startDate == null ? 'Today  ' : `${startDate}-${endDate} `}
+              title={markedDates == null ? 'Today  ' : `${startDay}-${endDay} `}
               style={{fontWeight: '600', fontSize: scale(10)}}
             />
             <Icon2
@@ -387,11 +400,57 @@ const HomeScreen = () => {
         close={() => {
           setCalenderModel(false);
         }}
-        dateRange={handleData}
+        // dateRange={handleData}
+        markedDates={markedDates}
+        onDayPress={day => {
+          if (startDay && !endDay) {
+            const date = {};
+            for (
+              const d = moment(startDay);
+              d.isSameOrBefore(day.dateString);
+              d.add(1, 'days')
+            ) {
+              date[d.format('YYYY-MM-DD')] = {
+                marked: true,
+                color: 'black',
+                textColor: 'white',
+              };
+
+              if (d.format('YYYY-MM-DD') === startDay)
+                date[d.format('YYYY-MM-DD')].startingDay = true;
+              if (d.format('YYYY-MM-DD') === day.dateString)
+                date[d.format('YYYY-MM-DD')].endingDay = true;
+            }
+
+            setMarkedDates(date);
+            setEndDay(day.dateString);
+          } else {
+            setStartDay(day.dateString);
+            setEndDay(null);
+            setMarkedDates({
+              [day.dateString]: {
+                marked: true,
+                color: 'black',
+                textColor: 'white',
+                startingDay: true,
+                endingDay: true,
+              },
+            });
+          }
+          // onSavePress={()=>setCalenderModel(false)}
+
+          // setCalenderModel(false);
+        }}
+        onSavePress={() => setCalenderModel(false)}
       />
 
+      {console.log(`start date - ${startDay} and end date is - ${endDay}`)}
+
       {openFolderModal && (
-        <CreateFolderModel close={() => setOpenFolderModal(false)} />
+        <CreateFolderModel
+          close={() => setOpenFolderModal(false)}
+          editFolder={editFolder}
+        />
       )}
     </SafeAreaView>
   );

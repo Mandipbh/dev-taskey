@@ -1,5 +1,6 @@
 import {
   FlatList,
+  Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -27,13 +28,15 @@ import {
   Timefolders,
   TimerSpecificfolders,
 } from '../../utils/mockData';
-import CustomChart from '../../components/CustomChart';
 import moment from 'moment';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+// import AntDesign from 'react-native-vector-icons/AntDesign';
 import CommonHeader from '../../components/CommonHeader';
 import {Checkbox} from 'react-native-paper';
 import ChartSection from '../../components/ChartSection';
-import SelectMultiple from 'react-native-select-multiple';
+import {useLayoutEffect} from 'react';
+import {useNavigation} from '@react-navigation/native';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import {MultiSelect} from 'react-native-element-dropdown';
 
 const data = [
   {id: 0, label: 'Crono'},
@@ -41,29 +44,74 @@ const data = [
   {id: 2, label: 'Counter'},
 ];
 
-const Folderdata = [
-  {id: 0, label: 'folder1'},
-  {id: 1, label: 'folder2'},
-  {id: 2, label: 'folder3'},
+const TimeFolders = [
+  {label: 'Golbal Timer Folder', value: '1'},
+  {label: 'Sport', value: '2'},
+  {label: 'Other folder 1', value: '3'},
+  {label: 'Other folder 2', value: '4'},
 ];
 
-const TaskData = [
-  {id: 0, label: 'Task1'},
-  {id: 1, label: 'Task2'},
-  {id: 2, label: 'Task3'},
+const TimeSpecificFolder = [
+  {label: 'Football', value: '1'},
+  {label: 'Running', value: '2'},
+  {label: 'Task example', value: '3'},
+  {label: 'Other', value: '4'},
+];
+
+const Type = [
+  {id: 1, name: 'All Data'},
+  {id: 2, name: 'Only generals'},
+  {id: 3, name: 'Only Specific folders'},
 ];
 
 const StatisticsScreen = () => {
+  const naviagtion = useNavigation();
   const [value, setvalue] = useState(null);
   const [foldervalue, setfolderValue] = useState(null);
   const [taskValue, setTaskValue] = useState(null);
   const [isChecked, setChecked] = useState(false);
-  const [checked, setChecke] = useState(true);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [folderchecked, setFolderChecked] = useState(Timefolders);
-  const [folderSpecific_checked, setFolderSpecific_checked] =
-    useState(TimerSpecificfolders);
+  const [selectedType, setType] = useState(1);
+  const [folderSpecific_checked, setFolderSpecific_checked] = useState([]);
+  const [folderselected, setFolderSelected] = useState([]);
+
+  useLayoutEffect(() => {
+    naviagtion.setOptions({
+      headerRight: () => (
+        <>
+          {Type.map((item, index) => {
+            return (
+              item.id === selectedType && (
+                <>
+                  <AntDesign
+                    name="left"
+                    size={scale(20)}
+                    onPress={() => {
+                      selectedType > 1
+                        ? setType(item.id - 1)
+                        : setType(item.id + 2);
+                    }}
+                  />
+                  <Text style={{fontSize: 18, paddingHorizontal: scale(10)}}>
+                    {item.name}
+                  </Text>
+                  <AntDesign
+                    name="right"
+                    size={scale(20)}
+                    onPress={() => {
+                      selectedType <= 2 ? setType(item.id + 1) : setType(1);
+                    }}
+                  />
+                </>
+              )
+            );
+          })}
+        </>
+      ),
+    });
+  });
 
   const handlclose = () => {
     setChecked(!isChecked);
@@ -117,6 +165,259 @@ const StatisticsScreen = () => {
         />
         <Text>{item.type}</Text>
       </View>
+    );
+  };
+
+  const Main = () => {
+    return (
+      <>
+        <View style={styles.mapView}>
+          {statisticdata.map((f, i) => {
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={styles.mapText}>{f.label}</Text>
+                <Text style={styles.mapText}>{f.value}</Text>
+              </View>
+            );
+          })}
+        </View>
+        <View style={styles.mapView}>
+          {statisticdataone.map((f, i) => {
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={styles.mapText}>{f.label}</Text>
+                <Text style={styles.mapText}>{f.value}</Text>
+              </View>
+            );
+          })}
+        </View>
+        <View style={styles.mapView}>
+          {statisticdatatwo.map((f, i) => {
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={styles.mapText}>{f.label}</Text>
+                <Text style={styles.mapText}>{f.value}</Text>
+              </View>
+            );
+          })}
+        </View>
+        <View style={styles.mapView}>
+          {statisticdatathree.map((f, i) => {
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={styles.mapText}>{f.label}</Text>
+                <Text style={styles.mapText}>{f.value}</Text>
+              </View>
+            );
+          })}
+        </View>
+        <View style={styles.mapView}>
+          {statisticdataFour.map((f, i) => {
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <View>
+                  <Text style={styles.mapText}>{f.label}</Text>
+                </View>
+                <Text style={styles.mapText}>{f.value}</Text>
+              </View>
+            );
+          })}
+        </View>
+        <View style={styles.mapView}>
+          {statisticdataFive.map((f, i) => {
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={styles.mapText}>{f.label}</Text>
+                <Text style={styles.mapText}>{f.value}</Text>
+              </View>
+            );
+          })}
+        </View>
+        <View style={styles.mapView}>
+          {statisticdataSix.map((f, i) => {
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={styles.mapText}>{f.label}</Text>
+                <Text style={styles.mapText}>{f.value}</Text>
+              </View>
+            );
+          })}
+        </View>
+        <View style={styles.mapView}>
+          {statisticdataSeven.map((f, i) => {
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={styles.mapText}>{f.label}</Text>
+                <Text style={styles.mapText}>{f.value}</Text>
+              </View>
+            );
+          })}
+        </View>
+        <ChartSection
+          style={{marginTop: scale(15)}}
+          title="Type Tasks Distribution"
+          data={TypeTask_Distribution}
+        />
+        <View style={styles.divider} />
+        <ChartSection
+          title="Achievement Tasks Status"
+          data={AchievementTasksStatus}
+        />
+        <View style={styles.divider} />
+        <View style={{marginTop: scale(15)}}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <Text style={{fontWeight: '600', fontSize: 16, fontWeight: '600'}}>
+              Time Folder
+            </Text>
+            <TouchableOpacity onPress={() => {}}>
+              <Text style={{color: 'red'}}>X Remove folder</Text>
+            </TouchableOpacity>
+          </View>
+          {/* <FlatList
+            numColumns={2}
+            data={Timefolders}
+            renderItem={folderChekbox}
+            keyExtractor={(item, index) => item.id}
+            columnWrapperStyle={styles.columnWrapperStyle}
+          /> */}
+          <View
+            style={{
+              alignItems: 'center',
+              marginVertical: scale(10),
+              marginTop: scale(20),
+            }}>
+            <MultiSelect
+              placeholder="Add Folder"
+              style={styles.Dropdown}
+              data={TimeFolders}
+              labelField="label"
+              valueField="value"
+              value={folderselected}
+              onChange={item => setFolderSelected(item)}
+              renderSelectedItem={(item, unSelect) => (
+                <Pressable
+                  style={styles.selectedStyle}
+                  onPress={() => console.log('first')}>
+                  <Text style={styles.textSelectedStyle}>{item.label}</Text>
+                  <TouchableOpacity onPress={() => unSelect && unSelect(item)}>
+                    <AntDesign color="red" name="close" size={20} />
+                  </TouchableOpacity>
+                </Pressable>
+              )}
+            />
+          </View>
+          {/* <View style={{alignItems: 'center', marginVertical: scale(10)}}>
+            <Dropdown
+              placeholder="Add Folder"
+              style={styles.Dropdown}
+              data={Folderdata}
+              labelField="label"
+              valueField="id"
+              onChange={item => setfolderValue(item.value)}
+            />
+          </View> */}
+          <ChartSection title="Timer folders" data={Timefolders} />
+        </View>
+      </>
+    );
+  };
+
+  const TimeSpecific = () => {
+    return (
+      <>
+        <View style={styles.divider} />
+
+        <View style={{marginTop: scale(15)}}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <Text style={{fontWeight: '600', fontSize: 16}}>
+              Time Specific Folders
+            </Text>
+            <TouchableOpacity onPress={() => {}}>
+              <Text style={{color: 'red'}}>X Remove Task</Text>
+            </TouchableOpacity>
+          </View>
+          {/* <FlatList
+            numColumns={2}
+            data={TimerSpecificfolders}
+            renderItem={folderSpecific_Chekbox}
+            keyExtractor={(item, index) => item.id}
+            columnWrapperStyle={styles.columnWrapperStyle}
+          />
+          <View style={{alignItems: 'center', marginVertical: scale(10)}}>
+            <Dropdown
+              placeholder="Add Tasks"
+              style={styles.Dropdown}
+              data={TaskData}
+              labelField="label"
+              valueField="id"
+              onChange={item => setTaskValue(item.value)}
+            />
+          </View> */}
+
+          <View
+            style={{
+              alignItems: 'center',
+              marginVertical: scale(10),
+              marginTop: scale(20),
+            }}>
+            <MultiSelect
+              placeholder="Add Folder"
+              style={styles.Dropdown}
+              data={TimeSpecificFolder}
+              labelField="label"
+              valueField="value"
+              value={folderSpecific_checked}
+              onChange={item => setFolderSpecific_checked(item)}
+              renderSelectedItem={(item, unSelect) => (
+                <Pressable
+                  style={styles.selectedStyle}
+                  onPress={() => console.log('first')}>
+                  <Text style={styles.textSelectedStyle}>{item.label}</Text>
+                  <TouchableOpacity onPress={() => unSelect && unSelect(item)}>
+                    <AntDesign color="red" name="close" size={20} />
+                  </TouchableOpacity>
+                </Pressable>
+              )}
+            />
+          </View>
+          <ChartSection
+            title="Timer Sports Folder"
+            data={TimerSpecificfolders}
+          />
+        </View>
+      </>
     );
   };
 
@@ -174,198 +475,19 @@ const StatisticsScreen = () => {
           </View>
         </View>
 
-        <View style={styles.mapView}>
-          {statisticdata.map((f, i) => {
-            return (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Text style={styles.mapText}>{f.label}</Text>
-                <Text style={styles.mapText}>{f.value}</Text>
-              </View>
-            );
-          })}
-        </View>
+        {selectedType === 1 ? (
+          <>
+            <Main />
+            <TimeSpecific />
+          </>
+        ) : selectedType === 2 ? (
+          <Main />
+        ) : (
+          <TimeSpecific />
+        )}
 
-        <View style={styles.mapView}>
-          {statisticdataone.map((f, i) => {
-            return (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Text style={styles.mapText}>{f.label}</Text>
-                <Text style={styles.mapText}>{f.value}</Text>
-              </View>
-            );
-          })}
-        </View>
-
-        <View style={styles.mapView}>
-          {statisticdatatwo.map((f, i) => {
-            return (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Text style={styles.mapText}>{f.label}</Text>
-                <Text style={styles.mapText}>{f.value}</Text>
-              </View>
-            );
-          })}
-        </View>
-        <View style={styles.mapView}>
-          {statisticdatathree.map((f, i) => {
-            return (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Text style={styles.mapText}>{f.label}</Text>
-                <Text style={styles.mapText}>{f.value}</Text>
-              </View>
-            );
-          })}
-        </View>
-
-        <View style={styles.mapView}>
-          {statisticdataFour.map((f, i) => {
-            return (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <View>
-                  <Text style={styles.mapText}>{f.label}</Text>
-                </View>
-                <Text style={styles.mapText}>{f.value}</Text>
-              </View>
-            );
-          })}
-        </View>
-
-        <View style={styles.mapView}>
-          {statisticdataFive.map((f, i) => {
-            return (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Text style={styles.mapText}>{f.label}</Text>
-                <Text style={styles.mapText}>{f.value}</Text>
-              </View>
-            );
-          })}
-        </View>
-
-        <View style={styles.mapView}>
-          {statisticdataSix.map((f, i) => {
-            return (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Text style={styles.mapText}>{f.label}</Text>
-                <Text style={styles.mapText}>{f.value}</Text>
-              </View>
-            );
-          })}
-        </View>
-
-        <View style={styles.mapView}>
-          {statisticdataSeven.map((f, i) => {
-            return (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Text style={styles.mapText}>{f.label}</Text>
-                <Text style={styles.mapText}>{f.value}</Text>
-              </View>
-            );
-          })}
-        </View>
-
-        <ChartSection
-          style={{marginTop: scale(15)}}
-          title="Type Tasks Distribution"
-          data={TypeTask_Distribution}
-        />
-
-        <ChartSection
-          title="Achievement Tasks Status"
-          data={AchievementTasksStatus}
-        />
-
-        <View style={{marginTop: scale(15)}}>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text style={{fontWeight: '600', fontSize: 16, fontWeight: '600'}}>
-              Time Folder
-            </Text>
-            <TouchableOpacity onPress={() => {}}>
-              <Text style={{color: 'red'}}>X Remove folder</Text>
-            </TouchableOpacity>
-          </View>
-          <FlatList
-            numColumns={2}
-            data={Timefolders}
-            renderItem={folderChekbox}
-            keyExtractor={(item, index) => item.id}
-            columnWrapperStyle={styles.columnWrapperStyle}
-          />
-          <View style={{alignItems: 'center', marginVertical: scale(10)}}>
-            <Dropdown
-              placeholder="Add Folder"
-              style={styles.Dropdown}
-              data={Folderdata}
-              labelField="label"
-              valueField="id"
-              onChange={item => setfolderValue(item.value)}
-            />
-          </View>
-          <ChartSection title="Timer folders" data={Timefolders} />
-        </View>
-
-        <View style={{marginTop: scale(15)}}>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text style={{fontWeight: '600', fontSize: 16}}>
-              Time Specific Folders
-            </Text>
-            <TouchableOpacity onPress={() => {}}>
-              <Text style={{color: 'red'}}>X Remove folder</Text>
-            </TouchableOpacity>
-          </View>
-          <FlatList
-            numColumns={2}
-            data={TimerSpecificfolders}
-            renderItem={folderSpecific_Chekbox}
-            keyExtractor={(item, index) => item.id}
-            columnWrapperStyle={styles.columnWrapperStyle}
-          />
-          <View style={{alignItems: 'center', marginVertical: scale(10)}}>
-            <Dropdown
-              placeholder="Add Folder"
-              style={styles.Dropdown}
-              data={TaskData}
-              labelField="label"
-              valueField="id"
-              onChange={item => setTaskValue(item.value)}
-            />
-          </View>
-          <ChartSection
-            title="Timer Sports Folder"
-            data={TimerSpecificfolders}
-          />
-        </View>
+        {/* <Main />
+        <TimeSpecific /> */}
       </ScrollView>
     </SafeAreaView>
   );
@@ -438,5 +560,48 @@ const styles = StyleSheet.create({
   columnWrapperStyle: {
     justifyContent: 'space-between',
     marginTop: scale(5),
+  },
+  divider: {
+    borderBottomWidth: 1,
+    borderBottomColor: 'gray',
+    marginVertical: scale(10),
+  },
+  MultiSelect: {
+    height: 50,
+    backgroundColor: 'transparent',
+    borderBottomColor: 'gray',
+    borderBottomWidth: 0.5,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 14,
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
+  },
+  icon: {
+    marginRight: 5,
+  },
+  selectedStyle: {
+    borderRadius: 12,
+    borderWidth: 1,
+    marginTop: scale(10),
+    flexDirection: 'row',
+    paddingVertical: scale(5),
+    paddingHorizontal: scale(8),
+    alignItems: 'center',
+    marginHorizontal: scale(5),
+    borderColor: 'gray',
+  },
+  textSelectedStyle: {
+    marginRight: 5,
+    fontSize: 14,
   },
 });
