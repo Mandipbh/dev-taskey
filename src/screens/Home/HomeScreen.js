@@ -43,9 +43,7 @@ const HomeScreen = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [data, setData] = useState(tasksData);
-  const [startDay, setStartDay] = useState(null);
-  const [endDay, setEndDay] = useState(null);
-  const [markedDates, setMarkedDates] = useState(null);
+
   const [editFolder, setEditFolder] = useState(null);
 
   const [taskDumyData, setTaskDummy] = useState([
@@ -124,10 +122,10 @@ const HomeScreen = () => {
     },
   ]);
 
-  useEffect(() => {
-    setStartDay(null);
-    setEndDay(null);
-  }, [isFocused]);
+  // useEffect(() => {
+  //   setStartDay(null);
+  //   setEndDay(null);
+  // }, [isFocused]);
 
   const taskType = [
     {
@@ -365,7 +363,9 @@ const HomeScreen = () => {
               // {width: scale(70), justifyContent: 'space-around'},
             ]}>
             <Label
-              title={startDay == null ? 'Today  ' : `${startDay}-${endDay} `}
+              title={
+                startDate === null ? 'Today  ' : `${startDate} / ${endDate} `
+              }
               style={{fontWeight: '600', fontSize: scale(10)}}
             />
             <Icon2
@@ -440,52 +440,21 @@ const HomeScreen = () => {
         isVisible={calenderModel}
         close={() => {
           setCalenderModel(false);
+          setEndDate(null);
+          setStartDate(null);
         }}
         // dateRange={handleData}
-        markedDates={markedDates}
-        onDayPress={day => {
-          if (startDay && !endDay) {
-            const date = {};
-            for (
-              const d = moment(startDay);
-              d.isSameOrBefore(day.dateString);
-              d.add(1, 'days')
-            ) {
-              date[d.format('YYYY-MM-DD')] = {
-                marked: true,
-                color: 'black',
-                textColor: 'white',
-              };
-
-              if (d.format('YYYY-MM-DD') === startDay)
-                date[d.format('YYYY-MM-DD')].startingDay = true;
-              if (d.format('YYYY-MM-DD') === day.dateString)
-                date[d.format('YYYY-MM-DD')].endingDay = true;
-            }
-
-            setMarkedDates(date);
-            setEndDay(day.dateString);
-          } else {
-            setStartDay(day.dateString);
-            setEndDay(null);
-            setMarkedDates({
-              [day.dateString]: {
-                marked: true,
-                color: 'black',
-                textColor: 'white',
-                startingDay: true,
-                endingDay: true,
-              },
-            });
-          }
-          // onSavePress={()=>setCalenderModel(false)}
-
-          // setCalenderModel(false);
+        // markedDates={markedDates}
+        onSavePress={(StartDate, Enddate) => {
+          setStartDate(StartDate);
+          setEndDate(Enddate);
+          setCalenderModel(false);
         }}
-        onSavePress={() => setCalenderModel(false)}
       />
 
-      {console.log(`start date - ${startDay} and end date is - ${endDay}`)}
+      {console.log(
+        `start date >>>>>>> - ${startDate} and end date is - ${endDate}`,
+      )}
 
       {openFolderModal && (
         <CreateFolderModel
