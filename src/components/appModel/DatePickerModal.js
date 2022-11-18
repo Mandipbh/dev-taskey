@@ -16,38 +16,15 @@ import Icon from 'react-native-vector-icons/Feather';
 import {Label, Title} from '../Label';
 
 const DatePickerModal = props => {
-  const {isVisible, close, dateRange, onDayPress, markedDates, onSavePress} =
-    props;
-  const [myDate, setMyDate] = useState('');
+  const {isVisible, close, dateRange, onDayPress, markedDates} = props;
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setendDate] = useState('');
 
-  // function onDayPress({...date}) {
-  //   setMyDate(date.dateString);
-  // }
-  // const [markedDates, setMarkedDates] = useState(null);
-
-  const handleDayPress = async day => {
-    await setMarkedDates({
-      [day.dateString]: {
-        startingDay: true,
-        color: theme.colors.primary1,
-      },
-      [moment(day.dateString).add(1, 'days').format('DD/MM')]: {
-        color: theme.colors.primary1,
-      },
-      [moment(day.dateString).add(2, 'days').format('DD/MM')]: {
-        color: theme.colors.primary1,
-      },
-      [moment(day.dateString).add(3, 'days').format('DD/MM')]: {
-        endingDay: true,
-        color: theme.colors.primary1,
-      },
-    });
-
-    // close();
+  const onSavePress = async day => {
+    console.log('start data >> ', startDate);
+    console.log('start data >> ', endDate);
   };
-  // useEffect(() => {
-  //   dateRange(markedDates);
-  // }, [markedDates]);
+
   return (
     <Modal animationType={'none'} visible={isVisible} onRequestClose={() => {}}>
       <View style={styles.mainView}>
@@ -60,41 +37,11 @@ const DatePickerModal = props => {
         monthFormat={'yyyy MMM'}
         hideDayNames={false}
         markingType={'period'}
-        markedDates={markedDates}
+        markedDates={setendDate}
         theme={{
-          // selectedDayBackgroundColor: '#646464',
-          // selectedDayTextColor: 'white',
-          // monthTextColor: 'blue',
-          // dayTextColor: 'black',
-          // textMonthFontSize: 18,
-          // textDayHeaderFontSize: 16,
-          // arrowColor: '#e6e6e6',
           dotColor: 'black',
         }}
       />
-      {/* <Calendar
-        style={{marginTop: scale(20)}}
-        onDayPress={onDayPress}
-        theme={{
-          textDayFontWeight: '400',
-          arrowColor: theme.colors.primary,
-          todayTextColor: theme.colors.primary,
-        }}
-        markingType={'custom'}
-        markedDates={{
-          [myDate]: {
-            customStyles: {
-              container: {
-                backgroundColor: theme.colors.primary,
-              },
-              text: {
-                color: 'white',
-                fontWeight: 'bold',
-              },
-            },
-          },
-        }}
-      /> */}
 
       <TouchableOpacity
         style={{alignItems: 'center', marginTop: scale(30)}}

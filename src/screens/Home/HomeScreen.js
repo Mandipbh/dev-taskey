@@ -8,6 +8,7 @@ import {
   Image,
   Platform,
 } from 'react-native';
+import {useIsFocused} from '@react-navigation/native';
 import React, {useState} from 'react';
 import Icon1 from 'react-native-vector-icons/Foundation';
 import Icon2 from 'react-native-vector-icons/Feather';
@@ -27,8 +28,10 @@ import {Calendar} from 'react-native-calendars';
 import moment from 'moment';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import DraggableFlatList from 'react-native-draggable-dynamic-flatlist';
+import {useEffect} from 'react';
 
 const HomeScreen = () => {
+  const isFocused = useIsFocused();
   const [folderData, setFolderData] = useState(folders);
   const [selectedFolder, setSelectedFolder] = useState(0);
   const [openFolderModal, setOpenFolderModal] = useState(false);
@@ -44,6 +47,87 @@ const HomeScreen = () => {
   const [endDay, setEndDay] = useState(null);
   const [markedDates, setMarkedDates] = useState(null);
   const [editFolder, setEditFolder] = useState(null);
+
+  const [taskDumyData, setTaskDummy] = useState([
+    {
+      fid: 0,
+      taskslist: [
+        {
+          id: 0,
+          title: 'Task name eyamole',
+          color: '#ffddff',
+          folder: 'global',
+          status: 1,
+          path: 10,
+          percentage: 10,
+        },
+        {
+          id: 1,
+          title: 'Task• example 2',
+          color: '#ffddff',
+          folder: 'global',
+          status: 0,
+          path: 20,
+          percentage: 20,
+        },
+        {
+          id: 2,
+          title: 'Task examole',
+          color: '#ffddff',
+          folder: 'global',
+          status: 1,
+          path: 20,
+          percentage: 20,
+        },
+      ],
+    },
+    {
+      fid: 1,
+      taskslist: [
+        {
+          id: 3,
+          title: 'Task examole 2',
+          color: '#ffddff',
+          folder: 'global',
+          status: 1,
+          path: 20,
+          percentage: 20,
+        },
+        {
+          id: 1,
+          title: 'Task• example 2',
+          color: '#ffddff',
+          folder: 'global',
+          status: 0,
+          path: 20,
+          percentage: 20,
+        },
+        {
+          id: 2,
+          title: 'Task examole',
+          color: '#ffddff',
+          folder: 'global',
+          status: 1,
+          path: 20,
+          percentage: 20,
+        },
+        {
+          id: 3,
+          title: 'Task examole 2',
+          color: '#ffddff',
+          folder: 'global',
+          status: 1,
+          path: 20,
+          percentage: 20,
+        },
+      ],
+    },
+  ]);
+
+  useEffect(() => {
+    setStartDay(null);
+    setEndDay(null);
+  }, [isFocused]);
 
   const taskType = [
     {
@@ -95,6 +179,66 @@ const HomeScreen = () => {
     }
   };
 
+  const tasksrender = ({item, index, move, moveEnd, isActive}) => {
+    return (
+      <>
+        <TouchableOpacity
+          onLongPress={move}
+          onPressOut={moveEnd}
+          key={index}
+          style={[
+            styles.row,
+            {
+              justifyContent: 'space-between',
+              // borderColor:
+              //   item?.tasks.length == tindex + 1
+              //     ? theme.colors.transparent
+              //     : item.color,
+              borderBottomWidth: scale(0.7),
+              paddingVertical: scale(3),
+              paddingHorizontal: scale(5),
+            },
+          ]}>
+          <View style={styles.statusView}>
+            {item.status ? (
+              <Icon1 name="play" size={scale(25)} color={theme.colors.green} />
+            ) : (
+              <Icon2
+                name="pause"
+                size={scale(20)}
+                color={theme.colors.orange}
+                style={{marginLeft: scale(-5)}}
+              />
+            )}
+            {item % 2 ? (
+              <Icon1
+                name="social-zerply"
+                size={scale(20)}
+                color={theme.colors.green}
+              />
+            ) : (
+              <Icon3
+                name="clock-time-seven"
+                size={scale(20)}
+                color={theme.colors.lightGreen}
+              />
+            )}
+          </View>
+
+          <Label
+            title={item.title}
+            style={{width: '45%', fontSize: scale(12)}}
+          />
+          <View style={styles.staticDetails}>
+            <Label title={item?.path} />
+            <Label title={`${item?.percentage} %`} />
+            <Label title="-" />
+          </View>
+        </TouchableOpacity>
+      </>
+    );
+  };
+
   const rendertasks = ({item, index, move, moveEnd, isActive}) => {
     return (
       <>
@@ -142,129 +286,26 @@ const HomeScreen = () => {
 
                 <Icon2 name="award" size={scale(22)} />
               </View>
-
-              {item?.tasks && item?.tasks.length > 3 && openIndex !== index
-                ? item?.tasks.slice(0, 3)?.map((titem, tindex) => {
-                    console.log('length ', item?.tasks.length);
-                    return (
-                      <TouchableOpacity
-                        style={[
-                          styles.row,
-                          {
-                            justifyContent: 'space-between',
-                            borderColor: item.color,
-                            borderBottomWidth: scale(0.7),
-                            paddingVertical: scale(3),
-                            borderColor:
-                              item?.tasks.length == tindex + 1
-                                ? theme.colors.transparent
-                                : item.color,
-                            paddingHorizontal: scale(5),
-                          },
-                        ]}
-                        onPress={() =>
-                          navigation.navigate('CreateTask', {editData: titem})
-                        }>
-                        <View style={styles.statusView}>
-                          {titem.status ? (
-                            <Icon1
-                              name="play"
-                              size={scale(25)}
-                              color={theme.colors.green}
-                            />
-                          ) : (
-                            <Icon2
-                              name="pause"
-                              size={scale(20)}
-                              color={theme.colors.orange}
-                              style={{marginLeft: scale(-5)}}
-                            />
-                          )}
-                          {tindex % 2 ? (
-                            <Icon1
-                              name="social-zerply"
-                              size={scale(20)}
-                              color={theme.colors.green}
-                            />
-                          ) : (
-                            <Icon3
-                              name="clock-time-seven"
-                              size={scale(20)}
-                              color={theme.colors.lightGreen}
-                            />
-                          )}
-                        </View>
-
-                        <Label
-                          title={titem.title}
-                          style={{width: '45%', fontSize: scale(12)}}
-                        />
-                        <View style={styles.staticDetails}>
-                          <Label title={titem?.path} />
-                          <Label title={`${titem?.percentage} %`} />
-                          <Label title={`-`} />
-                        </View>
-                      </TouchableOpacity>
-                    );
-                  })
-                : item?.tasks?.map((titem, tindex) => {
-                    return (
-                      <TouchableOpacity
-                        style={[
-                          styles.row,
-                          {
-                            justifyContent: 'space-between',
-                            borderColor:
-                              item?.tasks.length == tindex + 1
-                                ? theme.colors.transparent
-                                : item.color,
-                            borderBottomWidth: scale(0.7),
-                            paddingVertical: scale(3),
-                            paddingHorizontal: scale(5),
-                          },
-                        ]}>
-                        <View style={styles.statusView}>
-                          {titem.status ? (
-                            <Icon1
-                              name="play"
-                              size={scale(25)}
-                              color={theme.colors.green}
-                            />
-                          ) : (
-                            <Icon2
-                              name="pause"
-                              size={scale(20)}
-                              color={theme.colors.orange}
-                              style={{marginLeft: scale(-5)}}
-                            />
-                          )}
-                          {tindex % 2 ? (
-                            <Icon1
-                              name="social-zerply"
-                              size={scale(20)}
-                              color={theme.colors.green}
-                            />
-                          ) : (
-                            <Icon3
-                              name="clock-time-seven"
-                              size={scale(20)}
-                              color={theme.colors.lightGreen}
-                            />
-                          )}
-                        </View>
-
-                        <Label
-                          title={titem.title}
-                          style={{width: '45%', fontSize: scale(12)}}
-                        />
-                        <View style={styles.staticDetails}>
-                          <Label title={titem?.path} />
-                          <Label title={`${titem?.percentage} %`} />
-                          <Label title={`-`} />
-                        </View>
-                      </TouchableOpacity>
-                    );
-                  })}
+              {taskDumyData.map((taskItem, Tindex) => {
+                return (
+                  taskItem.fid === item.id && (
+                    <DraggableFlatList
+                      data={taskItem.taskslist}
+                      renderItem={tasksrender}
+                      showsVerticalScrollIndicator={false}
+                      keyExtractor={(item, index) =>
+                        `draggable-item-${item.key}`
+                      }
+                      scrollPercent={5}
+                      onMoveEnd={({data, index}) => {
+                        const updateData = [...taskDumyData];
+                        updateData[Tindex].taskslist = data;
+                        setTaskDummy(updateData);
+                      }}
+                    />
+                  )
+                );
+              })}
             </View>
           </TouchableOpacity>
         </GestureRecognizer>
@@ -324,7 +365,7 @@ const HomeScreen = () => {
               // {width: scale(70), justifyContent: 'space-around'},
             ]}>
             <Label
-              title={markedDates == null ? 'Today  ' : `${startDay}-${endDay} `}
+              title={startDay == null ? 'Today  ' : `${startDay}-${endDay} `}
               style={{fontWeight: '600', fontSize: scale(10)}}
             />
             <Icon2

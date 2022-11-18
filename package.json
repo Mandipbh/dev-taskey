@@ -28,6 +28,7 @@
     "react-native-color-picker": "^0.6.0",
     "react-native-daterange-picker": "^1.5.1",
     "react-native-draggable-dynamic-flatlist": "^1.0.4",
+    "react-native-draggable-flatlist": "^3.1.2",
     "react-native-element-dropdown": "^2.3.1",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-paper": "^4.12.5",

@@ -84,7 +84,7 @@ const tasksData = [
     ],
   },
   {
-    id: 0,
+    id: 1,
     color: '#22ffdd',
     folder: 'DEVELOPMENT FOLDER 2',
     type: 'Crono',
@@ -157,7 +157,7 @@ const tasksData = [
     ],
   },
   {
-    id: 1,
+    id: 2,
     title: 'Lorem ipsum',
     color: '#000000',
     folder: 'GLOBAL CRONO',
