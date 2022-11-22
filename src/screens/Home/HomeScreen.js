@@ -22,9 +22,7 @@ import {
 } from '../../components';
 import {images, scale, theme} from '../../utils';
 import {folders, tasksData} from '../../utils/mockData';
-import RoundIcon from '../../components/RoundIcon';
 import {useNavigation} from '@react-navigation/native';
-import {Calendar} from 'react-native-calendars';
 import moment from 'moment';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import DraggableFlatList from 'react-native-draggable-dynamic-flatlist';
@@ -478,9 +476,6 @@ const HomeScreen = () => {
               },
             });
           }
-          // onSavePress={()=>setCalenderModel(false)}
-
-          // setCalenderModel(false);
         }}
         onSavePress={() => setCalenderModel(false)}
       />
