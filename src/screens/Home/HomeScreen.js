@@ -7,6 +7,7 @@ import {
   View,
   Image,
   Platform,
+  Text,
 } from 'react-native';
 import {useIsFocused} from '@react-navigation/native';
 import React, {useState} from 'react';
@@ -29,6 +30,8 @@ import moment from 'moment';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import DraggableFlatList from 'react-native-draggable-dynamic-flatlist';
 import {useEffect} from 'react';
+import {getTask} from '../../redux/Actions/Action';
+import {useDispatch, useSelector} from 'react-redux';
 
 const HomeScreen = () => {
   const isFocused = useIsFocused();
@@ -43,8 +46,21 @@ const HomeScreen = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [data, setData] = useState(tasksData);
+  const [markedDates, setMarkedDates] = useState(null);
 
   const [editFolder, setEditFolder] = useState(null);
+
+  const dispatch = useDispatch();
+  const taskData = useSelector(state => state.task);
+  console.log('taskData', JSON.stringify(taskData, null, 2));
+
+  const getTaskList = () => {
+    dispatch(getTask());
+  };
+
+  useEffect(() => {
+    getTaskList();
+  }, []);
 
   const [taskDumyData, setTaskDummy] = useState([
     {
@@ -314,7 +330,7 @@ const HomeScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
-        <View style={styles.headerContainer}>
+        {/* <View style={styles.headerContainer}>
           {taskType?.map((type, index) => {
             return (
               type.id === selectedType && (
@@ -377,7 +393,112 @@ const HomeScreen = () => {
               }}
             />
           </View>
+        </View> */}
+
+        <View style={{flexDirection: 'row', height: '7%'}}>
+          {taskType?.map((type, index) => {
+            return (
+              type.id === selectedType && (
+                <>
+                  <View
+                    style={{
+                      width: '20%',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <Image
+                      source={type.icon}
+                      style={{
+                        height: type.id === 2 ? scale(28) : scale(35),
+                        width: type.id === 2 ? scale(28) : scale(35),
+                        resizeMode: 'contain',
+                      }}
+                    />
+                  </View>
+                  <View
+                    style={{
+                      width: '50%',
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <View
+                      style={{
+                        width: '15%',
+                        // justifyContent: 'center',
+                      }}>
+                      <Icon2
+                        name="chevron-left"
+                        size={scale(30)}
+                        onPress={() => {
+                          selectedType > 1
+                            ? setType(type.id - 1)
+                            : setType(type.id + 2);
+                        }}
+                      />
+                    </View>
+                    <View
+                      style={{
+                        width: '70%',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <Label key={index} title={type?.title} />
+                      <Label
+                        title={`Total = ${type?.totalTime}`}
+                        style={styles.time}
+                      />
+                    </View>
+                    <View style={{width: '15%'}}>
+                      <Icon2
+                        name="chevron-right"
+                        size={scale(30)}
+                        onPress={() => {
+                          selectedType <= 2 ? setType(type.id + 1) : setType(1);
+                        }}
+                      />
+                    </View>
+                  </View>
+                </>
+              )
+            );
+          })}
+
+          <View
+            style={{
+              width: '30%',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <View
+              style={{
+                width: '70%',
+                alignItems: 'flex-end',
+              }}>
+              <Text>
+                {startDate === null ? 'Today  ' : `${startDate} / ${endDate} `}
+              </Text>
+            </View>
+            <View
+              style={{
+                width: '30%',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Icon2
+                name="calendar"
+                size={scale(25)}
+                color={theme.colors.primary}
+                onPress={() => {
+                  setCalenderModel(true);
+                  setMarkedDates(null);
+                }}
+              />
+            </View>
+          </View>
         </View>
+
         <View style={styles.mainCOntainer}>
           <View
             style={{
@@ -444,7 +565,8 @@ const HomeScreen = () => {
           setStartDate(null);
         }}
         // dateRange={handleData}
-        // markedDates={markedDates}
+        markedDates={markedDates}
+        setMarkedDates={setMarkedDates}
         onSavePress={(StartDate, Enddate) => {
           setStartDate(StartDate);
           setEndDate(Enddate);

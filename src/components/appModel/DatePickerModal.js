@@ -14,15 +14,23 @@ import {useState} from 'react';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/Feather';
 import {Label, Title} from '../Label';
+import Feather from 'react-native-vector-icons/Feather';
 
 const DatePickerModal = props => {
-  const {isVisible, close, dateRange, onDayPress, onSavePress} = props;
+  const {
+    isVisible,
+    close,
+    dateRange,
+    onDayPress,
+    onSavePress,
+    markedDates,
+    setMarkedDates,
+  } = props;
   // const [startDate, setStartDate] = useState('');
   // const [endDate, setendDate] = useState('');
 
   const [startDay, setStartDay] = useState(null);
   const [endDay, setEndDay] = useState(null);
-  const [markedDates, setMarkedDates] = useState(null);
 
   var StartDate = startDay;
   StartDate =
@@ -101,7 +109,8 @@ const DatePickerModal = props => {
       <TouchableOpacity
         style={{alignItems: 'center', marginTop: scale(30)}}
         onPress={() => onSavePress(StartDate, Enddate)}>
-        <Text>Save</Text>
+        {/* <Text>Save</Text> */}
+        <Feather name="filter" size={scale(30)} />
       </TouchableOpacity>
     </Modal>
   );
