@@ -43,6 +43,7 @@ const BottomTab = () => {
         name="StatisticsStack"
         component={StatisticsStack}
         options={{
+          headerShown: false,
           tabBarIcon: ({focused}) => {
             return (
               <Entypo

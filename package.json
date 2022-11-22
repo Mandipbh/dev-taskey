@@ -16,6 +16,7 @@
     "@react-navigation/native": "^6.0.13",
     "@react-navigation/native-stack": "^6.9.1",
     "accordion-collapse-react-native": "^1.1.1",
+    "axios": "1.2.0-alpha.1",
     "lottie-loader-react-native": "^1.0.3",
     "lottie-react-native": "^5.1.4",
     "moment": "^2.29.4",
