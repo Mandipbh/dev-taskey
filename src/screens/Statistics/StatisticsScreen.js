@@ -1,5 +1,6 @@
 import {
   FlatList,
+  Platform,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -67,8 +68,6 @@ const Type = [
 const StatisticsScreen = () => {
   const naviagtion = useNavigation();
   const [value, setvalue] = useState(null);
-  const [foldervalue, setfolderValue] = useState(null);
-  const [taskValue, setTaskValue] = useState(null);
   const [isChecked, setChecked] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -76,38 +75,56 @@ const StatisticsScreen = () => {
   const [selectedType, setType] = useState(1);
   const [folderSpecific_checked, setFolderSpecific_checked] = useState([]);
   const [folderselected, setFolderSelected] = useState([]);
+  const [markedDates, setMarkedDates] = useState(null);
 
   useLayoutEffect(() => {
     naviagtion.setOptions({
+      headerTitle: null,
       headerRight: () => (
         <>
-          {Type.map((item, index) => {
-            return (
-              item.id === selectedType && (
-                <>
-                  <AntDesign
-                    name="left"
-                    size={scale(20)}
-                    onPress={() => {
-                      selectedType > 1
-                        ? setType(item.id - 1)
-                        : setType(item.id + 2);
-                    }}
-                  />
-                  <Text style={{fontSize: 18, paddingHorizontal: scale(10)}}>
-                    {item.name}
-                  </Text>
-                  <AntDesign
-                    name="right"
-                    size={scale(20)}
-                    onPress={() => {
-                      selectedType <= 2 ? setType(item.id + 1) : setType(1);
-                    }}
-                  />
-                </>
-              )
-            );
-          })}
+          <View
+            style={{
+              flexDirection: 'row',
+              width: '75%',
+              left: Platform.OS === 'ios' ? '5%' : '15%',
+            }}>
+            {Type.map((item, index) => {
+              return (
+                item.id === selectedType && (
+                  <>
+                    <View style={{width: '10%'}}>
+                      <AntDesign
+                        name="left"
+                        size={scale(20)}
+                        onPress={() => {
+                          selectedType > 1
+                            ? setType(item.id - 1)
+                            : setType(item.id + 2);
+                        }}
+                      />
+                    </View>
+                    <View
+                      style={{
+                        width: '80%',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
+                      <Text style={{fontSize: 18}}>{item.name}</Text>
+                    </View>
+                    <View style={{width: '10%'}}>
+                      <AntDesign
+                        name="right"
+                        size={scale(20)}
+                        onPress={() => {
+                          selectedType <= 2 ? setType(item.id + 1) : setType(1);
+                        }}
+                      />
+                    </View>
+                  </>
+                )
+              );
+            })}
+          </View>
         </>
       ),
     });
@@ -115,6 +132,8 @@ const StatisticsScreen = () => {
 
   const handlclose = () => {
     setChecked(!isChecked);
+    setEndDate(null);
+    setStartDate(null);
   };
 
   const handleData = d => {
@@ -433,7 +452,15 @@ const StatisticsScreen = () => {
           paddingBottom: scale(60),
           paddingHorizontal: scale(13),
         }}>
-        <CommonHeader headerTitle="Statistics" IconType={AntDesign} />
+        <CommonHeader
+          headerTitle={null}
+          IconType={AntDesign}
+          headerLeft={() => (
+            <Text style={{fontSize: scale(18), fontWeight: '500'}}>
+              Statistics
+            </Text>
+          )}
+        />
 
         <View style={styles.mainView}>
           <View style={styles.calView}>
@@ -442,11 +469,14 @@ const StatisticsScreen = () => {
           </View>
           <View>
             <TouchableOpacity
-              onPress={() => setChecked(!isChecked)}
+              onPress={() => {
+                setChecked(!isChecked);
+                setMarkedDates(null);
+              }}
               style={styles.selectTime}>
               <Label
                 title={
-                  startDate == null ? 'Today' : startDate + ' To ' + endDate
+                  startDate == null ? 'Today' : startDate + ' / ' + endDate
                 }
                 style={{textAlign: 'center'}}
               />
@@ -455,6 +485,13 @@ const StatisticsScreen = () => {
               isVisible={isChecked}
               close={handlclose}
               dateRange={handleData}
+              markedDates={markedDates}
+              setMarkedDates={setMarkedDates}
+              onSavePress={(StartDate, Enddate) => {
+                setStartDate(StartDate);
+                setEndDate(Enddate);
+                setChecked(false);
+              }}
             />
           </View>
         </View>

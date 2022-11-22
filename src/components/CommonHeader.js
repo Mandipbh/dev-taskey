@@ -22,7 +22,9 @@ const CommonHeader = props => {
       headerShown: true,
       headerBackTitleVisible: backButton,
       title: headerTitle,
+      headerTitleAlign: 'left',
       headerLeft: headerLeft,
+
       headerRight: () => (
         <TouchableOpacity
           style={styles.headerLeftIcon}
