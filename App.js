@@ -6,7 +6,6 @@ import {NavigationContainer} from '@react-navigation/native';
 import BottomTab from './src/navigation/BottomTab';
 import MainStack from './src/navigation/MainStack';
 import {LogBox} from 'react-native';
-import Store from './src/redux/Store';
 
 const App = () => {
   useEffect(() => {
