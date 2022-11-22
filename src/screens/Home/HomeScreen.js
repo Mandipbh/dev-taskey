@@ -28,7 +28,7 @@ import moment from 'moment';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import DraggableFlatList from 'react-native-draggable-dynamic-flatlist';
 import {useEffect} from 'react';
-import {getTask} from '../../redux/Actions/Action';
+// import {getTask} from '../../redux/Actions/Action';
 import {useDispatch, useSelector} from 'react-redux';
 
 const HomeScreen = () => {
@@ -47,18 +47,6 @@ const HomeScreen = () => {
   const [markedDates, setMarkedDates] = useState(null);
 
   const [editFolder, setEditFolder] = useState(null);
-
-  const dispatch = useDispatch();
-  const taskData = useSelector(state => state.task);
-  console.log('taskData', JSON.stringify(taskData, null, 2));
-
-  const getTaskList = () => {
-    dispatch(getTask());
-  };
-
-  useEffect(() => {
-    getTaskList();
-  }, []);
 
   const [taskDumyData, setTaskDummy] = useState([
     {
