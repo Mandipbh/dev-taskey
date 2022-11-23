@@ -93,6 +93,42 @@ const HomeScreen = () => {
           path: 20,
           percentage: 20,
         },
+        // {
+        //   id: 3,
+        //   title: 'Task• example 2',
+        //   color: '#ffddff',
+        //   folder: 'global',
+        //   status: 0,
+        //   path: 20,
+        //   percentage: 20,
+        // },
+        // {
+        //   id: 4,
+        //   title: 'Task examole',
+        //   color: '#ffddff',
+        //   folder: 'global',
+        //   status: 1,
+        //   path: 20,
+        //   percentage: 20,
+        // },
+        // {
+        //   id: 5,
+        //   title: 'Task• example 2',
+        //   color: '#ffddff',
+        //   folder: 'global',
+        //   status: 0,
+        //   path: 20,
+        //   percentage: 20,
+        // },
+        // {
+        //   id: 6,
+        //   title: 'Task example',
+        //   color: '#ffddff',
+        //   folder: 'global',
+        //   status: 1,
+        //   path: 20,
+        //   percentage: 20,
+        // },
       ],
     },
     {
@@ -194,61 +230,68 @@ const HomeScreen = () => {
   };
 
   const tasksrender = ({item, index, move, moveEnd, isActive}) => {
+    console.log('this is item', JSON.stringify(isActive, null, 2));
     return (
       <>
-        <TouchableOpacity
-          onLongPress={move}
-          onPressOut={moveEnd}
-          key={index}
-          style={[
-            styles.row,
-            {
-              justifyContent: 'space-between',
-              // borderColor:
-              //   item?.tasks.length == tindex + 1
-              //     ? theme.colors.transparent
-              //     : item.color,
-              borderBottomWidth: scale(0.7),
-              paddingVertical: scale(3),
-              paddingHorizontal: scale(5),
-            },
-          ]}>
-          <View style={styles.statusView}>
-            {item.status ? (
-              <Icon1 name="play" size={scale(25)} color={theme.colors.green} />
-            ) : (
-              <Icon2
-                name="pause"
-                size={scale(20)}
-                color={theme.colors.orange}
-                style={{marginLeft: scale(-5)}}
-              />
-            )}
-            {item % 2 ? (
-              <Icon1
-                name="social-zerply"
-                size={scale(20)}
-                color={theme.colors.green}
-              />
-            ) : (
-              <Icon3
-                name="clock-time-seven"
-                size={scale(20)}
-                color={theme.colors.lightGreen}
-              />
-            )}
-          </View>
+        {index < 3 && (
+          <TouchableOpacity
+            onLongPress={move}
+            onPressOut={moveEnd}
+            key={index}
+            style={[
+              styles.row,
+              {
+                justifyContent: 'space-between',
+                // borderColor:
+                //   item?.tasks.length == tindex + 1
+                //     ? theme.colors.transparent
+                //     : item.color,
+                borderBottomWidth: scale(0.7),
+                paddingVertical: scale(3),
+                paddingHorizontal: scale(5),
+              },
+            ]}>
+            <View style={styles.statusView}>
+              {item.status ? (
+                <Icon1
+                  name="play"
+                  size={scale(25)}
+                  color={theme.colors.green}
+                />
+              ) : (
+                <Icon2
+                  name="pause"
+                  size={scale(20)}
+                  color={theme.colors.orange}
+                  style={{marginLeft: scale(-5)}}
+                />
+              )}
+              {item % 2 ? (
+                <Icon1
+                  name="social-zerply"
+                  size={scale(20)}
+                  color={theme.colors.green}
+                />
+              ) : (
+                <Icon3
+                  name="clock-time-seven"
+                  size={scale(20)}
+                  color={theme.colors.lightGreen}
+                />
+              )}
+            </View>
 
-          <Label
-            title={item.title}
-            style={{width: '45%', fontSize: scale(12)}}
-          />
-          <View style={styles.staticDetails}>
-            <Label title={item?.path} />
-            <Label title={`${item?.percentage} %`} />
-            <Label title="-" />
-          </View>
-        </TouchableOpacity>
+            <Label
+              title={item.title}
+              style={{width: '45%', fontSize: scale(12)}}
+            />
+            <View style={styles.staticDetails}>
+              <Label title={item?.path} />
+              <Label title={`${item?.percentage} %`} />
+              <Label title="-" />
+            </View>
+          </TouchableOpacity>
+        )}
       </>
     );
   };
@@ -301,25 +344,49 @@ const HomeScreen = () => {
                 <Icon2 name="award" size={scale(22)} />
               </View>
               {taskDumyData.map((taskItem, Tindex) => {
+                // console.log('Tindex', Tindex);
                 return (
                   taskItem.fid === item.id && (
-                    <DraggableFlatList
-                      data={taskItem.taskslist}
-                      renderItem={tasksrender}
-                      showsVerticalScrollIndicator={false}
-                      keyExtractor={(item, index) =>
-                        `draggable-item-${item.key}`
-                      }
-                      scrollPercent={5}
-                      onMoveEnd={({data, index}) => {
-                        const updateData = [...taskDumyData];
-                        updateData[Tindex].taskslist = data;
-                        setTaskDummy(updateData);
-                      }}
-                    />
+                    <>
+                      <DraggableFlatList
+                        data={taskItem.taskslist}
+                        renderItem={tasksrender}
+                        showsVerticalScrollIndicator={false}
+                        keyExtractor={(item, index) =>
+                          `draggable-item-${item.key}`
+                        }
+                        scrollPercent={5}
+                        onMoveEnd={({data, index}) => {
+                          const updateData = [...taskDumyData];
+                          updateData[Tindex].taskslist = data;
+                          setTaskDummy(updateData);
+                        }}
+                      />
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigation.navigate('AllTask', {
+                            taskItem,
+                            folderName: item?.folder,
+                          })
+                        }
+                        style={{
+                          alignItems: 'flex-end',
+                          paddingHorizontal: scale(10),
+                          paddingTop: scale(5),
+                          justifyContent: 'center',
+                        }}>
+                        {/* {Tindex < 3 && <Label title="See more" />} */}
+                        {console.log('gdfs', taskItem.taskslist.length)}
+                        {taskItem.taskslist.length > 3 && (
+                          <Label title="See more" />
+                        )}
+                      </TouchableOpacity>
+                    </>
                   )
                 );
+                0;
               })}
+              {/* {console.log('index', index)} */}
             </View>
           </TouchableOpacity>
         </GestureRecognizer>
@@ -638,7 +705,7 @@ const styles = StyleSheet.create({
     // paddingVertical: scale(13),
     marginVertical: scale(4),
     borderRadius: scale(8),
-    paddingBottom: scale(25),
+    paddingBottom: scale(10),
   },
   cardBottom: {
     flexDirection: 'row',

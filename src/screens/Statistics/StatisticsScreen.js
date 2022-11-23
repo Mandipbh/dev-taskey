@@ -190,7 +190,7 @@ const StatisticsScreen = () => {
   const Main = () => {
     return (
       <>
-        <View style={styles.mapView}>
+        {/* <View style={styles.mapView}>
           {statisticdata.map((f, i) => {
             return (
               <View
@@ -203,7 +203,7 @@ const StatisticsScreen = () => {
               </View>
             );
           })}
-        </View>
+        </View> */}
         <View style={styles.mapView}>
           {statisticdataone.map((f, i) => {
             return (

@@ -6,6 +6,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import {scale, theme} from '../utils';
 import StatisticsStack from './StatisticsStack';
 import {Platform} from 'react-native';
+import HomeStack from './HomeStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -25,7 +26,7 @@ const BottomTab = () => {
       }}>
       <Tab.Screen
         name="Home"
-        component={Home}
+        component={HomeStack}
         options={{
           tabBarIcon: ({focused}) => {
             return (
