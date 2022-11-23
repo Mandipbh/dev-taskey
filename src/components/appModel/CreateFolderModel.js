@@ -14,6 +14,8 @@ import InputBox from '../InputBox';
 import {Title, Label} from '../Label';
 import {typeData} from '../../utils/mockData';
 import ColorPickerModel from './ColorPickerModel';
+import Toast from 'react-native-simple-toast';
+import ApiService from '../../utils/ApiService';
 
 const CreateFolderModel = props => {
   const {isVisible, close, editFolder} = props;
@@ -26,8 +28,51 @@ const CreateFolderModel = props => {
     setColorPicker(false);
   };
   const handleSave = () => {
-    close(selColor, folderName);
+    if (!handleValidation()) {
+      close(selColor, folderName);
+      // let folderFrm = new FormData();
+      // folderFrm.append('name', folderName);
+      // folderFrm.append('type', type);
+      // folderFrm.append('color', selColor);
+      // folderFrm.append('order', 1);
+      // folderFrm.append('icon', selColor);
+      // ApiService.post('folder')
+      //   .then(res => {
+      //     if (res.code === -1) {
+      //     }
+      //   })
+      //   .catch(error => {
+      //     console.log('error ', error);
+      //   });
+      setTimeout(() => {
+        onPressBack();
+      }, 800);
+    }
   };
+  var error = false;
+  const handleValidation = () => {
+    if (folderName === null) {
+      Toast.show('please enter folder name', Toast.SHORT);
+      error = true;
+    } else if (type === 0) {
+      Toast.show('please select type', Toast.SHORT);
+      error = true;
+    } else if (selColor === null) {
+      Toast.show('please select color', Toast.SHORT);
+      error = true;
+    } else {
+      error = false;
+    }
+    return error;
+  };
+
+  const onPressBack = () => {
+    close();
+    setColor(null);
+    setFolderName(null);
+    setType(0);
+  };
+
   return (
     <Modal
       transparent={true}
@@ -40,7 +85,7 @@ const CreateFolderModel = props => {
             name="left"
             size={scale(22)}
             color={theme.colors.primary2}
-            onPress={close}
+            onPress={onPressBack}
           />
           <Title title="Edit Folder" />
           <Icon
@@ -125,12 +170,10 @@ const CreateFolderModel = props => {
           </View>
           <View style={styles.devider} />
         </View>
-
         <View style={styles.secondCon}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <View style={styles.row}>
               <Label title="Icon " style={styles.label} />
-
               <TouchableOpacity style={[styles.iconPic]} />
             </View>
             <View style={[styles.row, {marginTop: scale(7)}]}>

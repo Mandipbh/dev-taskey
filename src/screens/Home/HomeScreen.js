@@ -17,12 +17,15 @@ import {
   Title,
 } from '../../components';
 import {images, scale, theme} from '../../utils';
-import {tasksData} from '../../utils/mockData';
+import {folders, tasksData} from '../../utils/mockData';
+import {useNavigation} from '@react-navigation/native';
+import moment from 'moment';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import DraggableFlatList from 'react-native-draggable-dynamic-flatlist';
 import {useEffect} from 'react';
-import {getTask} from '../../redux/Actions/Action';
+// import {getTask} from '../../redux/Actions/Action';
 import {useDispatch, useSelector} from 'react-redux';
+import ComplateTaskModel from '../../components/appModel/ComplateTaskModel';
 
 const HomeScreen = () => {
   const [openFolderModal, setOpenFolderModal] = useState(false);
@@ -34,20 +37,8 @@ const HomeScreen = () => {
   const [endDate, setEndDate] = useState(null);
   const [data, setData] = useState(tasksData);
   const [markedDates, setMarkedDates] = useState(null);
-
+  const [model, setModel] = useState(false);
   const [editFolder, setEditFolder] = useState(null);
-
-  const dispatch = useDispatch();
-  const taskData = useSelector(state => state.task);
-  // console.log('taskData', JSON.stringify(taskData, null, 2));
-
-  const getTaskList = () => {
-    dispatch(getTask());
-  };
-
-  useEffect(() => {
-    getTaskList();
-  }, []);
 
   const [taskDumyData, setTaskDummy] = useState([
     {
@@ -125,6 +116,10 @@ const HomeScreen = () => {
     },
   ]);
 
+  const handleProgressClose = () => {
+    setModel(false);
+  };
+
   const taskType = [
     {
       id: 1,
@@ -180,16 +175,27 @@ const HomeScreen = () => {
               paddingVertical: scale(3),
               paddingHorizontal: scale(5),
             },
-          ]}>
+          ]}
+          onPress={() => navigation.navigate('CreateTask', {editData: item})}>
           <View style={styles.statusView}>
             {item.status ? (
-              <Icon1 name="play" size={scale(25)} color={theme.colors.green} />
+              <Icon1
+                name="play"
+                size={scale(25)}
+                color={theme.colors.green}
+                onPress={() => {
+                  setModel(!model);
+                }}
+              />
             ) : (
               <Icon2
                 name="pause"
                 size={scale(20)}
                 color={theme.colors.orange}
                 style={{marginLeft: scale(-5)}}
+                onPress={() => {
+                  setModel(!model);
+                }}
               />
             )}
             {item % 2 ? (
@@ -468,10 +474,6 @@ const HomeScreen = () => {
           setCalenderModel(false);
         }}
       />
-{/* 
-      {console.log(
-        `start date >>>>>>> - ${startDate} and end date is - ${endDate}`,
-      )} */}
 
       {openFolderModal && (
         <CreateFolderModel
@@ -479,6 +481,7 @@ const HomeScreen = () => {
           editFolder={editFolder}
         />
       )}
+      <ComplateTaskModel isVisible={model} close={handleProgressClose} />
     </SafeAreaView>
   );
 };
