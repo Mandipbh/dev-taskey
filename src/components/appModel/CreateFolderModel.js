@@ -12,14 +12,14 @@ import LottieView from 'lottie-react-native';
 import {scale, theme} from '../../utils';
 import InputBox from '../InputBox';
 import {Title, Label} from '../Label';
-import {metaData, typeData} from '../../utils/mockData';
+import {typeData} from '../../utils/mockData';
 import ColorPickerModel from './ColorPickerModel';
-import {Item} from 'react-native-paper/lib/typescript/components/List/List';
+import Toast from 'react-native-simple-toast';
+import ApiService from '../../utils/ApiService';
 
 const CreateFolderModel = props => {
-  const {isVisible, close, title, subTitle, editFolder} = props;
+  const {isVisible, close, editFolder} = props;
   const [type, setType] = useState(0);
-  const [selMeta, setMeta] = useState(0);
   const [colorPicker, setColorPicker] = useState(false);
   const [selColor, setColor] = useState(null);
   const [folderName, setFolderName] = useState(null);
@@ -28,9 +28,51 @@ const CreateFolderModel = props => {
     setColorPicker(false);
   };
   const handleSave = () => {
-    close(selColor, folderName);
+    if (!handleValidation()) {
+      close(selColor, folderName);
+      // let folderFrm = new FormData();
+      // folderFrm.append('name', folderName);
+      // folderFrm.append('type', type);
+      // folderFrm.append('color', selColor);
+      // folderFrm.append('order', 1);
+      // folderFrm.append('icon', selColor);
+      // ApiService.post('folder')
+      //   .then(res => {
+      //     if (res.code === -1) {
+      //     }
+      //   })
+      //   .catch(error => {
+      //     console.log('error ', error);
+      //   });
+      setTimeout(() => {
+        onPressBack();
+      }, 800);
+    }
   };
-  console.log(editFolder);
+  var error = false;
+  const handleValidation = () => {
+    if (folderName === null) {
+      Toast.show('please enter folder name', Toast.SHORT);
+      error = true;
+    } else if (type === 0) {
+      Toast.show('please select type', Toast.SHORT);
+      error = true;
+    } else if (selColor === null) {
+      Toast.show('please select color', Toast.SHORT);
+      error = true;
+    } else {
+      error = false;
+    }
+    return error;
+  };
+
+  const onPressBack = () => {
+    close();
+    setColor(null);
+    setFolderName(null);
+    setType(0);
+  };
+
   return (
     <Modal
       transparent={true}
@@ -43,7 +85,7 @@ const CreateFolderModel = props => {
             name="left"
             size={scale(22)}
             color={theme.colors.primary2}
-            onPress={close}
+            onPress={onPressBack}
           />
           <Title title="Edit Folder" />
           <Icon
@@ -87,7 +129,6 @@ const CreateFolderModel = props => {
                       loop={type === t.id ? true : false}
                       style={{
                         height: scale(40),
-                        // marginLeft: scale(-6),
                       }}
                     />
                     <View style={[styles.row, {alignItems: 'center'}]}>
@@ -129,73 +170,10 @@ const CreateFolderModel = props => {
           </View>
           <View style={styles.devider} />
         </View>
-        {/* <View style={styles.secondCon}>
-          <View style={[styles.row]}>
-            <Label title="Meta" style={styles.label} />
-            <View style={styles.row}>
-              {metaData?.map((t, i) => {
-                return (
-                  <View
-                    style={{
-                      paddingHorizontal: scale(20),
-                    }}
-                    key={i.toString()}>
-                    <LottieView
-                      source={{
-                        uri: t.url,
-                      }}
-                      autoPlay
-                      loop={selMeta === t.id ? true : false}
-                      style={{
-                        height: scale(35),
-                        marginLeft: scale(-6),
-                      }}
-                    />
-                    <View style={styles.row}>
-                      <TouchableOpacity
-                        style={styles.checkBoxCon}
-                        onPress={() => {
-                          setMeta(t.id);
-                        }}>
-                        <View
-                          style={[
-                            styles.check,
-                            {
-                              backgroundColor:
-                                selMeta === t.id
-                                  ? theme.colors.primary
-                                  : theme.colors.white,
-                            },
-                          ]}
-                        />
-                      </TouchableOpacity>
-                      <Label
-                        title={t.title}
-                        style={[
-                          styles.checkboxLbl,
-                          {
-                            fontWeight: selMeta === t.id ? '700' : '300',
-                            color:
-                              selMeta === t.id
-                                ? theme.colors.primary
-                                : theme.colors.black,
-                          },
-                        ]}
-                      />
-                    </View>
-                  </View>
-                );
-              })}
-            </View>
-            <></>
-          </View>
-          <View style={styles.devider} />
-        </View> */}
         <View style={styles.secondCon}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <View style={styles.row}>
               <Label title="Icon " style={styles.label} />
-
               <TouchableOpacity style={[styles.iconPic]} />
             </View>
             <View style={[styles.row, {marginTop: scale(7)}]}>

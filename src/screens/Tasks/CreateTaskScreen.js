@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Toast from 'react-native-simple-toast';
 import Feather from 'react-native-vector-icons/Feather';
 import LottieView from 'lottie-react-native';
 import {scale, theme} from '../../utils';
@@ -14,11 +15,14 @@ import {Label, Title} from '../../components/Label';
 import {CreateFolderModel, InputBox} from '../../components';
 import CommonHeader from '../../components/CommonHeader';
 import ColorPickerModel from '../../components/appModel/ColorPickerModel';
-import {folders, metaData, typeData} from '../../utils/mockData';
-import {useNavigation} from '@react-navigation/native';
+import {metaData, typeData} from '../../utils/mockData';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
+import ApiService from '../../utils/ApiService';
+
 const CreateTaskScreen = props => {
+  const isFocused = useIsFocused();
   const [type, setType] = useState(0);
   const [selMeta, setMeta] = useState(0);
   const [colorPicker, setColorPicker] = useState(false);
@@ -26,10 +30,11 @@ const CreateTaskScreen = props => {
   const [open, setOpen] = useState(false);
   const [newFolderM, setnewFolderM] = useState(false);
   const [selectedFolder, setSelFolder] = useState(null);
-  const [title, setTitle] = useState('');
-  const [desc, setDesc] = useState('');
+  const [folders, setFolders] = useState([]);
+  const [amount, setAmount] = useState(null);
+  const [title, setTitle] = useState(null);
   const navigation = useNavigation();
-  // const {editData} = props?.route?.params;
+
   const handleCloseClolorpicker = c => {
     setColor(c);
     setColorPicker(false);
@@ -44,11 +49,78 @@ const CreateTaskScreen = props => {
     if (props?.route?.params?.editData) {
       const {editData} = props?.route?.params;
       setTitle(editData?.title);
-      setDesc(editData?.desc);
       setColor(editData.color);
     }
   }, []);
-  // console.log(editData);
+
+  // useEffect(() => {
+  //   getAllFolders();
+  // }, [isFocused]);
+
+  const getAllFolders = async () => {
+    ApiService.get('folder').then(res => {
+      if (res.code === 0) {
+        setFolders(res.data);
+      }
+    });
+  };
+  const handleMeta = id => {
+    if (type === 1) {
+      setMeta(2);
+    } else {
+      Toast.show('Chrono in just registry');
+    }
+    if (type === 2) {
+      setMeta(1);
+    } else {
+      Toast.show('Timer in just Achievement');
+    }
+    if (type === 3) {
+      setMeta(id);
+    }
+  };
+
+  const handleSave = () => {
+    if (!handleValidation()) {
+      // let folderFrm = new FormData();
+      // folderFrm.append('name', title);
+      // folderFrm.append('type', type);
+      // folderFrm.append('color', selColor);
+      // folderFrm.append('order', 1);
+      // folderFrm.append('meta', meta);
+      // folderFrm.append('amount', amount);
+      // folderFrm.append('status', 'play');
+      // folderFrm.append('icon', selColor);
+
+      // ApiService.post('folder')
+      //   .then(res => {
+      //     if (res.code === -1) {
+      //     }
+      //   })
+      //   .catch(error => {
+      //     console.log('error ', error);
+      //   });
+    }
+  };
+  var error = false;
+  const handleValidation = () => {
+    if (title === null) {
+      Toast.show('please enter title', Toast.SHORT);
+    } else if (selectedFolder === null) {
+      Toast.show('please select folder', Toast.SHORT);
+      error = true;
+    } else if (type === 0) {
+      Toast.show('please select type', Toast.SHORT);
+      error = true;
+    } else if (selColor === null) {
+      Toast.show('please select color', Toast.SHORT);
+      error = true;
+    } else {
+      error = false;
+    }
+    return error;
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
@@ -60,7 +132,8 @@ const CreateTaskScreen = props => {
           IconType={Feather}
           IconColor={theme.colors.primary2}
           onRightIconPress={() => {
-            navigation.navigate('Home');
+            handleSave();
+            // navigation.navigate('Home');
           }}
           // onLeftIconPress={() => navigation.replace('Tabs')}
           headerLeft={
@@ -91,18 +164,6 @@ const CreateTaskScreen = props => {
               }}
             />
           </View>
-          {/* <View style={styles.secondCon}>
-            <Label title="Details :" style={styles.label} />
-            <InputBox
-              placeholder="Task description"
-              value={desc}
-              style={styles.inputdesc}
-              multiline={true}
-              onChangeText={txt => {
-                setDesc(txt);
-              }}
-            />
-          </View> */}
           <View style={styles.secondCon}>
             <View style={styles.row}>
               <Label title="Type :" style={styles.label} />
@@ -131,6 +192,7 @@ const CreateTaskScreen = props => {
                           style={styles.checkBoxCon}
                           onPress={() => {
                             setType(t.id);
+                            setMeta(null);
                           }}>
                           <View
                             style={[
@@ -191,7 +253,7 @@ const CreateTaskScreen = props => {
                         <TouchableOpacity
                           style={styles.checkBoxCon}
                           onPress={() => {
-                            setMeta(t.id);
+                            handleMeta(t.id);
                           }}>
                           <View
                             style={[
@@ -232,6 +294,10 @@ const CreateTaskScreen = props => {
                   style={{width: theme.SCREENWIDTH * 0.2, height: scale(35)}}
                   placeholder="1 min"
                   inputStyle={{fontSize: 14}}
+                  value={amount}
+                  onChangeText={txt => {
+                    setAmount(txt);
+                  }}
                 />
               </View>
             )}
@@ -272,7 +338,7 @@ const CreateTaskScreen = props => {
                 <TouchableOpacity
                   style={styles.folder}
                   onPress={() => {
-                    setOpen(true);
+                    setOpen(!open);
                   }}>
                   <Icon
                     name={open ? 'menu-up' : 'menu-down'}
@@ -284,6 +350,7 @@ const CreateTaskScreen = props => {
                         ? 'Globle list folder'
                         : selectedFolder
                     }
+                    style={styles.selFolderTxt}
                   />
                 </TouchableOpacity>
               </View>
@@ -291,6 +358,7 @@ const CreateTaskScreen = props => {
               <TouchableOpacity
                 style={styles.row}
                 onPress={() => {
+                  getAllFolders();
                   setnewFolderM(true);
                 }}>
                 <Icon
@@ -416,10 +484,13 @@ const styles = StyleSheet.create({
     borderWidth: scale(1),
     height: scale(30),
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
     alignItems: 'center',
     marginLeft: scale(10),
     borderRadius: scale(5),
+  },
+  selFolderTxt: {
+    marginRight: scale(10),
   },
   circule: {
     borderWidth: scale(2),

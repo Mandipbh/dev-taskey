@@ -15,7 +15,6 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 import {scale, theme} from '../../utils';
 import {useState} from 'react';
-import {API, postAPICall} from '../../utils/AppApi';
 import {useDispatch, useSelector} from 'react-redux';
 import ApiService from '../../utils/ApiService';
 import {isLogin, loginAction} from '../../redux/Actions/UserActions';
@@ -84,7 +83,6 @@ const SignIn = () => {
         };
         const options = {payloads: mobileFrm1};
         const response = await ApiService.post('login', options);
-        console.log('resposemn >> ', response);
         if (response.code === 0) {
           Toast.show('OTP is sent to your mobile number');
           setSendOtp(true);
@@ -92,15 +90,6 @@ const SignIn = () => {
         } else {
           setSendOtp(true);
         }
-
-        // postAPICall(API.login, mobileFrm).then(res => {
-        //   console.log('response >>. ', res);
-        // });
-        // if (response.code === 0) {
-        //   console.log('respomnse >. ', response);
-        // } else {
-        //   console.log('error part', response);
-        // }
       } catch (error) {
         Toast.show('error', Toast.SHORT);
       }

@@ -30,6 +30,7 @@ import DraggableFlatList from 'react-native-draggable-dynamic-flatlist';
 import {useEffect} from 'react';
 // import {getTask} from '../../redux/Actions/Action';
 import {useDispatch, useSelector} from 'react-redux';
+import ComplateTaskModel from '../../components/appModel/ComplateTaskModel';
 
 const HomeScreen = () => {
   const isFocused = useIsFocused();
@@ -45,7 +46,7 @@ const HomeScreen = () => {
   const [endDate, setEndDate] = useState(null);
   const [data, setData] = useState(tasksData);
   const [markedDates, setMarkedDates] = useState(null);
-
+  const [model, setModel] = useState(false);
   const [editFolder, setEditFolder] = useState(null);
 
   const [taskDumyData, setTaskDummy] = useState([
@@ -124,10 +125,9 @@ const HomeScreen = () => {
     },
   ]);
 
-  // useEffect(() => {
-  //   setStartDay(null);
-  //   setEndDay(null);
-  // }, [isFocused]);
+  const handleProgressClose = () => {
+    setModel(false);
+  };
 
   const taskType = [
     {
@@ -190,24 +190,31 @@ const HomeScreen = () => {
             styles.row,
             {
               justifyContent: 'space-between',
-              // borderColor:
-              //   item?.tasks.length == tindex + 1
-              //     ? theme.colors.transparent
-              //     : item.color,
               borderBottomWidth: scale(0.7),
               paddingVertical: scale(3),
               paddingHorizontal: scale(5),
             },
-          ]}>
+          ]}
+          onPress={() => navigation.navigate('CreateTask', {editData: item})}>
           <View style={styles.statusView}>
             {item.status ? (
-              <Icon1 name="play" size={scale(25)} color={theme.colors.green} />
+              <Icon1
+                name="play"
+                size={scale(25)}
+                color={theme.colors.green}
+                onPress={() => {
+                  setModel(!model);
+                }}
+              />
             ) : (
               <Icon2
                 name="pause"
                 size={scale(20)}
                 color={theme.colors.orange}
                 style={{marginLeft: scale(-5)}}
+                onPress={() => {
+                  setModel(!model);
+                }}
               />
             )}
             {item % 2 ? (
@@ -316,71 +323,6 @@ const HomeScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
-        {/* <View style={styles.headerContainer}>
-          {taskType?.map((type, index) => {
-            return (
-              type.id === selectedType && (
-                <>
-                  <Image
-                    source={type.icon}
-                    style={{
-                      height: type.id === 2 ? scale(28) : scale(35),
-                      width: type.id === 2 ? scale(28) : scale(35),
-                      resizeMode: 'contain',
-                    }}
-                  />
-                  <View style={styles.taskCon}>
-                    <Icon2
-                      name="chevron-left"
-                      size={scale(30)}
-                      onPress={() => {
-                        selectedType > 1
-                          ? setType(type.id - 1)
-                          : setType(type.id + 2);
-                      }}
-                    />
-                    <View style={styles.selctCon}>
-                      <Label key={index} title={type?.title} />
-                      <Label
-                        title={`Total = ${type?.totalTime}`}
-                        style={styles.time}
-                      />
-                    </View>
-                    <Icon2
-                      name="chevron-right"
-                      size={scale(30)}
-                      onPress={() => {
-                        selectedType <= 2 ? setType(type.id + 1) : setType(1);
-                      }}
-                    />
-                  </View>
-                </>
-              )
-            );
-          })}
-
-          <View
-            style={[
-              styles.row,
-              // {width: scale(70), justifyContent: 'space-around'},
-            ]}>
-            <Label
-              title={
-                startDate === null ? 'Today  ' : `${startDate} / ${endDate} `
-              }
-              style={{fontWeight: '600', fontSize: scale(10)}}
-            />
-            <Icon2
-              name="calendar"
-              size={scale(25)}
-              color={theme.colors.primary}
-              onPress={() => {
-                setCalenderModel(true);
-              }}
-            />
-          </View>
-        </View> */}
-
         <View style={{flexDirection: 'row', height: '7%'}}>
           {taskType?.map((type, index) => {
             return (
@@ -560,16 +502,13 @@ const HomeScreen = () => {
         }}
       />
 
-      {console.log(
-        `start date >>>>>>> - ${startDate} and end date is - ${endDate}`,
-      )}
-
       {openFolderModal && (
         <CreateFolderModel
           close={() => setOpenFolderModal(false)}
           editFolder={editFolder}
         />
       )}
+      <ComplateTaskModel isVisible={model} close={handleProgressClose} />
     </SafeAreaView>
   );
 };
