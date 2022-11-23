@@ -5,7 +5,14 @@ import {Label} from './Label';
 import {scale, theme} from '../utils';
 
 const CommonTextInupt = props => {
-  const {LabelIcon, placeholder, Labeltitle} = props;
+  const {
+    LabelIcon,
+    placeholder,
+    Labeltitle,
+    onChangeText,
+    keyboardType,
+    maxLength,
+  } = props;
   return (
     <View style={styles.container}>
       <View style={styles.label}>
@@ -16,7 +23,13 @@ const CommonTextInupt = props => {
         />
         <Label title={Labeltitle} style={styles.labelText} />
       </View>
-      <TextInput style={styles.textinput} placeholder={placeholder} />
+      <TextInput
+        style={styles.textinput}
+        placeholder={placeholder}
+        onChangeText={onChangeText}
+        keyboardType={keyboardType}
+        maxLength={maxLength}
+      />
     </View>
   );
 };

@@ -9,3 +9,4 @@ export {default as AlertModel} from './appModel/AlertModel';
 export {default as CustomModal} from './CustomModal';
 export {default as CreateFolderModel} from './appModel/CreateFolderModel';
 export {default as DatePickerModal} from './appModel/DatePickerModal';
+export {default as ComplateTaskModel} from './appModel/ComplateTaskModel';
