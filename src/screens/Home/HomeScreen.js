@@ -23,6 +23,7 @@ import DraggableFlatList from 'react-native-draggable-dynamic-flatlist';
 import {useEffect} from 'react';
 import {getTask} from '../../redux/Actions/Action';
 import {useDispatch, useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
 
 const HomeScreen = () => {
   const [openFolderModal, setOpenFolderModal] = useState(false);
@@ -36,7 +37,7 @@ const HomeScreen = () => {
   const [markedDates, setMarkedDates] = useState(null);
 
   const [editFolder, setEditFolder] = useState(null);
-
+  const naviagtion = useNavigation();
   const dispatch = useDispatch();
   const taskData = useSelector(state => state.task);
   // console.log('taskData', JSON.stringify(taskData, null, 2));
@@ -335,7 +336,7 @@ const HomeScreen = () => {
                       />
                       <TouchableOpacity
                         onPress={() =>
-                          navigation.navigate('AllTask', {
+                          naviagtion.navigate('AllTask', {
                             taskItem,
                             folderName: item?.folder,
                           })
