@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Modal, ActivityIndicator} from 'react-native';
+import {StyleSheet, View, Modal} from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import {scale, theme} from '../../utils';
 import {Title, Label} from '../Label';
@@ -38,13 +38,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#00000020',
     zIndex: 111,
   },
-  label: {textAlign: 'center', color: theme.colors.black},
   activityIndicatorWrapper: {
     backgroundColor: theme.colors.white,
-    // height: theme.SCREENHEIGHT * 0.2,
     width: theme.SCREENWIDTH * 0.85,
     borderRadius: scale(10),
-    // paddingVertical:scale(20),
     padding: scale(15),
     zIndex: 111,
   },
@@ -52,8 +49,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingVertical: scale(7),
-    // paddingHorizontal:scale(10),
-    // marginVertical:scale(8)
   },
   divider: {
     width: '112%',

@@ -1,12 +1,13 @@
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
 import React from 'react';
 import AntDesign from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon1 from 'react-native-vector-icons/Foundation';
-import {moderatedScale, scale, theme} from '../../utils';
+import {scale, theme} from '../../utils';
 import CommonHeader from '../../components/CommonHeader';
 import {Label, Title} from '../../components';
 import {useNavigation} from '@react-navigation/native';
+
 const TaskDetailsScreen = props => {
   const navigation = useNavigation();
   const {note} = props?.route?.params;
@@ -54,14 +55,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.white,
     paddingHorizontal: scale(15),
-  },
-  headerContainer: {
-    height: scale(55),
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderBottomWidth: scale(0.2),
-    borderColor: theme.colors.gray,
   },
   secondContainer: {
     marginTop: scale(10),

@@ -1,7 +1,8 @@
-import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Platform, StyleSheet, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
 import {scale, theme} from '../utils';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {Label} from './Label';
 
 const Accordian = props => {
   const {title, children, leftContent, style} = props;
@@ -12,9 +13,9 @@ const Accordian = props => {
       <TouchableOpacity onPress={() => setShowContent(!showContent)}>
         <View style={styles.titleContainer}>
           <View style={styles.AccordianContainer}>
-            <Text style={styles.title}>{title}</Text>
+            <Label style={styles.title} title={title}></Label>
             <View style={styles.row}>
-              <Text style={styles.title}>{leftContent}</Text>
+              <Label style={styles.title} title={leftContent}></Label>
               {showContent ? (
                 <AntDesign name="up" />
               ) : (

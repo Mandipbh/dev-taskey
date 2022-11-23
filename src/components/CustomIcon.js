@@ -1,25 +1,21 @@
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import React from 'react';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {theme} from '../utils';
+import {scale, theme} from '../utils';
 
 export default CustomIcon = props => {
   const {iconName, onPress, IconSetName, iconSize, style} = props;
   return (
-    <TouchableOpacity
-      style={[
-        {
-          padding: 10,
-          borderRadius: 5,
-          backgroundColor: theme.colors.purpal,
-          marginHorizontal: 5,
-        },
-        style,
-      ]}
-      onPress={onPress}>
+    <TouchableOpacity style={[style, styles.CustomIcon]} onPress={onPress}>
       <IconSetName name={iconName} size={iconSize} color={theme.colors.white} />
     </TouchableOpacity>
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  CustomIcon: {
+    padding: scale(10),
+    borderRadius: scale(5),
+    backgroundColor: theme.colors.purpal,
+    marginHorizontal: scale(5),
+  },
+});

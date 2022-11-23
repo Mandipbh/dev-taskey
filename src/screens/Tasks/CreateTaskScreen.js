@@ -10,7 +10,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import LottieView from 'lottie-react-native';
 import {scale, theme} from '../../utils';
-import {Label, Title} from '../../components/Label';
+import {Label} from '../../components/Label';
 import {CreateFolderModel, InputBox} from '../../components';
 import CommonHeader from '../../components/CommonHeader';
 import ColorPickerModel from '../../components/appModel/ColorPickerModel';
@@ -29,7 +29,6 @@ const CreateTaskScreen = props => {
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const navigation = useNavigation();
-  // const {editData} = props?.route?.params;
   const handleCloseClolorpicker = c => {
     setColor(c);
     setColorPicker(false);
@@ -48,7 +47,6 @@ const CreateTaskScreen = props => {
       setColor(editData.color);
     }
   }, []);
-  // console.log(editData);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
@@ -62,17 +60,13 @@ const CreateTaskScreen = props => {
           onRightIconPress={() => {
             navigation.navigate('Home');
           }}
-          // onLeftIconPress={() => navigation.replace('Tabs')}
           headerLeft={
             props?.route?.params?.editData
               ? () => (
                   <TouchableOpacity
-                    // style={{left: scale(7)}}
                     onPress={() => {
                       navigation.replace('Tabs');
-                    }}
-                    // onPress={onLeftIconPress}
-                  >
+                    }}>
                     <AntDesign name="left" size={25} />
                   </TouchableOpacity>
                 )
@@ -91,18 +85,6 @@ const CreateTaskScreen = props => {
               }}
             />
           </View>
-          {/* <View style={styles.secondCon}>
-            <Label title="Details :" style={styles.label} />
-            <InputBox
-              placeholder="Task description"
-              value={desc}
-              style={styles.inputdesc}
-              multiline={true}
-              onChangeText={txt => {
-                setDesc(txt);
-              }}
-            />
-          </View> */}
           <View style={styles.secondCon}>
             <View style={styles.row}>
               <Label title="Type :" style={styles.label} />
@@ -112,7 +94,6 @@ const CreateTaskScreen = props => {
                     <View
                       key={i.toString()}
                       style={{
-                        // marginHorizontal: scale(8),
                         marginLeft: scale(20),
                       }}>
                       <LottieView
@@ -123,7 +104,6 @@ const CreateTaskScreen = props => {
                         loop={type === t.id ? true : false}
                         style={{
                           height: scale(40),
-                          // marginLeft: scale(-6),
                         }}
                       />
                       <View style={[styles.row, {alignItems: 'center'}]}>
@@ -342,12 +322,8 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.white,
     paddingHorizontal: scale(13),
   },
-  subtitle: {
-    marginTop: scale(5),
-  },
   row: {
     flexDirection: 'row',
-    // justifyContent: 'center',
     alignItems: 'center',
   },
   secondCon: {
@@ -360,12 +336,6 @@ const styles = StyleSheet.create({
   input: {
     width: '100%',
     marginLeft: scale(0),
-    marginTop: scale(5),
-  },
-  inputdesc: {
-    width: '100%',
-    marginLeft: scale(0),
-    height: scale(100),
     marginTop: scale(5),
   },
   checkBoxCon: {
@@ -409,7 +379,6 @@ const styles = StyleSheet.create({
     borderWidth: scale(1),
     borderRadius: scale(5),
     marginLeft: scale(10),
-    // marginRight: scale(30),
   },
   folder: {
     width: theme.SCREENWIDTH * 0.42,
@@ -420,15 +389,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: scale(10),
     borderRadius: scale(5),
-  },
-  circule: {
-    borderWidth: scale(2),
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: scale(50),
-    height: scale(50),
-    borderRadius: scale(40),
-    alignSelf: 'center',
   },
   optionsContainer: {
     marginLeft: theme.SCREENWIDTH * 0.22,

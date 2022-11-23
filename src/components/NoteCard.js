@@ -1,9 +1,9 @@
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import React from 'react';
 import {scale, theme} from '../utils';
 
 const NoteCard = props => {
-  const {children, backgroundColor, index, onPress} = props;
+  const {children, index, onPress} = props;
   return (
     <TouchableOpacity
       style={{
@@ -21,5 +21,3 @@ const NoteCard = props => {
 };
 
 export default NoteCard;
-
-const styles = StyleSheet.create({});

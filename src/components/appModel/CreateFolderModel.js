@@ -12,14 +12,12 @@ import LottieView from 'lottie-react-native';
 import {scale, theme} from '../../utils';
 import InputBox from '../InputBox';
 import {Title, Label} from '../Label';
-import {metaData, typeData} from '../../utils/mockData';
+import {typeData} from '../../utils/mockData';
 import ColorPickerModel from './ColorPickerModel';
-import {Item} from 'react-native-paper/lib/typescript/components/List/List';
 
 const CreateFolderModel = props => {
-  const {isVisible, close, title, subTitle, editFolder} = props;
+  const {isVisible, close, editFolder} = props;
   const [type, setType] = useState(0);
-  const [selMeta, setMeta] = useState(0);
   const [colorPicker, setColorPicker] = useState(false);
   const [selColor, setColor] = useState(null);
   const [folderName, setFolderName] = useState(null);
@@ -30,7 +28,6 @@ const CreateFolderModel = props => {
   const handleSave = () => {
     close(selColor, folderName);
   };
-  console.log(editFolder);
   return (
     <Modal
       transparent={true}
@@ -87,7 +84,6 @@ const CreateFolderModel = props => {
                       loop={type === t.id ? true : false}
                       style={{
                         height: scale(40),
-                        // marginLeft: scale(-6),
                       }}
                     />
                     <View style={[styles.row, {alignItems: 'center'}]}>
@@ -129,68 +125,7 @@ const CreateFolderModel = props => {
           </View>
           <View style={styles.devider} />
         </View>
-        {/* <View style={styles.secondCon}>
-          <View style={[styles.row]}>
-            <Label title="Meta" style={styles.label} />
-            <View style={styles.row}>
-              {metaData?.map((t, i) => {
-                return (
-                  <View
-                    style={{
-                      paddingHorizontal: scale(20),
-                    }}
-                    key={i.toString()}>
-                    <LottieView
-                      source={{
-                        uri: t.url,
-                      }}
-                      autoPlay
-                      loop={selMeta === t.id ? true : false}
-                      style={{
-                        height: scale(35),
-                        marginLeft: scale(-6),
-                      }}
-                    />
-                    <View style={styles.row}>
-                      <TouchableOpacity
-                        style={styles.checkBoxCon}
-                        onPress={() => {
-                          setMeta(t.id);
-                        }}>
-                        <View
-                          style={[
-                            styles.check,
-                            {
-                              backgroundColor:
-                                selMeta === t.id
-                                  ? theme.colors.primary
-                                  : theme.colors.white,
-                            },
-                          ]}
-                        />
-                      </TouchableOpacity>
-                      <Label
-                        title={t.title}
-                        style={[
-                          styles.checkboxLbl,
-                          {
-                            fontWeight: selMeta === t.id ? '700' : '300',
-                            color:
-                              selMeta === t.id
-                                ? theme.colors.primary
-                                : theme.colors.black,
-                          },
-                        ]}
-                      />
-                    </View>
-                  </View>
-                );
-              })}
-            </View>
-            <></>
-          </View>
-          <View style={styles.devider} />
-        </View> */}
+
         <View style={styles.secondCon}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <View style={styles.row}>
@@ -250,11 +185,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
-    // padding: 45,
     paddingTop: Platform.OS === 'ios' ? scale(30) : scale(5),
     backgroundColor: theme.colors.white,
     margin: 0,
-    // paddingHorizontal: scale(10),
   },
   subTitleView: {
     paddingVertical: scale(20),
@@ -264,7 +197,6 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    // justifyContent: 'center',
     alignItems: 'center',
   },
   input: {
@@ -312,7 +244,6 @@ const styles = StyleSheet.create({
     borderWidth: scale(1),
     borderRadius: scale(5),
     marginLeft: scale(10),
-    // marginRight: scale(30),
   },
 });
 
