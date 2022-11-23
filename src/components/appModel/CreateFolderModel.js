@@ -228,11 +228,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
-    // padding: 45,
     paddingTop: Platform.OS === 'ios' ? scale(30) : scale(5),
     backgroundColor: theme.colors.white,
     margin: 0,
-    // paddingHorizontal: scale(10),
   },
   subTitleView: {
     paddingVertical: scale(20),
@@ -242,7 +240,6 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    // justifyContent: 'center',
     alignItems: 'center',
   },
   input: {
@@ -290,7 +287,6 @@ const styles = StyleSheet.create({
     borderWidth: scale(1),
     borderRadius: scale(5),
     marginLeft: scale(10),
-    // marginRight: scale(30),
   },
 });
 

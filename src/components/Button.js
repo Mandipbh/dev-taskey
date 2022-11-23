@@ -1,9 +1,9 @@
 import React from 'react';
 import {TouchableOpacity, StyleSheet} from 'react-native';
-
 import {scale, theme} from '../utils';
 import {Label} from './index';
 import ICON from 'react-native-vector-icons/Ionicons';
+
 const Button = props => {
   const {onPress, style, title, titleStyle, Icon} = props;
   return (
@@ -36,17 +36,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     height: theme.SCREENHEIGHT * 0.06,
   },
-  buttonImage: {
-    width: scale(20),
-    height: scale(20),
-    resizeMode: 'contain',
-    left: scale(-10),
-    alignSelf: 'center',
-  },
   buttontxt: {
     fontSize: scale(15),
     color: theme.colors.white,
-    // fontFamily: theme.fonts.muktaSemiBold,
     fontWeight: '500',
   },
   title: {color: theme.colors.blue, textAlign: 'center'},

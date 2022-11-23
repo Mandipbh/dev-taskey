@@ -1,20 +1,15 @@
 import {
-  FlatList,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
   Image,
   Platform,
-  Text,
 } from 'react-native';
-import {useIsFocused} from '@react-navigation/native';
 import React, {useState} from 'react';
 import Icon1 from 'react-native-vector-icons/Foundation';
 import Icon2 from 'react-native-vector-icons/Feather';
 import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
-import Icon from 'react-native-vector-icons/Entypo';
 import {
   CreateFolderModel,
   DatePickerModal,
@@ -33,12 +28,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import ComplateTaskModel from '../../components/appModel/ComplateTaskModel';
 
 const HomeScreen = () => {
-  const isFocused = useIsFocused();
-  const [folderData, setFolderData] = useState(folders);
-  const [selectedFolder, setSelectedFolder] = useState(0);
   const [openFolderModal, setOpenFolderModal] = useState(false);
   const [openIndex, setOpenIndex] = useState(null);
-  const navigation = useNavigation();
   const [selectedType, setType] = useState(1);
   const [calenderModel, setCalenderModel] = useState(false);
   const [legendView, setlegendView] = useState(false);
@@ -80,6 +71,42 @@ const HomeScreen = () => {
           path: 20,
           percentage: 20,
         },
+        // {
+        //   id: 3,
+        //   title: 'Task• example 2',
+        //   color: '#ffddff',
+        //   folder: 'global',
+        //   status: 0,
+        //   path: 20,
+        //   percentage: 20,
+        // },
+        // {
+        //   id: 4,
+        //   title: 'Task examole',
+        //   color: '#ffddff',
+        //   folder: 'global',
+        //   status: 1,
+        //   path: 20,
+        //   percentage: 20,
+        // },
+        // {
+        //   id: 5,
+        //   title: 'Task• example 2',
+        //   color: '#ffddff',
+        //   folder: 'global',
+        //   status: 0,
+        //   path: 20,
+        //   percentage: 20,
+        // },
+        // {
+        //   id: 6,
+        //   title: 'Task example',
+        //   color: '#ffddff',
+        //   folder: 'global',
+        //   status: 1,
+        //   path: 20,
+        //   percentage: 20,
+        // },
       ],
     },
     {
@@ -149,21 +176,11 @@ const HomeScreen = () => {
       icon: images.counter,
     },
   ];
-  const handleData = d => {
-    if (d !== null) {
-      const sDate = Object.keys(d)[0];
-      const eDate = Object.keys(d)[3];
-      setStartDate(moment(sDate).format('DD/MM'));
-      setEndDate(moment(eDate).format('DD/MM'));
-      console.log('starting date >> ', moment(sDate).format('DD/MM'));
-      console.log('end date >> ', moment(eDate).format('DD/MM'));
-    }
-  };
   const config = {
     velocityThreshold: 0.3,
     directionalOffsetThreshold: 20,
   };
-  const onSwipe = (gestureName, gestureState, index) => {
+  const onSwipe = (gestureName, index) => {
     const {SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT} = swipeDirections;
     switch (gestureName) {
       case SWIPE_UP:
@@ -180,6 +197,7 @@ const HomeScreen = () => {
   };
 
   const tasksrender = ({item, index, move, moveEnd, isActive}) => {
+    console.log('this is item', JSON.stringify(isActive, null, 2));
     return (
       <>
         <TouchableOpacity
@@ -246,7 +264,7 @@ const HomeScreen = () => {
     );
   };
 
-  const rendertasks = ({item, index, move, moveEnd, isActive}) => {
+  const rendertasks = ({item, index, move, moveEnd}) => {
     return (
       <>
         <GestureRecognizer
@@ -257,7 +275,6 @@ const HomeScreen = () => {
             onPressOut={moveEnd}
             onPress={() => {
               setEditFolder(item);
-              // navigation.navigate('TaskDetails', {note: item});
               setOpenFolderModal(true);
             }}>
             <View
@@ -294,25 +311,49 @@ const HomeScreen = () => {
                 <Icon2 name="award" size={scale(22)} />
               </View>
               {taskDumyData.map((taskItem, Tindex) => {
+                // console.log('Tindex', Tindex);
                 return (
                   taskItem.fid === item.id && (
-                    <DraggableFlatList
-                      data={taskItem.taskslist}
-                      renderItem={tasksrender}
-                      showsVerticalScrollIndicator={false}
-                      keyExtractor={(item, index) =>
-                        `draggable-item-${item.key}`
-                      }
-                      scrollPercent={5}
-                      onMoveEnd={({data, index}) => {
-                        const updateData = [...taskDumyData];
-                        updateData[Tindex].taskslist = data;
-                        setTaskDummy(updateData);
-                      }}
-                    />
+                    <>
+                      <DraggableFlatList
+                        data={taskItem.taskslist}
+                        renderItem={tasksrender}
+                        showsVerticalScrollIndicator={false}
+                        keyExtractor={(item, index) =>
+                          `draggable-item-${item.key}`
+                        }
+                        scrollPercent={5}
+                        onMoveEnd={({data, index}) => {
+                          const updateData = [...taskDumyData];
+                          updateData[Tindex].taskslist = data;
+                          setTaskDummy(updateData);
+                        }}
+                      />
+                      <TouchableOpacity
+                        onPress={() =>
+                          naviagtion.navigate('AllTask', {
+                            taskItem,
+                            folderName: item?.folder,
+                          })
+                        }
+                        style={{
+                          alignItems: 'flex-end',
+                          paddingHorizontal: scale(10),
+                          paddingTop: scale(5),
+                          justifyContent: 'center',
+                        }}>
+                        {/* {Tindex < 3 && <Label title="See more" />} */}
+                        {console.log('gdfs', taskItem.taskslist.length)}
+                        {taskItem.taskslist.length > 3 && (
+                          <Label title="See more" />
+                        )}
+                      </TouchableOpacity>
+                    </>
                   )
                 );
+                0;
               })}
+              {/* {console.log('index', index)} */}
             </View>
           </TouchableOpacity>
         </GestureRecognizer>
@@ -353,7 +394,6 @@ const HomeScreen = () => {
                     <View
                       style={{
                         width: '15%',
-                        // justifyContent: 'center',
                       }}>
                       <Icon2
                         name="chevron-left"
@@ -404,9 +444,11 @@ const HomeScreen = () => {
                 width: '70%',
                 alignItems: 'flex-end',
               }}>
-              <Text>
-                {startDate === null ? 'Today  ' : `${startDate} / ${endDate} `}
-              </Text>
+              <Label
+                title={
+                  startDate === null ? 'Today  ' : `${startDate} / ${endDate} `
+                }
+              />
             </View>
             <View
               style={{
@@ -435,11 +477,6 @@ const HomeScreen = () => {
                   ? theme.SCREENHEIGHT * 0.71
                   : theme.SCREENHEIGHT * 0.765,
             }}>
-            {/*   <View style={styles.dataCon}>
-              <Label title={'Tasks'} style={styles.subt} />
-              <Icon2 name="calendar" size={scale(22)} />
-            </View> */}
-
             <DraggableFlatList
               style={{height: theme.SCREENHEIGHT * 0.67}}
               contentContainerStyle={{
@@ -449,7 +486,7 @@ const HomeScreen = () => {
               data={data}
               renderItem={rendertasks}
               showsVerticalScrollIndicator={false}
-              keyExtractor={(item, index) => `draggable-item-${item.key}`}
+              keyExtractor={item => `draggable-item-${item.key}`}
               scrollPercent={5}
               onMoveEnd={({data}) => setData(data)}
             />
@@ -492,7 +529,6 @@ const HomeScreen = () => {
           setEndDate(null);
           setStartDate(null);
         }}
-        // dateRange={handleData}
         markedDates={markedDates}
         setMarkedDates={setMarkedDates}
         onSavePress={(StartDate, Enddate) => {
@@ -520,72 +556,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.white,
   },
-  headerContainer: {
-    height: scale(55),
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderBottomWidth: scale(0.2),
-    borderColor: theme.colors.gray,
-    paddingHorizontal: scale(15),
-  },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  shadow: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-
-    elevation: 2,
-  },
-  tabView: {
-    backgroundColor: theme.colors.black,
-    padding: scale(10),
-    marginHorizontal: scale(5),
-    borderRadius: scale(10),
-  },
-
-  tabViewCon: {
-    backgroundColor: theme.colors.gray1,
-    paddingVertical: scale(8),
-    paddingHorizontal: scale(5),
-    borderRadius: scale(8),
-    marginVertical: scale(10),
-  },
   taskCard: {
-    // padding: scale(8),
-    // paddingVertical: scale(13),
     marginVertical: scale(4),
     borderRadius: scale(8),
-    paddingBottom: scale(25),
-  },
-  cardBottom: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: scale(10),
-  },
-  roundIcon: {
-    bottom: 20,
-    right: 25,
-    position: 'absolute',
-  },
-  folderView: {flexDirection: 'row', alignItems: 'center'},
-  subt: {
-    marginLeft: scale(3),
-    fontWeight: '600',
-    fontSize: scale(14),
-    marginBottom: scale(5),
-  },
-  dataCon: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    paddingBottom: scale(10),
   },
   mainCOntainer: {
     paddingHorizontal: scale(13),
@@ -593,17 +571,6 @@ const styles = StyleSheet.create({
   time: {
     fontSize: scale(11),
     alignItems: 'center',
-  },
-  taskCon: {
-    flexDirection: 'row',
-    width: theme.SCREENWIDTH * 0.4,
-    justifyContent: 'space-between',
-    marginLeft: -theme.SCREENWIDTH * 0.05,
-  },
-  selctCon: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    minWidth: theme.SCREENWIDTH * 0.35,
   },
   taskContainer: {
     flexDirection: 'row',
@@ -614,9 +581,6 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontWeight: '600',
-  },
-  rowdata: {
-    flexDirection: 'row',
   },
   statusView: {
     flexDirection: 'row',

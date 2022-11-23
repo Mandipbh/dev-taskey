@@ -1,13 +1,12 @@
 import {
-  FlatList,
   Platform,
   Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
+  Text,
 } from 'react-native';
 import React from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -30,15 +29,33 @@ import {
   TimerSpecificfolders,
 } from '../../utils/mockData';
 import moment from 'moment';
-// import AntDesign from 'react-native-vector-icons/AntDesign';
 import CommonHeader from '../../components/CommonHeader';
-import {Checkbox} from 'react-native-paper';
 import ChartSection from '../../components/ChartSection';
 import {useLayoutEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {MultiSelect} from 'react-native-element-dropdown';
 
+const CustomDetails = props => {
+  const {detailsData} = props;
+  return (
+    <View style={styles.mapView}>
+      {detailsData &&
+        detailsData.map(item => {
+          return (
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <Label style={styles.mapText} title={item?.label} />
+              <Label style={styles.mapText} title={item?.value} />
+            </View>
+          );
+        })}
+    </View>
+  );
+};
 const data = [
   {id: 0, label: 'Crono'},
   {id: 1, label: 'Timer'},
@@ -71,7 +88,6 @@ const StatisticsScreen = () => {
   const [isChecked, setChecked] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [folderchecked, setFolderChecked] = useState(Timefolders);
   const [selectedType, setType] = useState(1);
   const [folderSpecific_checked, setFolderSpecific_checked] = useState([]);
   const [folderselected, setFolderSelected] = useState([]);
@@ -88,7 +104,7 @@ const StatisticsScreen = () => {
               width: '75%',
               left: Platform.OS === 'ios' ? '5%' : '15%',
             }}>
-            {Type.map((item, index) => {
+            {Type.map(item => {
               return (
                 item.id === selectedType && (
                   <>
@@ -109,7 +125,7 @@ const StatisticsScreen = () => {
                         alignItems: 'center',
                         justifyContent: 'center',
                       }}>
-                      <Text style={{fontSize: 18}}>{item.name}</Text>
+                      <Label style={{fontSize: 18}} title={item.name}></Label>
                     </View>
                     <View style={{width: '10%'}}>
                       <AntDesign
@@ -142,55 +158,13 @@ const StatisticsScreen = () => {
       const eDate = Object.keys(d)[3];
       setStartDate(moment(sDate).format('DD/MM'));
       setEndDate(moment(eDate).format('DD/MM'));
-      console.log('starting date >> ', moment(sDate).format('DD/MM'));
-      console.log('end date >> ', moment(eDate).format('DD/MM'));
     }
-  };
-
-  const handlefoldercheck = index => {
-    let tempArray = [...folderchecked];
-    tempArray[index].ischecked = !tempArray[index].ischecked;
-    setFolderChecked(tempArray);
-  };
-
-  const handlefolderSpecific_check = index => {
-    let tempArray = [...folderSpecific_checked];
-    tempArray[index].ischecked = !tempArray[index].ischecked;
-    setFolderSpecific_checked(tempArray);
-  };
-
-  const folderChekbox = ({item, index}) => {
-    console.log('selected Item', item.type, item.ischecked);
-    return (
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Checkbox.Android
-          color={theme.colors.primary}
-          status={item.ischecked ? 'checked' : 'unchecked'}
-          onPress={() => handlefoldercheck(index)}
-        />
-        <Text>{item.type}</Text>
-      </View>
-    );
-  };
-
-  const folderSpecific_Chekbox = ({item, index}) => {
-    console.log('selected Item', item.type, item.ischecked);
-    return (
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Checkbox.Android
-          color={theme.colors.primary}
-          status={item.ischecked ? 'checked' : 'unchecked'}
-          onPress={() => handlefolderSpecific_check(index)}
-        />
-        <Text>{item.type}</Text>
-      </View>
-    );
   };
 
   const Main = () => {
     return (
       <>
-        <View style={styles.mapView}>
+        {/* <View style={styles.mapView}>
           {statisticdata.map((f, i) => {
             return (
               <View
@@ -203,7 +177,7 @@ const StatisticsScreen = () => {
               </View>
             );
           })}
-        </View>
+        </View> */}
         <View style={styles.mapView}>
           {statisticdataone.map((f, i) => {
             return (
@@ -317,20 +291,13 @@ const StatisticsScreen = () => {
         <View style={styles.divider} />
         <View style={{marginTop: scale(15)}}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text style={{fontWeight: '600', fontSize: 16, fontWeight: '600'}}>
-              Time Folder
-            </Text>
+            <Label
+              style={{fontWeight: '600', fontSize: 16, fontWeight: '600'}}
+              title="Time Folder"></Label>
             <TouchableOpacity onPress={() => {}}>
-              <Text style={{color: 'red'}}>X Remove folder</Text>
+              <Label style={{color: 'red'}} title="X Remove folder"></Label>
             </TouchableOpacity>
           </View>
-          {/* <FlatList
-            numColumns={2}
-            data={Timefolders}
-            renderItem={folderChekbox}
-            keyExtractor={(item, index) => item.id}
-            columnWrapperStyle={styles.columnWrapperStyle}
-          /> */}
           <View
             style={{
               alignItems: 'center',
@@ -346,10 +313,10 @@ const StatisticsScreen = () => {
               value={folderselected}
               onChange={item => setFolderSelected(item)}
               renderSelectedItem={(item, unSelect) => (
-                <Pressable
-                  style={styles.selectedStyle}
-                  onPress={() => console.log('first')}>
-                  <Text style={styles.textSelectedStyle}>{item.label}</Text>
+                <Pressable style={styles.selectedStyle}>
+                  <Label
+                    style={styles.textSelectedStyle}
+                    title={item.label}></Label>
                   <TouchableOpacity onPress={() => unSelect && unSelect(item)}>
                     <AntDesign color="red" name="close" size={20} />
                   </TouchableOpacity>
@@ -357,16 +324,6 @@ const StatisticsScreen = () => {
               )}
             />
           </View>
-          {/* <View style={{alignItems: 'center', marginVertical: scale(10)}}>
-            <Dropdown
-              placeholder="Add Folder"
-              style={styles.Dropdown}
-              data={Folderdata}
-              labelField="label"
-              valueField="id"
-              onChange={item => setfolderValue(item.value)}
-            />
-          </View> */}
           <ChartSection title="Timer folders" data={Timefolders} />
         </View>
       </>
@@ -377,34 +334,15 @@ const StatisticsScreen = () => {
     return (
       <>
         <View style={styles.divider} />
-
         <View style={{marginTop: scale(15)}}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text style={{fontWeight: '600', fontSize: 16}}>
-              Time Specific Folders
-            </Text>
+            <Label
+              style={{fontWeight: '600', fontSize: 16}}
+              title="Time Specific Folders"></Label>
             <TouchableOpacity onPress={() => {}}>
-              <Text style={{color: 'red'}}>X Remove Task</Text>
+              <Label style={{color: 'red'}} title="X Remove Task"></Label>
             </TouchableOpacity>
           </View>
-          {/* <FlatList
-            numColumns={2}
-            data={TimerSpecificfolders}
-            renderItem={folderSpecific_Chekbox}
-            keyExtractor={(item, index) => item.id}
-            columnWrapperStyle={styles.columnWrapperStyle}
-          />
-          <View style={{alignItems: 'center', marginVertical: scale(10)}}>
-            <Dropdown
-              placeholder="Add Tasks"
-              style={styles.Dropdown}
-              data={TaskData}
-              labelField="label"
-              valueField="id"
-              onChange={item => setTaskValue(item.value)}
-            />
-          </View> */}
-
           <View
             style={{
               alignItems: 'center',
@@ -420,10 +358,10 @@ const StatisticsScreen = () => {
               value={folderSpecific_checked}
               onChange={item => setFolderSpecific_checked(item)}
               renderSelectedItem={(item, unSelect) => (
-                <Pressable
-                  style={styles.selectedStyle}
-                  onPress={() => console.log('first')}>
-                  <Text style={styles.textSelectedStyle}>{item.label}</Text>
+                <Pressable style={styles.selectedStyle}>
+                  <Label
+                    style={styles.textSelectedStyle}
+                    title={item.label}></Label>
                   <TouchableOpacity onPress={() => unSelect && unSelect(item)}>
                     <AntDesign color="red" name="close" size={20} />
                   </TouchableOpacity>
@@ -456,9 +394,9 @@ const StatisticsScreen = () => {
           headerTitle={null}
           IconType={AntDesign}
           headerLeft={() => (
-            <Text style={{fontSize: scale(18), fontWeight: '500'}}>
-              Statistics
-            </Text>
+            <Label
+              style={{fontSize: scale(18), fontWeight: '500'}}
+              title="Statistics"></Label>
           )}
         />
 
@@ -522,9 +460,6 @@ const StatisticsScreen = () => {
         ) : (
           <TimeSpecific />
         )}
-
-        {/* <Main />
-        <TimeSpecific /> */}
       </ScrollView>
     </SafeAreaView>
   );
@@ -540,15 +475,9 @@ const styles = StyleSheet.create({
     marginVertical: scale(8),
   },
   selectTime: {
-    borderWidth: 1,
-    padding: 5,
+    borderWidth: scale(1),
+    padding: scale(4),
     width: theme.SCREENWIDTH * 0.45,
-  },
-  timteText: {
-    fontSize: 17,
-    width: '70%',
-    fontWeight: '700',
-    textAlign: 'center',
   },
   calView: {
     flexDirection: 'row',
@@ -556,25 +485,17 @@ const styles = StyleSheet.create({
     width: theme.SCREENWIDTH * 0.4,
   },
   Dropdown: {
-    paddingHorizontal: 15,
+    paddingHorizontal: scale(14),
     width: theme.SCREENWIDTH * 0.45,
     borderWidth: Platform.OS === 'android' ? 1 : 0.3,
   },
   mapView: {
     marginTop: scale(25),
     borderBottomWidth: 0.5,
-    paddingBottom: 5,
+    paddingBottom: scale(4),
     borderColor: theme.colors.gray,
   },
   mapText: {fontWeight: '400', fontSize: 16},
-  chartView: {
-    backgroundColor: theme.colors.gray1,
-    padding: scale(15),
-    marginVertical: scale(5),
-  },
-  innerView: {
-    marginLeft: -theme.SCREENWIDTH * 0.3,
-  },
   label: {
     fontWeight: '600',
     marginLeft: scale(5),
@@ -582,53 +503,20 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
   },
-  chartTitle: {
-    paddingLeft: scale(15),
-    paddingBottom: scale(15),
-    fontSize: 20,
-    fontWeight: '400',
-  },
-  colorBox: {
-    height: 20,
-    width: 18,
-    margin: 2,
-    marginHorizontal: 8,
-  },
-  columnWrapperStyle: {
-    justifyContent: 'space-between',
-    marginTop: scale(5),
-  },
   divider: {
-    borderBottomWidth: 1,
+    borderBottomWidth: scale(1),
     borderBottomColor: 'gray',
     marginVertical: scale(10),
   },
   MultiSelect: {
-    height: 50,
+    height: scale(45),
     backgroundColor: 'transparent',
     borderBottomColor: 'gray',
     borderBottomWidth: 0.5,
   },
-  placeholderStyle: {
-    fontSize: 16,
-  },
-  selectedTextStyle: {
-    fontSize: 14,
-  },
-  iconStyle: {
-    width: 20,
-    height: 20,
-  },
-  inputSearchStyle: {
-    height: 40,
-    fontSize: 16,
-  },
-  icon: {
-    marginRight: 5,
-  },
   selectedStyle: {
     borderRadius: 12,
-    borderWidth: 1,
+    borderWidth: scale(1),
     marginTop: scale(10),
     flexDirection: 'row',
     paddingVertical: scale(5),
@@ -638,7 +526,7 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
   },
   textSelectedStyle: {
-    marginRight: 5,
+    marginRight: scale(4),
     fontSize: 14,
   },
 });

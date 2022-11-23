@@ -11,7 +11,7 @@ import Toast from 'react-native-simple-toast';
 import Feather from 'react-native-vector-icons/Feather';
 import LottieView from 'lottie-react-native';
 import {scale, theme} from '../../utils';
-import {Label, Title} from '../../components/Label';
+import {Label} from '../../components/Label';
 import {CreateFolderModel, InputBox} from '../../components';
 import CommonHeader from '../../components/CommonHeader';
 import ColorPickerModel from '../../components/appModel/ColorPickerModel';
@@ -34,7 +34,6 @@ const CreateTaskScreen = props => {
   const [amount, setAmount] = useState(null);
   const [title, setTitle] = useState(null);
   const navigation = useNavigation();
-
   const handleCloseClolorpicker = c => {
     setColor(c);
     setColorPicker(false);
@@ -91,7 +90,6 @@ const CreateTaskScreen = props => {
       // folderFrm.append('amount', amount);
       // folderFrm.append('status', 'play');
       // folderFrm.append('icon', selColor);
-
       // ApiService.post('folder')
       //   .then(res => {
       //     if (res.code === -1) {
@@ -135,17 +133,13 @@ const CreateTaskScreen = props => {
             handleSave();
             // navigation.navigate('Home');
           }}
-          // onLeftIconPress={() => navigation.replace('Tabs')}
           headerLeft={
             props?.route?.params?.editData
               ? () => (
                   <TouchableOpacity
-                    // style={{left: scale(7)}}
                     onPress={() => {
                       navigation.replace('Tabs');
-                    }}
-                    // onPress={onLeftIconPress}
-                  >
+                    }}>
                     <AntDesign name="left" size={25} />
                   </TouchableOpacity>
                 )
@@ -173,7 +167,6 @@ const CreateTaskScreen = props => {
                     <View
                       key={i.toString()}
                       style={{
-                        // marginHorizontal: scale(8),
                         marginLeft: scale(20),
                       }}>
                       <LottieView
@@ -184,7 +177,6 @@ const CreateTaskScreen = props => {
                         loop={type === t.id ? true : false}
                         style={{
                           height: scale(40),
-                          // marginLeft: scale(-6),
                         }}
                       />
                       <View style={[styles.row, {alignItems: 'center'}]}>
@@ -410,12 +402,8 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.white,
     paddingHorizontal: scale(13),
   },
-  subtitle: {
-    marginTop: scale(5),
-  },
   row: {
     flexDirection: 'row',
-    // justifyContent: 'center',
     alignItems: 'center',
   },
   secondCon: {
@@ -428,12 +416,6 @@ const styles = StyleSheet.create({
   input: {
     width: '100%',
     marginLeft: scale(0),
-    marginTop: scale(5),
-  },
-  inputdesc: {
-    width: '100%',
-    marginLeft: scale(0),
-    height: scale(100),
     marginTop: scale(5),
   },
   checkBoxCon: {
@@ -477,7 +459,6 @@ const styles = StyleSheet.create({
     borderWidth: scale(1),
     borderRadius: scale(5),
     marginLeft: scale(10),
-    // marginRight: scale(30),
   },
   folder: {
     width: theme.SCREENWIDTH * 0.42,

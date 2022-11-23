@@ -1,10 +1,4 @@
-import {
-  StyleSheet,
-  View,
-  SafeAreaView,
-  TouchableOpacity,
-  Text,
-} from 'react-native';
+import {StyleSheet, View, SafeAreaView, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {Button, Label, TextInput, Title} from '../../components';
 import {CommonStyles} from './CommonStyles';
@@ -145,8 +139,8 @@ export default SignUp;
 
 const styles = StyleSheet.create({
   backIcon: {
-    marginLeft: 10,
-    marginTop: 15,
+    marginLeft: scale(10),
+    marginTop: scale(15),
   },
   Sendcode: {
     color: theme.colors.primary,

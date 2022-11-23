@@ -1,11 +1,12 @@
 import React from 'react';
-import {Home, Setting, CreateFolder, CreateTask} from '../screens';
+import {Home, Setting, CreateTask} from '../screens';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
 import {scale, theme} from '../utils';
 import StatisticsStack from './StatisticsStack';
 import {Platform} from 'react-native';
+import HomeStack from './HomeStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -25,7 +26,7 @@ const BottomTab = () => {
       }}>
       <Tab.Screen
         name="Home"
-        component={Home}
+        component={HomeStack}
         options={{
           tabBarIcon: ({focused}) => {
             return (

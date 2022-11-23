@@ -1,6 +1,5 @@
 import {
   StyleSheet,
-  Text,
   View,
   SafeAreaView,
   TouchableOpacity,
@@ -15,7 +14,6 @@ import {Label, Title} from '../../components/Label';
 import {Dropdown} from 'react-native-element-dropdown';
 import Accordian from '../../components/Accordian';
 import {RadioButton} from 'react-native-paper';
-import {useNavigation} from '@react-navigation/native';
 
 const chips = [
   {
@@ -37,15 +35,18 @@ const chips = [
 ];
 
 function ShareBtn(props) {
-  const {onPress, style, title, iconName, backgroundColor} = props;
+  const {onPress, title, iconName, backgroundColor} = props;
   return (
     <TouchableOpacity
       style={[styles.shareBtnContainer, {backgroundColor: backgroundColor}]}
       onPress={onPress}>
-      <Text
-        style={{fontSize: 18, color: theme.colors.white, fontWeight: '600'}}>
-        {title}
-      </Text>
+      <Title
+        title={title}
+        style={{
+          fontSize: 18,
+          color: theme.colors.white,
+          fontWeight: '600',
+        }}></Title>
       <AntDesign
         name={iconName}
         size={18}
@@ -57,7 +58,6 @@ function ShareBtn(props) {
 }
 
 const SettingScreen = () => {
-  const navigation = useNavigation();
   const [checked, setChecked] = useState('Today');
   const [value, setvalue] = useState(null);
   return (
@@ -81,10 +81,7 @@ const SettingScreen = () => {
           onChange={item => setvalue(item.value1)}
         />
 
-        <Accordian
-          title="Default Range of Time"
-          // leftContent={<AntDesign name="down" />}
-          style={{marginTop: scale(15)}}>
+        <Accordian title="Default Range of Time" style={{marginTop: scale(15)}}>
           <View style={styles.CheckBoxInventory}>
             <View style={styles.checkboxContainer}>
               <RadioButton.Android
@@ -93,7 +90,7 @@ const SettingScreen = () => {
                 onPress={() => setChecked('Today')}
                 color={theme.colors.primary}
               />
-              <Text>Today</Text>
+              <Label title="Today" ></Label>
             </View>
             <View style={styles.checkboxContainer}>
               <RadioButton.Android
@@ -102,10 +99,9 @@ const SettingScreen = () => {
                 onPress={() => setChecked('All time')}
                 color={theme.colors.primary}
               />
-              <Text>All time</Text>
+              <Label title="All time"></Label>
             </View>
           </View>
-          {console.log('your selected time Range', checked)}
         </Accordian>
 
         <Accordian title="Social">
@@ -135,10 +131,7 @@ const SettingScreen = () => {
           </View>
         </Accordian>
 
-        <Accordian
-          title="Contact"
-          // leftContent={<AntDesign name="down" />}
-        >
+        <Accordian title="Contact">
           <View
             style={{
               flexDirection: 'row',
@@ -159,13 +152,6 @@ const SettingScreen = () => {
           </View>
         </Accordian>
       </ScrollView>
-      {/* <TouchableOpacity
-        style={styles.btn}
-        onPress={() => {
-          navigation.replace('LoginStack');
-        }}>
-        <Label title={'Logout'} style={styles.logout} />
-      </TouchableOpacity> */}
     </SafeAreaView>
   );
 };
@@ -177,17 +163,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.white,
   },
-  CommonBoxContainer: {
-    backgroundColor: theme.colors.gray1,
-    paddingVertical: scale(20),
-    paddingHorizontal: scale(15),
-    borderRadius: 15,
-  },
   Dropdown: {
-    borderRadius: 15,
-    paddingHorizontal: 20,
+    borderRadius: scale(15),
+    paddingHorizontal: scale(20),
     paddingVertical: scale(11),
-    marginTop: 15,
+    marginTop: scale(15),
     marginHorizontal: 15,
     backgroundColor: theme.colors.gray1,
     borderWidth: Platform.OS === 'android' ? 0.8 : 0.3,
@@ -218,16 +198,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: scale(7),
     borderRadius: 10,
-  },
-  btn: {
-    position: 'absolute',
-    bottom: scale(100),
-    // left: scale(15),
-    alignSelf: 'center',
-  },
-  logout: {
-    color: theme.colors.red,
-    fontSize: scale(15),
-    fontWeight: '600',
   },
 });

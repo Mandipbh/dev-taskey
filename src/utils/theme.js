@@ -3,14 +3,6 @@ const {width, height} = Dimensions.get('window');
 
 const theme = {
   fonts: {
-    // PoppinsBold: 'Poppins-Bold',
-    // PoppinsLight: 'Poppins-Light',
-    // PoppinsMedium: 'Poppins-Medium',
-    // PoppinsSemiBold: 'Poppins-SemiBold',
-    // GrandHotel: 'GrandHotel-Regular',
-    // Robato: 'Roboto-Black',
-    // RobatoBlod: 'Roboto-Bold',
-    // RobatoMedium: 'Roboto-Medium',
   },
   colors: {
     primary: '#3396FF',
