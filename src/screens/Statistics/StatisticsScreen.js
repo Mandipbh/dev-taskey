@@ -35,6 +35,26 @@ import {useNavigation} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {MultiSelect} from 'react-native-element-dropdown';
 
+const CustomDetails = props => {
+  const {detailsData} = props;
+  return (
+    <View style={styles.mapView}>
+      {detailsData &&
+        detailsData.map(item => {
+          return (
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <Label style={styles.mapText} title={item?.label} />
+              <Label style={styles.mapText} title={item?.value} />
+            </View>
+          );
+        })}
+    </View>
+  );
+};
 const data = [
   {id: 0, label: 'Crono'},
   {id: 1, label: 'Timer'},
@@ -143,120 +163,15 @@ const StatisticsScreen = () => {
   const Main = () => {
     return (
       <>
-        <View style={styles.mapView}>
-          {statisticdata.map(f => {
-            return (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Label style={styles.mapText} title={f.label}></Label>
-                <Label style={styles.mapText} title={f.value}></Label>
-              </View>
-            );
-          })}
-        </View>
-        <View style={styles.mapView}>
-          {statisticdataone.map(f => {
-            return (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Label style={styles.mapText} title={f.label}></Label>
-                <Label style={styles.mapText} title={f.value}></Label>
-              </View>
-            );
-          })}
-        </View>
-        <View style={styles.mapView}>
-          {statisticdatatwo.map(f => {
-            return (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Label style={styles.mapText} title={f.label}></Label>
-                <Label style={styles.mapText} title={f.value}></Label>
-              </View>
-            );
-          })}
-        </View>
-        <View style={styles.mapView}>
-          {statisticdatathree.map(f => {
-            return (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Label style={styles.mapText} title={f.label}></Label>
-                <Label style={styles.mapText} title={f.value}></Label>
-              </View>
-            );
-          })}
-        </View>
-        <View style={styles.mapView}>
-          {statisticdataFour.map(f => {
-            return (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <View>
-                  <Label style={styles.mapText} title={f.label}></Label>
-                </View>
-                <Label style={styles.mapText} title={f.value}></Label>
-              </View>
-            );
-          })}
-        </View>
-        <View style={styles.mapView}>
-          {statisticdataFive.map(f => {
-            return (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Label style={styles.mapText} title={f.label}></Label>
-                <Label style={styles.mapText} title={f.value}></Label>
-              </View>
-            );
-          })}
-        </View>
-        <View style={styles.mapView}>
-          {statisticdataSix.map(f => {
-            return (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Label style={styles.mapText} title={f.label}></Label>
-                <Label style={styles.mapText} title={f.value}></Label>
-              </View>
-            );
-          })}
-        </View>
-        <View style={styles.mapView}>
-          {statisticdataSeven.map((f, i) => {
-            return (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Label style={styles.mapText} title={f.label}></Label>
-                <Label style={styles.mapText} title={f.value}></Label>
-              </View>
-            );
-          })}
-        </View>
+        <CustomDetails detailsData={statisticdata} />
+        <CustomDetails detailsData={statisticdataone} />
+        <CustomDetails detailsData={statisticdatatwo} />
+        <CustomDetails detailsData={statisticdatathree} />
+        <CustomDetails detailsData={statisticdataFour} />
+        <CustomDetails detailsData={statisticdataFive} />
+        <CustomDetails detailsData={statisticdataSix} />
+        <CustomDetails detailsData={statisticdataSeven} />
+
         <ChartSection
           style={{marginTop: scale(15)}}
           title="Type Tasks Distribution"
