@@ -260,7 +260,6 @@ const HomeScreen = () => {
             <Label title="-" />
           </View>
         </TouchableOpacity>
-        )}
       </>
     );
   };
@@ -445,9 +444,11 @@ const HomeScreen = () => {
                 width: '70%',
                 alignItems: 'flex-end',
               }}>
-              <Label>
-                {startDate === null ? 'Today  ' : `${startDate} / ${endDate} `}
-              </Label>
+              <Label
+                title={
+                  startDate === null ? 'Today  ' : `${startDate} / ${endDate} `
+                }
+              />
             </View>
             <View
               style={{

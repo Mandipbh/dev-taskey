@@ -90,7 +90,6 @@ const CreateTaskScreen = props => {
       // folderFrm.append('amount', amount);
       // folderFrm.append('status', 'play');
       // folderFrm.append('icon', selColor);
-
       // ApiService.post('folder')
       //   .then(res => {
       //     if (res.code === -1) {
@@ -471,8 +470,6 @@ const styles = StyleSheet.create({
     marginLeft: scale(10),
     borderRadius: scale(5),
   },
-<<<<<<< HEAD
-=======
   selFolderTxt: {
     marginRight: scale(10),
   },
@@ -485,7 +482,6 @@ const styles = StyleSheet.create({
     borderRadius: scale(40),
     alignSelf: 'center',
   },
->>>>>>> 649a720b77256167bcceb03c6168bc1f31b78117
   optionsContainer: {
     marginLeft: theme.SCREENWIDTH * 0.22,
     marginVertical: scale(5),
