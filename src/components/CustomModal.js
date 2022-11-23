@@ -1,5 +1,4 @@
-import {StyleSheet} from 'react-native';
-import React, {Children} from 'react';
+import React from 'react';
 import * as Animatable from 'react-native-animatable';
 import {theme} from '../utils';
 
@@ -11,10 +10,10 @@ const CustomModal = props => {
       style={{
         backgroundColor: theme.colors.lightpurpal,
         height: ModalHeight,
-        borderRadius: 20,
-        marginHorizontal: 5,
-        paddingHorizontal: 20,
-        paddingVertical: 25,
+        borderRadius: scale(20),
+        marginHorizontal: scale(4),
+        paddingHorizontal: scale(20),
+        paddingVertical: scale(25),
         alignItems: 'center',
       }}>
       {children}
@@ -23,5 +22,3 @@ const CustomModal = props => {
 };
 
 export default CustomModal;
-
-const styles = StyleSheet.create({});

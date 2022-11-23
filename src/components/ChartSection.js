@@ -1,13 +1,14 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import React from 'react';
 import CustomChart from './CustomChart';
 import {scale, theme} from '../utils';
+import {Label, Title} from './Label';
 
 const ChartSection = props => {
   const {title, data, style} = props;
   return (
     <View style={[styles.chartView, style]}>
-      <Text style={{fontSize: 20}}>{title}</Text>
+      <Title style={{fontSize: 20}} title={title}></Title>
       <View style={{flexDirection: 'row', marginTop: scale(10)}}>
         <CustomChart chartData={data} />
         <View style={{justifyContent: 'center'}}>
@@ -18,7 +19,7 @@ const ChartSection = props => {
                   <View
                     style={[styles.colorBox, {backgroundColor: i.svg.fill}]}
                   />
-                  <Text style={{fontSize: 12}}>{i.type} Tasks</Text>
+                  <Label style={{fontSize: 12}} title={`${i.type} Tasks`} ></Label>
                 </View>
               </>
             );
@@ -38,9 +39,9 @@ const styles = StyleSheet.create({
     marginVertical: scale(5),
   },
   colorBox: {
-    height: 20,
-    width: 18,
-    margin: 2,
-    marginHorizontal: 8,
+    height: scale(20),
+    width: scale(18),
+    margin: scale(2),
+    marginHorizontal: scale(8),
   },
 });

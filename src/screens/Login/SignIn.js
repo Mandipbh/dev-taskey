@@ -1,10 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  SafeAreaView,
-  TouchableOpacity,
-} from 'react-native';
+import {StyleSheet, View, SafeAreaView, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {Button, Label, TextInput, Title} from '../../components';
 import {CommonStyles} from './CommonStyles';
@@ -30,7 +24,7 @@ const SignIn = () => {
             placeholder="Enter Phone Number"
           />
           <TouchableOpacity style={{alignSelf: 'flex-end'}}>
-            <Text style={styles.Sendcode}>Send Code</Text>
+            <Label style={styles.Sendcode}>Send Code</Label>
           </TouchableOpacity>
           <TextInput
             LabelIcon="message1"
@@ -50,11 +44,6 @@ const SignIn = () => {
               <Label style={CommonStyles.navTxt} title="Sign Up" />
             </TouchableOpacity>
           </View>
-          {/* <TouchableOpacity
-            onPress={() => navigation.navigate('Forgot')}
-            style={styles.forgetPass}>
-            <Label style={styles.navTxt} title="Forget Passowrd ?" />
-          </TouchableOpacity> */}
         </View>
       </SafeAreaView>
     </KeyboardAwareScrollView>
@@ -66,9 +55,6 @@ const styles = StyleSheet.create({
   navTxt: {
     textAlign: 'center',
     fontSize: scale(14),
-  },
-  forgetPass: {
-    marginTop: scale(8),
   },
   Sendcode: {
     color: theme.colors.primary,

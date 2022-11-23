@@ -26,7 +26,7 @@ export const CommonStyles = StyleSheet.create({
   navTxtContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 30,
+    marginTop: scale(30),
   },
   navTxt: {
     color: theme.colors.primary,

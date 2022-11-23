@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, SafeAreaView} from 'react-native';
+import {StyleSheet, View, SafeAreaView} from 'react-native';
 import React from 'react';
 import Feather from 'react-native-vector-icons/Feather';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -20,14 +20,14 @@ const HeaderComponent = props => {
       <SafeAreaView
         style={{
           backgroundColor: theme.colors.purpal,
-          borderBottomRightRadius: 20,
-          borderBottomLeftRadius: 20,
+          borderBottomRightRadius: scale(20),
+          borderBottomLeftRadius: scale(20),
         }}>
         <View
           style={{
             flexDirection: 'row',
-            paddingVertical: 15,
-            paddingHorizontal: 25,
+            paddingVertical: scale(15),
+            paddingHorizontal: scale(25),
             alignItems: 'center',
             justifyContent: 'space-between',
           }}>
