@@ -1,4 +1,10 @@
-import {StyleSheet, View, SafeAreaView, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  SafeAreaView,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
 import React from 'react';
 import {Button, Label, TextInput, Title} from '../../components';
 import {CommonStyles} from './CommonStyles';

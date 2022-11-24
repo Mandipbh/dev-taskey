@@ -41,6 +41,7 @@ const HomeScreen = () => {
   const [model, setModel] = useState(false);
   const [editFolder, setEditFolder] = useState(null);
   const navigation = useNavigation();
+  const [indexState, setindexState] = useState();
   const [taskDumyData, setTaskDummy] = useState([
     {
       fid: 0,
@@ -198,8 +199,6 @@ const HomeScreen = () => {
   };
 
   const tasksrender = ({item, index, move, moveEnd, isActive}) => {
-    console.log('this is item', JSON.stringify(isActive, null, 2));
-
     return (
       <>
         {index < 3 && (
@@ -254,7 +253,7 @@ const HomeScreen = () => {
             </View>
             <View style={{width: '45%'}}>
               <Label title={item.title} style={{fontSize: scale(12)}} />
-              <ProgressBar progress={0.5} color={theme.colors.orange} />
+              <ProgressBar progress={0.3} color={theme.colors.orange} />
             </View>
             <View style={styles.staticDetails}>
               <Label title={item?.path} />
@@ -314,7 +313,6 @@ const HomeScreen = () => {
                 <Icon2 name="award" size={scale(22)} />
               </View>
               {taskDumyData.map((taskItem, Tindex) => {
-                // console.log('Tindex', Tindex);
                 return (
                   taskItem.fid === item.id && (
                     <>
