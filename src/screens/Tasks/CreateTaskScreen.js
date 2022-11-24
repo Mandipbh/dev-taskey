@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
+  Text,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -11,14 +12,14 @@ import Toast from 'react-native-simple-toast';
 import Feather from 'react-native-vector-icons/Feather';
 import LottieView from 'lottie-react-native';
 import {scale, theme} from '../../utils';
-import {Label} from '../../components/Label';
+import {Label, Title} from '../../components/Label';
 import {CreateFolderModel, InputBox} from '../../components';
 import CommonHeader from '../../components/CommonHeader';
 import ColorPickerModel from '../../components/appModel/ColorPickerModel';
 import {metaData, typeData} from '../../utils/mockData';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-
+import Foundation from 'react-native-vector-icons/Foundation';
 import ApiService from '../../utils/ApiService';
 
 const CreateTaskScreen = props => {
@@ -377,6 +378,19 @@ const CreateTaskScreen = props => {
                 })}
               </ScrollView>
             )}
+            <TouchableOpacity
+              style={{
+                alignSelf: 'center',
+                borderWidth: 2,
+                padding: 10,
+                width: scale(57),
+                alignItems: 'center',
+                borderRadius: 35,
+                marginTop: scale(45),
+                // borderColor: theme.colors.orange,
+              }}>
+              <Foundation name="play" size={40} color={theme.colors.green} />
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </View>
