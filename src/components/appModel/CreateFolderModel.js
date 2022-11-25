@@ -30,20 +30,20 @@ const CreateFolderModel = props => {
   const handleSave = () => {
     if (!handleValidation()) {
       close(selColor, folderName);
-      // let folderFrm = new FormData();
-      // folderFrm.append('name', folderName);
-      // folderFrm.append('type', type);
-      // folderFrm.append('color', selColor);
-      // folderFrm.append('order', 1);
-      // folderFrm.append('icon', selColor);
-      // ApiService.post('folder')
-      //   .then(res => {
-      //     if (res.code === -1) {
-      //     }
-      //   })
-      //   .catch(error => {
-      //     console.log('error ', error);
-      //   });
+      let folderFrm = new FormData();
+      folderFrm.append('name', folderName);
+      folderFrm.append('type', type);
+      folderFrm.append('color', selColor);
+      folderFrm.append('order', 1);
+      folderFrm.append('icon', null);
+      ApiService.post('folder')
+        .then(res => {
+          if (res.code === -1) {
+          }
+        })
+        .catch(error => {
+          console.log('error ', error);
+        });
       setTimeout(() => {
         onPressBack();
       }, 800);
