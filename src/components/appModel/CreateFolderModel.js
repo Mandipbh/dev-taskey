@@ -30,14 +30,23 @@ const CreateFolderModel = props => {
   const handleSave = () => {
     if (!handleValidation()) {
       close(selColor, folderName);
-      let folderFrm = new FormData();
-      folderFrm.append('name', folderName);
-      folderFrm.append('type', type);
-      folderFrm.append('color', selColor);
-      folderFrm.append('order', 1);
-      folderFrm.append('icon', null);
-      ApiService.post('folder')
+      // let folderFrm = new FormData();
+      // folderFrm.append('name', folderName);
+      // folderFrm.append('type', type);
+      // folderFrm.append('color', selColor);
+      // folderFrm.append('order', 1);
+      // folderFrm.append('icon', null);
+      let folderFrm = {
+        name: folderName,
+        type: type === 1 ? 'CRONO' : type === 2 ? 'TIMER' : 'COUNTER',
+        color: selColor,
+        order: 1,
+        // icon: null,
+      };
+      const options = {payloads: folderFrm};
+      ApiService.post('folder', options)
         .then(res => {
+          console.log('respoe >>. ', res);
           if (res.code === -1) {
           }
         })

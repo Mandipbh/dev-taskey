@@ -5,12 +5,14 @@ import BottomTab from './BottomTab';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {CreateTask, TaskDetails} from '../screens';
 import {useSelector} from 'react-redux';
+import axios from 'axios';
 
 const Stack = createNativeStackNavigator();
 
 const MainStack = () => {
   const isLogin = useSelector(state => state.UserReducer.login);
-  console.log('is loading >> ', isLogin);
+  const userDetails = useSelector(state => state.UserReducer.userDetails);
+  // axios.defaults.headers.common.Authorization = `Bearer ${userDetails?.token}`;
   return (
     <Stack.Navigator
       screenOptions={{headerShown: false}}

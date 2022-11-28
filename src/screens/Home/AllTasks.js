@@ -32,8 +32,8 @@ function HeaderTitle() {
 
 const AllTasks = ({route}) => {
   const {taskItem, folderName} = route.params;
-  const [task, setTask] = useState(taskItem.taskslist);
-  // console.log('All tasks', JSON.stringify(task, null, 2));
+  const [task, setTask] = useState(taskItem);
+  console.log('All tasks', JSON.stringify(task, null, 2));
   const navigation = useNavigation();
 
   return (
@@ -48,72 +48,75 @@ const AllTasks = ({route}) => {
         )}
       />
       <View style={styles.container}>
-        <Title title={folderName} style={{marginLeft: scale(5)}} />
+        <Title title={task?.name} style={{marginLeft: scale(5)}} />
         <View style={styles.divider} />
 
         <HeaderTitle />
         <View style={styles.divider} />
 
-        {task.map((item, index) => {
-          const lastItem = index === task.length - 1;
+        {task &&
+          task?.taskList.map((item, index) => {
+            const lastItem = index === task.length - 1;
 
-          return (
-            <View>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <View style={{marginLeft: scale(5)}}>
-                  {item.status ? (
-                    <Feather
-                      name="play"
-                      size={scale(25)}
-                      color={theme.colors.green}
+            return (
+              <View>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <View style={{marginLeft: scale(5)}}>
+                    {item.status === 'play' ? (
+                      <Feather
+                        name="play"
+                        size={scale(25)}
+                        color={theme.colors.green}
+                      />
+                    ) : (
+                      <Feather
+                        name="pause"
+                        size={scale(25)}
+                        color={theme.colors.orange}
+                      />
+                    )}
+                  </View>
+                  <View style={{marginLeft: scale(5)}}>
+                    {item % 2 ? (
+                      <Foundation
+                        name="social-zerply"
+                        size={scale(20)}
+                        color={theme.colors.green}
+                      />
+                    ) : (
+                      <MaterialCommunityIcons
+                        name="clock-time-seven"
+                        size={scale(20)}
+                        color={theme.colors.lightGreen}
+                      />
+                    )}
+                  </View>
+
+                  <Label
+                    style={{
+                      marginLeft: scale(2),
+                      fontSize: 14,
+                      width: scale(130),
+                    }}
+                    title={item?.name}
+                  />
+                  <View style={styles.staticDetails}>
+                    <Label title={item?.path} />
+                    <Label
+                      title={`${item?.percentage ? item?.percentage : 0} %`}
                     />
-                  ) : (
-                    <Feather
-                      name="pause"
-                      size={scale(25)}
-                      color={theme.colors.orange}
-                    />
-                  )}
-                </View>
-                <View style={{marginLeft: scale(5)}}>
-                  {item % 2 ? (
-                    <Foundation
-                      name="social-zerply"
-                      size={scale(20)}
-                      color={theme.colors.green}
-                    />
-                  ) : (
-                    <MaterialCommunityIcons
-                      name="clock-time-seven"
-                      size={scale(20)}
-                      color={theme.colors.lightGreen}
-                    />
-                  )}
+                    <Label title="-" />
+                  </View>
                 </View>
 
-                <Label
-                  style={{
-                    marginLeft: scale(2),
-                    fontSize: 14,
-                    width: scale(130),
-                  }}
-                  title={item.title}
-                />
-                <View style={styles.staticDetails}>
-                  <Label title={item?.path} />
-                  <Label title={`${item?.percentage} %`} />
-                  <Label title="-" />
-                </View>
+                {!lastItem && (
+                  <View
+                    style={[styles.divider, {borderColor: theme.colors.black}]}
+                  />
+                )}
               </View>
-
-              {!lastItem && (
-                <View
-                  style={[styles.divider, {borderColor: theme.colors.black}]}
-                />
-              )}
-            </View>
-          );
-        })}
+            );
+          })}
       </View>
     </SafeAreaView>
   );

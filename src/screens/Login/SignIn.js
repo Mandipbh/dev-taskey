@@ -18,6 +18,7 @@ import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import ApiService from '../../utils/ApiService';
 import {isLogin, loginAction} from '../../redux/Actions/UserActions';
+import axios from 'axios';
 
 const SignIn = () => {
   const navigation = useNavigation();
@@ -83,7 +84,9 @@ const SignIn = () => {
         };
         const options = {payloads: mobileFrm1};
         const response = await ApiService.post('login', options);
-        if (response.code === 0) {
+        console.log('response << > ', response?.token);
+        if (response.success) {
+          axios.defaults.headers.common.Authorization = `Bearer ${response.token}`;
           Toast.show('OTP is sent to your mobile number');
           setSendOtp(true);
           dispatch(loginAction(response));

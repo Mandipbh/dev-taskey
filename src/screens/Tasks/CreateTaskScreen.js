@@ -4,7 +4,6 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
-  Text,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -12,7 +11,7 @@ import Toast from 'react-native-simple-toast';
 import Feather from 'react-native-vector-icons/Feather';
 import LottieView from 'lottie-react-native';
 import {scale, theme} from '../../utils';
-import {Label, Title} from '../../components/Label';
+import {Label} from '../../components/Label';
 import {CreateFolderModel, InputBox} from '../../components';
 import CommonHeader from '../../components/CommonHeader';
 import ColorPickerModel from '../../components/appModel/ColorPickerModel';
@@ -30,7 +29,7 @@ const CreateTaskScreen = props => {
   const [selColor, setColor] = useState(null);
   const [open, setOpen] = useState(false);
   const [newFolderM, setnewFolderM] = useState(false);
-  const [selectedFolder, setSelFolder] = useState(null);
+  const [selectedFolder, setSelFolder] = useState('');
   const [folders, setFolders] = useState([]);
   const [amount, setAmount] = useState(null);
   const [title, setTitle] = useState(null);
@@ -56,15 +55,22 @@ const CreateTaskScreen = props => {
 
   useEffect(() => {
     getAllFolders();
-  }, [isFocused]);
+  }, [isFocused, type]);
 
   const getAllFolders = async () => {
-    ApiService.get('folder/specDetail').then(res => {
-      console.log('respose >> ', res);
-      if (res.code === 0) {
-        setFolders(res.data);
+    if (type != 0) {
+      try {
+        const taskType =
+          type === 1 ? 'CRONO' : type === 2 ? 'TIMER' : 'COUNTER';
+        ApiService.get('getfolder/' + taskType).then(res => {
+          if (res.success) {
+            setFolders(res.data);
+          }
+        });
+      } catch (error) {
+        console.log('error >', error);
       }
-    });
+    }
   };
   const handleMeta = id => {
     if (type === 1) {
@@ -92,12 +98,31 @@ const CreateTaskScreen = props => {
       );
       folderFrm.append('color', selColor);
       folderFrm.append('order', 1);
-      folderFrm.append('meta', selMeta);
+      folderFrm.append('meta', selMeta == 1 ? 'Achievement' : 'Registry');
       folderFrm.append('amount', amount);
       folderFrm.append('status', 'play');
-      folderFrm.append('icon', selColor);
-      ApiService.post('task')
+      folderFrm.append('folderId', selectedFolder?._id);
+      // folderFrm.append('icon', null);
+      console.log('pay load >> ', folderFrm);
+
+      let frmData = {
+        name: title,
+        type: type === 1 ? 'CRONO' : type === 2 ? 'TIMER' : 'COUNTER',
+
+        color: selColor,
+        order: 1,
+        meta: selMeta,
+        amount: amount,
+        status: 'play',
+        folderId: selectedFolder?._id,
+        selectedFolder,
+        // folderFrm.append('icon', null);
+      };
+      let options = {payloads: frmData};
+      ApiService.post('task', options)
         .then(res => {
+          // navigation.goBack();
+          console.log('response << >>> ', res);
           if (res.code === -1) {
           } else {
             navigation.goBack();
@@ -346,9 +371,9 @@ const CreateTaskScreen = props => {
                   />
                   <Label
                     title={
-                      selectedFolder === null
+                      selectedFolder === ''
                         ? 'Globle list folder'
-                        : selectedFolder
+                        : selectedFolder?.name
                     }
                     style={styles.selFolderTxt}
                   />
@@ -510,6 +535,9 @@ const styles = StyleSheet.create({
   },
   optionView: {
     height: scale(20),
+    borderBottomColor: theme.colors.gray,
+    borderBottomWidth: scale(0.6),
+    width: '50%',
   },
   amount: {
     marginTop: scale(15),

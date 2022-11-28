@@ -1,4 +1,10 @@
-import {StyleSheet, View, SafeAreaView, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  SafeAreaView,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
 import React from 'react';
 import {Button, Label, TextInput, Title} from '../../components';
 import {CommonStyles} from './CommonStyles';
@@ -12,6 +18,7 @@ import {API, postAPICall} from '../../utils/AppApi';
 import ApiService from '../../utils/ApiService';
 import {useDispatch} from 'react-redux';
 import {isLogin, loginAction} from '../../redux/Actions/UserActions';
+import axios from 'axios';
 
 const SignUp = () => {
   const navigation = useNavigation();
@@ -30,9 +37,8 @@ const SignUp = () => {
       const options = {payloads: mobileFrm};
       const response = await ApiService.post('verifyOTP', options);
       console.log('resposemn >> ', response);
-      if (response.data.valid) {
+      if (response.success) {
         Toast.show('Signup successfully');
-        dispatch(loginAction(response));
         dispatch(isLogin(true));
         navigation.navigate('Tabs');
       } else {
@@ -54,8 +60,10 @@ const SignUp = () => {
         const options = {payloads: registerFrm};
         const response = await ApiService.post('register', options);
         console.log('Register frm >> ', response);
-        if (response.code === 0) {
+        if (response.success) {
+          axios.defaults.headers.common.Authorization = `Bearer ${response.token}`;
           Toast.show('OTP is sent to your mobile number');
+          dispatch(loginAction(response));
           setSendOtp(true);
         } else {
           setSendOtp(true);

@@ -18,7 +18,7 @@ import {
 } from '../../components';
 import {images, scale, theme} from '../../utils';
 import {folders, tasksData} from '../../utils/mockData';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import DraggableFlatList from 'react-native-draggable-dynamic-flatlist';
@@ -28,6 +28,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import ComplateTaskModel from '../../components/appModel/ComplateTaskModel';
 import {ProgressBar} from 'react-native-paper';
 import ApiService from '../../utils/ApiService';
+import axios from 'axios';
 
 const HomeScreen = () => {
   const [openFolderModal, setOpenFolderModal] = useState(false);
@@ -153,6 +154,7 @@ const HomeScreen = () => {
       ],
     },
   ]);
+  axios.defaults.headers.common['Authorization'];
 
   const [Folder, setFolder] = useState([]);
 
@@ -161,7 +163,7 @@ const HomeScreen = () => {
   };
   useEffect(() => {
     getAllTasks();
-  }, [selectedType]);
+  }, [selectedType, useIsFocused()]);
 
   const getAllTasks = async () => {
     console.log('type >>> ', selectedType);
@@ -345,7 +347,6 @@ const HomeScreen = () => {
                 <Icon2 name="award" size={scale(22)} />
               </View>
               {Folder?.map((taskItem, Tindex) => {
-                console.log('Tindex', taskItem?.taskList);
                 return taskItem?._id === item?._id &&
                   item?.taskList?.length !== 0 ? (
                   <>
@@ -373,7 +374,7 @@ const HomeScreen = () => {
                         })
                       }
                       style={styles.seeMore}>
-                      {Folder && Folder?.taskList?.length > 3 && (
+                      {taskItem?.taskList?.length > 3 && (
                         <Label title="See more" />
                       )}
                     </TouchableOpacity>
@@ -510,7 +511,9 @@ const HomeScreen = () => {
                   paddingVertical: scale(10),
                   paddingBottom: theme.SCREENHEIGHT * 0.04,
                 }}
-                data={Folder}
+                data={Folder.sort(function (a, b) {
+                  return a?.order - b?.order;
+                })}
                 renderItem={rendertasks}
                 showsVerticalScrollIndicator={false}
                 keyExtractor={item => `draggable-item-${item.key}`}
