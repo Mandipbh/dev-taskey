@@ -60,7 +60,7 @@ const SignIn = () => {
         const options = {payloads: mobileFrm};
         const response = await ApiService.post('verifyOTP', options);
         console.log('resposemn >> ', response);
-        if (response.data.valid) {
+        if (response) {
           Toast.show('Login successfully');
           dispatch(isLogin(true));
           navigation.navigate('Tabs');
@@ -135,6 +135,7 @@ const SignIn = () => {
               setOtp(txt);
             }}
             keyboardType="numeric"
+            maxLength={6}
           />
           <Button
             style={CommonStyles.btn}

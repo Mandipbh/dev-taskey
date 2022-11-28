@@ -27,6 +27,7 @@ import {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import ComplateTaskModel from '../../components/appModel/ComplateTaskModel';
 import {ProgressBar} from 'react-native-paper';
+import ApiService from '../../utils/ApiService';
 
 const HomeScreen = () => {
   const [openFolderModal, setOpenFolderModal] = useState(false);
@@ -154,8 +155,36 @@ const HomeScreen = () => {
     },
   ]);
 
+  const [Folder, setFolder] = useState([]);
+
   const handleProgressClose = () => {
     setModel(false);
+  };
+  useEffect(() => {
+    getAllTasks();
+  }, [selectedType]);
+
+  const getAllTasks = async () => {
+    console.log('type >>> ', selectedType);
+    if (selectedType === 1) {
+      ApiService.get('folder/CRONO').then(res => {
+        if (res.code === 0) {
+          setFolder(res.data);
+        }
+      });
+    } else if (selectedType === 2) {
+      ApiService.get('folder/TIMER').then(res => {
+        if (res.code === 0) {
+          setFolder(res.data);
+        }
+      });
+    } else if (selectedType === 3) {
+      ApiService.get('folder/COUNTER').then(res => {
+        if (res.code === 0) {
+          setFolder(res.data);
+        }
+      });
+    }
   };
 
   const taskType = [
@@ -252,12 +281,16 @@ const HomeScreen = () => {
               )}
             </View>
             <View style={{width: '45%'}}>
-              <Label title={item.title} style={{fontSize: scale(12)}} />
-              <ProgressBar progress={0.3} color={theme.colors.orange} />
+              <Label title={item?.name} style={{fontSize: scale(12)}} />
+              <ProgressBar progress={0.5} color={theme.colors.orange} />
             </View>
             <View style={styles.staticDetails}>
               <Label title={item?.path} />
-              <Label title={`${item?.percentage} %`} />
+              <Label
+                title={`${
+                  item?.percentage === undefined ? 0 : item?.percentage
+                }  %`}
+              />
               <Label title="-" />
             </View>
           </TouchableOpacity>
@@ -292,7 +325,7 @@ const HomeScreen = () => {
                   color={theme.colors.primary2}
                 />
                 <Label
-                  title={item?.folder}
+                  title={item?.name}
                   style={[styles.headerTitle, {width: '60%'}]}
                 />
                 <Label title={item?.totalmins} style={[styles.headerTitle]} />
@@ -312,49 +345,42 @@ const HomeScreen = () => {
 
                 <Icon2 name="award" size={scale(22)} />
               </View>
-              {taskDumyData.map((taskItem, Tindex) => {
-                return (
-                  taskItem.fid === item.id && (
-                    <>
+              {Folder?.map((taskItem, Tindex) => {
+                console.log('Tindex', taskItem?.taskList);
+                return taskItem?._id === item?._id &&
+                  item?.taskList?.length !== 0 ? (
+                  <>
+                    {
                       <DraggableFlatList
-                        data={taskItem.taskslist}
+                        data={taskItem?.taskList}
                         renderItem={tasksrender}
                         showsVerticalScrollIndicator={false}
                         keyExtractor={(item, index) =>
                           `draggable-item-${item.key}`
                         }
                         scrollPercent={5}
-                        onMoveEnd={({data, index}) => {
-                          const updateData = [...taskDumyData];
-                          updateData[Tindex].taskslist = data;
-                          setTaskDummy(updateData);
-                        }}
+                        // onMoveEnd={({data, index}) => {
+                        //   const updateData = [...taskDumyData];
+                        //   updateData[Tindex].taskslist = data;
+                        //   setTaskDummy(updateData);
+                        // }}
                       />
-                      <TouchableOpacity
-                        onPress={() =>
-                          navigation.navigate('AllTask', {
-                            taskItem,
-                            folderName: item?.folder,
-                          })
-                        }
-                        style={{
-                          alignItems: 'flex-end',
-                          paddingHorizontal: scale(10),
-                          paddingTop: scale(5),
-                          justifyContent: 'center',
-                        }}>
-                        {/* {Tindex < 3 && <Label title="See more" />} */}
-                        {console.log('gdfs', taskItem.taskslist.length)}
-                        {taskItem.taskslist.length > 3 && (
-                          <Label title="See more" />
-                        )}
-                      </TouchableOpacity>
-                    </>
-                  )
-                );
-                0;
+                    }
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigation.navigate('AllTask', {
+                          taskItem,
+                          folderName: item?.folder,
+                        })
+                      }
+                      style={styles.seeMore}>
+                      {Folder && Folder?.taskList?.length > 3 && (
+                        <Label title="See more" />
+                      )}
+                    </TouchableOpacity>
+                  </>
+                ) : null;
               })}
-              {/* {console.log('index', index)} */}
             </View>
           </TouchableOpacity>
         </GestureRecognizer>
@@ -478,19 +504,21 @@ const HomeScreen = () => {
                   ? theme.SCREENHEIGHT * 0.71
                   : theme.SCREENHEIGHT * 0.765,
             }}>
-            <DraggableFlatList
-              style={{height: theme.SCREENHEIGHT * 0.67}}
-              contentContainerStyle={{
-                paddingVertical: scale(10),
-                paddingBottom: theme.SCREENHEIGHT * 0.04,
-              }}
-              data={data}
-              renderItem={rendertasks}
-              showsVerticalScrollIndicator={false}
-              keyExtractor={item => `draggable-item-${item.key}`}
-              scrollPercent={5}
-              onMoveEnd={({data}) => setData(data)}
-            />
+            {Folder && (
+              <DraggableFlatList
+                style={{height: theme.SCREENHEIGHT * 0.67}}
+                contentContainerStyle={{
+                  paddingVertical: scale(10),
+                  paddingBottom: theme.SCREENHEIGHT * 0.04,
+                }}
+                data={Folder}
+                renderItem={rendertasks}
+                showsVerticalScrollIndicator={false}
+                keyExtractor={item => `draggable-item-${item.key}`}
+                scrollPercent={5}
+                onMoveEnd={({data}) => setFolder(data)}
+              />
+            )}
           </View>
           <View>
             <TouchableOpacity
@@ -623,5 +651,11 @@ const styles = StyleSheet.create({
   hide: {
     color: theme.colors.gray,
     fontSize: scale(13),
+  },
+  seeMore: {
+    alignItems: 'flex-end',
+    paddingHorizontal: scale(10),
+    paddingTop: scale(5),
+    justifyContent: 'center',
   },
 });

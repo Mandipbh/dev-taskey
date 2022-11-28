@@ -35,6 +35,7 @@ const CreateTaskScreen = props => {
   const [amount, setAmount] = useState(null);
   const [title, setTitle] = useState(null);
   const navigation = useNavigation();
+
   const handleCloseClolorpicker = c => {
     setColor(c);
     setColorPicker(false);
@@ -53,12 +54,13 @@ const CreateTaskScreen = props => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   getAllFolders();
-  // }, [isFocused]);
+  useEffect(() => {
+    getAllFolders();
+  }, [isFocused]);
 
   const getAllFolders = async () => {
-    ApiService.get('folder').then(res => {
+    ApiService.get('folder/specDetail').then(res => {
+      console.log('respose >> ', res);
       if (res.code === 0) {
         setFolders(res.data);
       }
@@ -82,23 +84,28 @@ const CreateTaskScreen = props => {
 
   const handleSave = () => {
     if (!handleValidation()) {
-      // let folderFrm = new FormData();
-      // folderFrm.append('name', title);
-      // folderFrm.append('type', type);
-      // folderFrm.append('color', selColor);
-      // folderFrm.append('order', 1);
-      // folderFrm.append('meta', meta);
-      // folderFrm.append('amount', amount);
-      // folderFrm.append('status', 'play');
-      // folderFrm.append('icon', selColor);
-      // ApiService.post('folder')
-      //   .then(res => {
-      //     if (res.code === -1) {
-      //     }
-      //   })
-      //   .catch(error => {
-      //     console.log('error ', error);
-      //   });
+      let folderFrm = new FormData();
+      folderFrm.append('name', title);
+      folderFrm.append(
+        'type',
+        type === 1 ? 'CRONO' : type === 2 ? 'TIMER' : 'COUNTER',
+      );
+      folderFrm.append('color', selColor);
+      folderFrm.append('order', 1);
+      folderFrm.append('meta', selMeta);
+      folderFrm.append('amount', amount);
+      folderFrm.append('status', 'play');
+      folderFrm.append('icon', selColor);
+      ApiService.post('task')
+        .then(res => {
+          if (res.code === -1) {
+          } else {
+            navigation.goBack();
+          }
+        })
+        .catch(error => {
+          console.log('error ', error);
+        });
     }
   };
   var error = false;
@@ -370,7 +377,7 @@ const CreateTaskScreen = props => {
                       key={i.toString()}
                       style={styles.optionView}
                       onPress={() => {
-                        handleOptions(f.name);
+                        handleOptions(f);
                       }}>
                       <Label title={f.name} />
                     </TouchableOpacity>
