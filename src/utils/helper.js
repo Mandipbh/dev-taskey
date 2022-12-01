@@ -9,6 +9,7 @@ export const handleResponse = async res => {
 };
 
 export const handleError = async errorMsg => {
+  console.log('error >>> ', errorMsg);
   try {
     const state = await NetInfo.fetch();
     if (state.isConnected) {

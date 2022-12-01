@@ -16,13 +16,16 @@ import {typeData} from '../../utils/mockData';
 import ColorPickerModel from './ColorPickerModel';
 import Toast from 'react-native-simple-toast';
 import ApiService from '../../utils/ApiService';
+import Loader from './Loader';
 
 const CreateFolderModel = props => {
   const {isVisible, close, editFolder} = props;
   const [type, setType] = useState(0);
   const [colorPicker, setColorPicker] = useState(false);
-  const [selColor, setColor] = useState(null);
+  const [selColor, setColor] = useState(theme.colors.primary);
   const [folderName, setFolderName] = useState(null);
+  const [isLoading, setLoading] = useState(false);
+
   const handleCloseClolorpicker = c => {
     setColor(c);
     setColorPicker(false);
@@ -43,14 +46,17 @@ const CreateFolderModel = props => {
         order: 1,
         // icon: null,
       };
+      setLoading(true);
       const options = {payloads: folderFrm};
       ApiService.post('folder', options)
         .then(res => {
+          setLoading(false);
           console.log('respoe >>. ', res);
           if (res.code === -1) {
           }
         })
         .catch(error => {
+          setLoading(false);
           console.log('error ', error);
         });
       setTimeout(() => {
@@ -77,7 +83,7 @@ const CreateFolderModel = props => {
 
   const onPressBack = () => {
     close();
-    setColor(null);
+    setColor(theme.colors.primary);
     setFolderName(null);
     setType(0);
   };
@@ -96,7 +102,7 @@ const CreateFolderModel = props => {
             color={theme.colors.primary2}
             onPress={onPressBack}
           />
-          <Title title="Edit Folder" />
+          <Title title="Folder" />
           <Icon
             size={scale(22)}
             color={theme.colors.primary2}
@@ -208,6 +214,7 @@ const CreateFolderModel = props => {
         isVisible={colorPicker}
         close={handleCloseClolorpicker}
       />
+      {isLoading && <Loader />}
     </Modal>
   );
 };

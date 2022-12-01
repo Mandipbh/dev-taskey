@@ -29,28 +29,31 @@ const SignUp = () => {
   const dispatch = useDispatch();
 
   const handleSignup = async () => {
-    try {
-      const mobileFrm = {
-        phonenumber: mobile,
-        code: otp,
-      };
-      const options = {payloads: mobileFrm};
-      const response = await ApiService.post('verifyOTP', options);
-      console.log('resposemn >> ', response);
-      if (response.success) {
-        Toast.show('Signup successfully');
-        dispatch(isLogin(true));
-        navigation.navigate('Tabs');
-      } else {
-        // setSendOtp(true);
+    if (mobile.length !== 10 && otp.length !== 6) {
+      Toast.show('Not allow blank.', Toast.SHORT);
+    } else {
+      try {
+        const mobileFrm = {
+          phonenumber: mobile,
+          code: otp,
+        };
+        const options = {payloads: mobileFrm};
+        const response = await ApiService.post('verifyOTP', options);
+        if (response.success) {
+          Toast.show('Signup successfully.');
+          dispatch(isLogin(true));
+          navigation.navigate('Tabs');
+        } else {
+          // setSendOtp(true);
+        }
+      } catch (error) {
+        Toast.show(error.response.data.message, Toast.SHORT);
       }
-    } catch (error) {
-      Toast.show('error', Toast.SHORT);
     }
   };
   const handleotpSend = async () => {
     if (mobile.trim() === '') {
-      Toast.show('Mobile Number is not allow blank', Toast.SHORT);
+      Toast.show('Mobile Number is not allow blank.', Toast.SHORT);
     } else {
       try {
         const registerFrm = {
@@ -59,7 +62,6 @@ const SignUp = () => {
         };
         const options = {payloads: registerFrm};
         const response = await ApiService.post('register', options);
-        console.log('Register frm >> ', response);
         if (response.success) {
           axios.defaults.headers.common.Authorization = `Bearer ${response.token}`;
           Toast.show('OTP is sent to your mobile number');
@@ -69,7 +71,7 @@ const SignUp = () => {
           setSendOtp(true);
         }
       } catch (error) {
-        Toast.show('error', Toast.SHORT);
+        Toast.show(error.response.data.message, Toast.SHORT);
       }
     }
   };
@@ -108,6 +110,7 @@ const SignUp = () => {
               setMobile(txt);
             }}
             keyboardType="numeric"
+            maxLength={10}
           />
           <TouchableOpacity style={styles.sendOtpBtn} onPress={handleotpSend}>
             <Text style={styles.Sendcode}>
@@ -119,6 +122,7 @@ const SignUp = () => {
             Labeltitle="OTP"
             placeholder="Enter OTP"
             value={otp}
+            maxLength={6}
             onChangeText={txt => {
               setOtp(txt);
             }}

@@ -33,14 +33,13 @@ function HeaderTitle() {
 const AllTasks = ({route}) => {
   const {taskItem, folderName} = route.params;
   const [task, setTask] = useState(taskItem);
-  console.log('All tasks', JSON.stringify(task, null, 2));
   const navigation = useNavigation();
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.white}}>
       <CommonHeader
         IconType={AntDesign}
-        headerTitle="All Tasks"
+        headerTitle={`${taskItem?.name}`}
         headerLeft={() => (
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <AntDesign name="left" size={scale(20)} />

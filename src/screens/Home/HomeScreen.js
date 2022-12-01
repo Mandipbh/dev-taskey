@@ -7,6 +7,7 @@ import {
   Platform,
 } from 'react-native';
 import React, {useState} from 'react';
+import Toast from 'react-native-simple-toast';
 import Icon1 from 'react-native-vector-icons/Foundation';
 import Icon2 from 'react-native-vector-icons/Feather';
 import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -19,16 +20,14 @@ import {
 import {images, scale, theme} from '../../utils';
 import {folders, tasksData} from '../../utils/mockData';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
-import moment from 'moment';
 import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import DraggableFlatList from 'react-native-draggable-dynamic-flatlist';
 import {useEffect} from 'react';
-// import {getTask} from '../../redux/Actions/Action';
-import {useDispatch, useSelector} from 'react-redux';
 import ComplateTaskModel from '../../components/appModel/ComplateTaskModel';
 import {ProgressBar} from 'react-native-paper';
 import ApiService from '../../utils/ApiService';
 import axios from 'axios';
+import {appAPI, postAPICall} from '../../utils/AppApi';
 
 const HomeScreen = () => {
   const [openFolderModal, setOpenFolderModal] = useState(false);
@@ -42,119 +41,8 @@ const HomeScreen = () => {
   const [markedDates, setMarkedDates] = useState(null);
   const [model, setModel] = useState(false);
   const [editFolder, setEditFolder] = useState(null);
+  const [loader, setLoader] = useState(false);
   const navigation = useNavigation();
-  const [taskDumyData, setTaskDummy] = useState([
-    {
-      fid: 0,
-      taskslist: [
-        {
-          id: 0,
-          title: 'Task name eyamole',
-          color: '#ffddff',
-          folder: 'global',
-          status: 1,
-          path: 10,
-          percentage: 10,
-        },
-        {
-          id: 1,
-          title: 'Task• example 2',
-          color: '#ffddff',
-          folder: 'global',
-          status: 0,
-          path: 20,
-          percentage: 20,
-        },
-        {
-          id: 2,
-          title: 'Task examole',
-          color: '#ffddff',
-          folder: 'global',
-          status: 1,
-          path: 20,
-          percentage: 20,
-        },
-        // {
-        //   id: 3,
-        //   title: 'Task• example 2',
-        //   color: '#ffddff',
-        //   folder: 'global',
-        //   status: 0,
-        //   path: 20,
-        //   percentage: 20,
-        // },
-        // {
-        //   id: 4,
-        //   title: 'Task examole',
-        //   color: '#ffddff',
-        //   folder: 'global',
-        //   status: 1,
-        //   path: 20,
-        //   percentage: 20,
-        // },
-        // {
-        //   id: 5,
-        //   title: 'Task• example 2',
-        //   color: '#ffddff',
-        //   folder: 'global',
-        //   status: 0,
-        //   path: 20,
-        //   percentage: 20,
-        // },
-        // {
-        //   id: 6,
-        //   title: 'Task example',
-        //   color: '#ffddff',
-        //   folder: 'global',
-        //   status: 1,
-        //   path: 20,
-        //   percentage: 20,
-        // },
-      ],
-    },
-    {
-      fid: 1,
-      taskslist: [
-        {
-          id: 3,
-          title: 'Task examole 2',
-          color: '#ffddff',
-          folder: 'global',
-          status: 1,
-          path: 20,
-          percentage: 20,
-        },
-        {
-          id: 1,
-          title: 'Task• example 2',
-          color: '#ffddff',
-          folder: 'global',
-          status: 0,
-          path: 20,
-          percentage: 20,
-        },
-        {
-          id: 2,
-          title: 'Task examole',
-          color: '#ffddff',
-          folder: 'global',
-          status: 1,
-          path: 20,
-          percentage: 20,
-        },
-        {
-          id: 3,
-          title: 'Task examole 2',
-          color: '#ffddff',
-          folder: 'global',
-          status: 1,
-          path: 20,
-          percentage: 20,
-        },
-      ],
-    },
-  ]);
-  axios.defaults.headers.common['Authorization'];
 
   const [Folder, setFolder] = useState([]);
 
@@ -166,22 +54,29 @@ const HomeScreen = () => {
   }, [selectedType, useIsFocused()]);
 
   const getAllTasks = async () => {
-    console.log('type >>> ', selectedType);
     if (selectedType === 1) {
+      setLoader(true);
       ApiService.get('folder/CRONO').then(res => {
-        if (res.code === 0) {
-          setFolder(res.data);
+        setLoader(false);
+        if (res.success) {
+          let OrderWiseData = [...res.data];
+          OrderWiseData?.sort(function (a, b) {
+            return a?.order - b?.order;
+          });
+          setFolder(OrderWiseData);
         }
       });
     } else if (selectedType === 2) {
       ApiService.get('folder/TIMER').then(res => {
-        if (res.code === 0) {
+        setLoader(false);
+        if (res.success) {
           setFolder(res.data);
         }
       });
     } else if (selectedType === 3) {
       ApiService.get('folder/COUNTER').then(res => {
-        if (res.code === 0) {
+        setLoader(false);
+        if (res.success) {
           setFolder(res.data);
         }
       });
@@ -228,69 +123,125 @@ const HomeScreen = () => {
     }
   };
 
+  const updateStatus = task => {
+    let taskId = task?._id;
+    const taskStatus = task?.status === 'Paused' ? 'Play' : 'Paused';
+    const obj = {
+      id: taskId,
+      status: taskStatus,
+      type: task?.type,
+    };
+    const options = {payloads: obj};
+    try {
+      console.log('payload >>> ', obj);
+      ApiService.post('taskStartStop', options).then(res => {
+        console.log('response of ordering >> ', res);
+        if (res.success) {
+          Toast.show(res.message, Toast.SHORT);
+          getAllTasks();
+        }
+      });
+    } catch (error) {
+      console.log('error >>> ', error.response.message);
+    }
+  };
+
   const tasksrender = ({item, index, move, moveEnd, isActive}) => {
+    console.log('first>>> ', item?.meta);
     return (
       <>
-        {index < 3 && (
+        {index < 4 && (
           <TouchableOpacity
             onLongPress={move}
             onPressOut={moveEnd}
             key={index}
-            style={[
-              styles.row,
-              {
-                justifyContent: 'space-between',
-                borderBottomWidth: scale(0.7),
-                paddingVertical: scale(3),
-                paddingHorizontal: scale(5),
-              },
-            ]}
+            style={styles.taskRow}
             onPress={() => navigation.navigate('CreateTask', {editData: item})}>
             <View style={styles.statusView}>
-              {item.status ? (
-                <Icon1
-                  name="play"
-                  size={scale(25)}
-                  color={theme.colors.green}
-                  onPress={() => {
-                    setModel(!model);
-                  }}
-                />
+              {selectedType !== 3 ? (
+                <>
+                  {item.status !== 'Paused' ? (
+                    <Icon1
+                      name="play"
+                      size={scale(25)}
+                      color={theme.colors.green}
+                      onPress={() => {
+                        updateStatus(item);
+                        // setModel(!model);
+                      }}
+                    />
+                  ) : (
+                    <Icon2
+                      name="pause"
+                      size={scale(20)}
+                      color={theme.colors.orange}
+                      style={{marginLeft: scale(-5)}}
+                      onPress={() => {
+                        updateStatus(item);
+                      }}
+                    />
+                  )}
+                  {item?.status !== 'play' ? (
+                    <Icon1
+                      name="social-zerply"
+                      size={scale(20)}
+                      color={theme.colors.green}
+                    />
+                  ) : (
+                    <Icon3
+                      name="clock-time-seven"
+                      size={scale(20)}
+                      color={theme.colors.lightGreen}
+                    />
+                  )}
+                </>
               ) : (
-                <Icon2
-                  name="pause"
-                  size={scale(20)}
-                  color={theme.colors.orange}
-                  style={{marginLeft: scale(-5)}}
-                  onPress={() => {
-                    setModel(!model);
-                  }}
-                />
-              )}
-              {item % 2 ? (
-                <Icon1
-                  name="social-zerply"
-                  size={scale(20)}
-                  color={theme.colors.green}
-                />
-              ) : (
-                <Icon3
-                  name="clock-time-seven"
-                  size={scale(20)}
-                  color={theme.colors.lightGreen}
-                />
+                <View style={{marginLeft: scale(-20)}}>
+                  <TouchableOpacity
+                    style={{borderColor: theme.colors.green, borderWidth: 1}}>
+                    <Icon2
+                      name="plus"
+                      size={scale(20)}
+                      color={theme.colors.green}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{borderColor: theme.colors.red, borderWidth: 1}}>
+                    <Icon2
+                      name="minus"
+                      size={scale(20)}
+                      color={theme.colors.red}
+                    />
+                  </TouchableOpacity>
+                </View>
               )}
             </View>
-            <View style={{width: '45%'}}>
-              <Label title={item?.name} style={{fontSize: scale(12)}} />
-              <ProgressBar progress={0.5} color={theme.colors.orange} />
+            <View style={styles.taskLabel}>
+              <Label
+                title={item?.name}
+                style={{fontSize: scale(12), color: item?.color}}
+              />
+              {item?.meta === 'Achievement' && (
+                <ProgressBar
+                  progress={0.4}
+                  color={
+                    item?.status !== 'Play'
+                      ? theme.colors.gray
+                      : theme.colors.green
+                  }
+                />
+              )}
             </View>
             <View style={styles.staticDetails}>
-              <Label title={item?.path} />
+              <Label
+                title={'15:05'}
+                style={{fontSize: scale(11), marginLeft: scale(-5)}}
+              />
               <Label
                 title={`${
                   item?.percentage === undefined ? 0 : item?.percentage
                 }  %`}
+                style={{fontSize: scale(11)}}
               />
               <Label title="-" />
             </View>
@@ -306,13 +257,7 @@ const HomeScreen = () => {
         <GestureRecognizer
           onSwipe={(direction, state) => onSwipe(direction, state, index)}
           config={config}>
-          <TouchableOpacity
-            onLongPress={move}
-            onPressOut={moveEnd}
-            onPress={() => {
-              setEditFolder(item);
-              setOpenFolderModal(true);
-            }}>
+          <TouchableOpacity onLongPress={move} onPressOut={moveEnd}>
             <View
               style={[
                 styles.taskCard,
@@ -325,20 +270,34 @@ const HomeScreen = () => {
                   size={scale(22)}
                   color={theme.colors.primary2}
                 />
+                <TouchableOpacity
+                  style={{width: '60%'}}
+                  onPress={() => {
+                    setEditFolder(item);
+                    setOpenFolderModal(true);
+                  }}>
+                  <Label
+                    title={item?.name}
+                    style={[styles.headerTitle, {width: '60%'}]}
+                  />
+                </TouchableOpacity>
+
+                <Label title={'100 mins'} style={[styles.headerTitle]} />
                 <Label
-                  title={item?.name}
-                  style={[styles.headerTitle, {width: '60%'}]}
+                  title={'20%'}
+                  style={[styles.headerTitle, {marginVertical: scale(7)}]}
                 />
-                <Label title={item?.totalmins} style={[styles.headerTitle]} />
-                <Label title={item?.done} style={[styles.headerTitle]} />
               </View>
-              <View style={[styles.taskContainer, {borderColor: item.color}]}>
+              <View style={[styles.taskContainer, {borderColor: item?.color}]}>
                 <Label title={'Status'} style={[styles.headerTitle]} />
                 <Label
                   title={'Name'}
                   style={[styles.headerTitle, {width: '35%'}]}
                 />
-                <Label title={'Path'} style={[styles.headerTitle]} />
+                <Label
+                  title={'Path'}
+                  style={[styles.headerTitle, {left: scale(10)}]}
+                />
                 <View style={styles.row}>
                   <Label title={'% '} style={[styles.headerTitle]} />
                   <Icon2 name="folder" size={scale(22)} />
@@ -352,18 +311,20 @@ const HomeScreen = () => {
                   <>
                     {
                       <DraggableFlatList
-                        data={taskItem?.taskList}
+                        data={taskItem?.taskList.sort(function (a, b) {
+                          return a?.order - b?.order;
+                        })}
                         renderItem={tasksrender}
                         showsVerticalScrollIndicator={false}
                         keyExtractor={(item, index) =>
                           `draggable-item-${item.key}`
                         }
                         scrollPercent={5}
-                        // onMoveEnd={({data, index}) => {
-                        //   const updateData = [...taskDumyData];
-                        //   updateData[Tindex].taskslist = data;
-                        //   setTaskDummy(updateData);
-                        // }}
+                        onMoveEnd={({data, index}) => {
+                          handleTaskOrder(data);
+                          const updateData = [...folders];
+                          updateData[Tindex].taskList = data;
+                        }}
                       />
                     }
                     <TouchableOpacity
@@ -387,7 +348,45 @@ const HomeScreen = () => {
       </>
     );
   };
-
+  const handleMoveFolder = data => {
+    setFolder(data);
+    const updateData = [];
+    data.map((item, index) => {
+      updateData.push({id: item?._id, order: index});
+    });
+    const payload = {data: updateData};
+    const options = {payloads: payload};
+    try {
+      ApiService.put('folderorder', options).then(res => {
+        if (res.success) {
+          Toast.show('folder order updated', Toast.SHORT);
+          console.log('response of ordering >> ', res);
+        }
+      });
+    } catch (error) {
+      console.log('error >>> ', error);
+    }
+  };
+  const handleTaskOrder = taskOrder => {
+    const updateData = [];
+    taskOrder.map((item, index) => {
+      updateData.push({id: item?._id, order: index});
+    });
+    const payload = {data: updateData};
+    const options = {payloads: payload};
+    console.log('data >>> ', updateData);
+    try {
+      ApiService.put('taskorder', options).then(res => {
+        if (res.success) {
+          getAllTasks();
+          Toast.show('task order updated', Toast.SHORT);
+          console.log('response of ordering >> ', res);
+        }
+      });
+    } catch (error) {
+      console.log('error >>> ', error);
+    }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
@@ -511,14 +510,12 @@ const HomeScreen = () => {
                   paddingVertical: scale(10),
                   paddingBottom: theme.SCREENHEIGHT * 0.04,
                 }}
-                data={Folder.sort(function (a, b) {
-                  return a?.order - b?.order;
-                })}
+                data={Folder}
                 renderItem={rendertasks}
                 showsVerticalScrollIndicator={false}
                 keyExtractor={item => `draggable-item-${item.key}`}
                 scrollPercent={5}
-                onMoveEnd={({data}) => setFolder(data)}
+                onMoveEnd={({data}) => handleMoveFolder(data)}
               />
             )}
           </View>
@@ -576,6 +573,7 @@ const HomeScreen = () => {
         />
       )}
       <ComplateTaskModel isVisible={model} close={handleProgressClose} />
+      {/* {!loader && <Loader />} */}
     </SafeAreaView>
   );
 };
@@ -612,6 +610,15 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontWeight: '600',
+    fontSize: scale(10),
+  },
+  taskRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: scale(0.7),
+    paddingVertical: scale(3),
+    paddingHorizontal: scale(5),
   },
   statusView: {
     flexDirection: 'row',
@@ -623,6 +630,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '40%',
     justifyContent: 'space-around',
+  },
+  taskLabel: {
+    width: '40%',
+    // alignItems: 'flex-start',
+    marginLeft: scale(-12),
   },
   move: {
     borderWidth: scale(1),

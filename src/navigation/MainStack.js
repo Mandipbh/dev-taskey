@@ -12,7 +12,7 @@ const Stack = createNativeStackNavigator();
 const MainStack = () => {
   const isLogin = useSelector(state => state.UserReducer.login);
   const userDetails = useSelector(state => state.UserReducer.userDetails);
-  // axios.defaults.headers.common.Authorization = `Bearer ${userDetails?.token}`;
+  axios.defaults.headers.common.Authorization = `Bearer ${userDetails?.token}`;
   return (
     <Stack.Navigator
       screenOptions={{headerShown: false}}

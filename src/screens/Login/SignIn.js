@@ -25,6 +25,7 @@ const SignIn = () => {
   const [mobile, setMobile] = useState('');
   const [otp, setOtp] = useState('');
   const [otpSend, setSendOtp] = useState(false);
+  const [varified, setVarified] = useState(false);
   const userDetails = useSelector(state => state.UserReducer.userDetails);
   const dispatch = useDispatch();
   const validation = () => {
@@ -53,23 +54,28 @@ const SignIn = () => {
   const handleLogin = async () => {
     if (validation()) {
     } else {
-      try {
-        const mobileFrm = {
-          phonenumber: mobile,
-          code: otp,
-        };
-        const options = {payloads: mobileFrm};
-        const response = await ApiService.post('verifyOTP', options);
-        console.log('resposemn >> ', response);
-        if (response) {
-          Toast.show('Login successfully');
-          dispatch(isLogin(true));
-          navigation.navigate('Tabs');
-        } else {
-          // setSendOtp(true);
+      if (otpSend) {
+        try {
+          const mobileFrm = {
+            phonenumber: mobile,
+            code: otp,
+          };
+          const options = {payloads: mobileFrm};
+          const response = await ApiService.post('verifyOTP', options);
+          console.log('resposemn >> ', response);
+          if (response) {
+            Toast.show('Login successfully');
+
+            dispatch(isLogin(true));
+            navigation.navigate('Tabs');
+          } else {
+            // setSendOtp(true);
+          }
+        } catch (error) {
+          Toast.show(error.response.data.message, Toast.SHORT);
         }
-      } catch (error) {
-        Toast.show('error', Toast.SHORT);
+      } else {
+        Toast.show('first press send code', Toast.SHORT);
       }
     }
   };
@@ -84,17 +90,20 @@ const SignIn = () => {
         };
         const options = {payloads: mobileFrm1};
         const response = await ApiService.post('login', options);
-        console.log('response << > ', response?.token);
+        console.log('response << > ', response);
         if (response.success) {
           axios.defaults.headers.common.Authorization = `Bearer ${response.token}`;
+          setVarified(true);
           Toast.show('OTP is sent to your mobile number');
           setSendOtp(true);
           dispatch(loginAction(response));
         } else {
+          setVarified(false);
           setSendOtp(true);
         }
       } catch (error) {
-        Toast.show('error', Toast.SHORT);
+        console.log('errror >>> ', error.response.data.message);
+        Toast.show(error.response.data.message, Toast.SHORT);
       }
     }
   };
@@ -124,7 +133,8 @@ const SignIn = () => {
             style={styles.sendBtn}
             onPress={() => {
               handleotpSend();
-            }}>
+            }}
+            disabled={mobile.length !== 10 ? true : false}>
             <Text style={styles.Sendcode}>
               {otpSend ? 'Re-Send' : 'Send Code'}
             </Text>
@@ -149,7 +159,9 @@ const SignIn = () => {
           />
           <View style={CommonStyles.navTxtContainer}>
             <Label title="Are you a new User ?" />
-            <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('SignUp')}
+              disabled={varified}>
               <Label style={CommonStyles.navTxt} title="Sign Up" />
             </TouchableOpacity>
           </View>
