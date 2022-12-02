@@ -134,7 +134,7 @@ const HomeScreen = () => {
     const options = {payloads: obj};
     try {
       console.log('payload >>> ', obj);
-      ApiService.post('taskStartStop', options).then(res => {
+      postAPICall('taskStartStop', obj).then(res => {
         console.log('response of ordering >> ', res);
         if (res.success) {
           Toast.show(res.message, Toast.SHORT);
@@ -142,12 +142,11 @@ const HomeScreen = () => {
         }
       });
     } catch (error) {
-      console.log('error >>> ', error.response.message);
+      console.log('error >>> ', error.response.data);
     }
   };
 
   const tasksrender = ({item, index, move, moveEnd, isActive}) => {
-    console.log('first>>> ', item?.meta);
     return (
       <>
         {index < 4 && (
@@ -160,7 +159,7 @@ const HomeScreen = () => {
             <View style={styles.statusView}>
               {selectedType !== 3 ? (
                 <>
-                  {item.status !== 'Paused' ? (
+                  {item.status === 'Paused' ? (
                     <Icon1
                       name="play"
                       size={scale(25)}
@@ -181,6 +180,7 @@ const HomeScreen = () => {
                       }}
                     />
                   )}
+
                   {item?.status !== 'play' ? (
                     <Icon1
                       name="social-zerply"

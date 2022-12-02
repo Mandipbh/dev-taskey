@@ -120,7 +120,7 @@ const CreateTaskScreen = props => {
         order: 0,
         meta: selMeta == 1 ? 'Achievement' : 'Registry',
         amount: amount,
-        status: 'Play',
+        status: 'Paused',
         folderId: selectedFolder?._id,
         // folderFrm.append('icon', null);
       };

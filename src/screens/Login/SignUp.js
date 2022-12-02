@@ -14,7 +14,6 @@ import Toast from 'react-native-simple-toast';
 import {scale, theme} from '../../utils';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useState} from 'react';
-import {API, postAPICall} from '../../utils/AppApi';
 import ApiService from '../../utils/ApiService';
 import {useDispatch} from 'react-redux';
 import {isLogin, loginAction} from '../../redux/Actions/UserActions';
@@ -47,7 +46,8 @@ const SignUp = () => {
           // setSendOtp(true);
         }
       } catch (error) {
-        Toast.show(error.response.data.message, Toast.SHORT);
+        // console.log('error ', error.response.data.error.message);
+        Toast.show('something went wrong', Toast.SHORT);
       }
     }
   };
@@ -62,16 +62,18 @@ const SignUp = () => {
         };
         const options = {payloads: registerFrm};
         const response = await ApiService.post('register', options);
+        console.log('respose .>> ', response);
         if (response.success) {
           axios.defaults.headers.common.Authorization = `Bearer ${response.token}`;
           Toast.show('OTP is sent to your mobile number');
           dispatch(loginAction(response));
           setSendOtp(true);
         } else {
-          setSendOtp(true);
+          Toast.show('Phone number exist');
+          setSendOtp(false);
         }
       } catch (error) {
-        Toast.show(error.response.data.message, Toast.SHORT);
+        Toast.show('something want wrong', Toast.SHORT);
       }
     }
   };
