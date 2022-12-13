@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
+  Text,
 } from 'react-native';
 import React from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -163,15 +164,120 @@ const StatisticsScreen = () => {
   const Main = () => {
     return (
       <>
-        <CustomDetails detailsData={statisticdata} />
-        <CustomDetails detailsData={statisticdataone} />
-        <CustomDetails detailsData={statisticdatatwo} />
-        <CustomDetails detailsData={statisticdatathree} />
-        <CustomDetails detailsData={statisticdataFour} />
-        <CustomDetails detailsData={statisticdataFive} />
-        <CustomDetails detailsData={statisticdataSix} />
-        <CustomDetails detailsData={statisticdataSeven} />
-
+        {/* <View style={styles.mapView}>
+          {statisticdata.map((f, i) => {
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={styles.mapText}>{f.label}</Text>
+                <Text style={styles.mapText}>{f.value}</Text>
+              </View>
+            );
+          })}
+        </View> */}
+        <View style={styles.mapView}>
+          {statisticdataone.map((f, i) => {
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={styles.mapText}>{f.label}</Text>
+                <Text style={styles.mapText}>{f.value}</Text>
+              </View>
+            );
+          })}
+        </View>
+        <View style={styles.mapView}>
+          {statisticdatatwo.map((f, i) => {
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={styles.mapText}>{f.label}</Text>
+                <Text style={styles.mapText}>{f.value}</Text>
+              </View>
+            );
+          })}
+        </View>
+        <View style={styles.mapView}>
+          {statisticdatathree.map((f, i) => {
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={styles.mapText}>{f.label}</Text>
+                <Text style={styles.mapText}>{f.value}</Text>
+              </View>
+            );
+          })}
+        </View>
+        <View style={styles.mapView}>
+          {statisticdataFour.map((f, i) => {
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <View>
+                  <Text style={styles.mapText}>{f.label}</Text>
+                </View>
+                <Text style={styles.mapText}>{f.value}</Text>
+              </View>
+            );
+          })}
+        </View>
+        <View style={styles.mapView}>
+          {statisticdataFive.map((f, i) => {
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={styles.mapText}>{f.label}</Text>
+                <Text style={styles.mapText}>{f.value}</Text>
+              </View>
+            );
+          })}
+        </View>
+        <View style={styles.mapView}>
+          {statisticdataSix.map((f, i) => {
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={styles.mapText}>{f.label}</Text>
+                <Text style={styles.mapText}>{f.value}</Text>
+              </View>
+            );
+          })}
+        </View>
+        <View style={styles.mapView}>
+          {statisticdataSeven.map((f, i) => {
+            return (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}>
+                <Text style={styles.mapText}>{f.label}</Text>
+                <Text style={styles.mapText}>{f.value}</Text>
+              </View>
+            );
+          })}
+        </View>
         <ChartSection
           style={{marginTop: scale(15)}}
           title="Type Tasks Distribution"
@@ -340,6 +446,10 @@ const StatisticsScreen = () => {
               labelField="label"
               valueField="id"
               onChange={item => setvalue(item.value)}
+              iconColor={theme.colors.black}
+              itemTextStyle={{color: theme.colors.black}}
+              selectedTextStyle={{color: theme.colors.black}}
+              placeholderStyle={{color: theme.colors.black}}
             />
           </View>
         </View>
@@ -389,10 +499,11 @@ const styles = StyleSheet.create({
     paddingBottom: scale(4),
     borderColor: theme.colors.gray,
   },
-  mapText: {fontWeight: '400', fontSize: 16},
+  mapText: {fontWeight: '400', fontSize: 16, color: theme.colors.black},
   label: {
     fontWeight: '600',
     marginLeft: scale(5),
+    color: theme.colors.black,
   },
   row: {
     flexDirection: 'row',

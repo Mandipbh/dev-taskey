@@ -1,4 +1,10 @@
-import {StyleSheet, View, SafeAreaView, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  SafeAreaView,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
 import React from 'react';
 import {Button, Label, TextInput, Title} from '../../components';
 import {CommonStyles} from './CommonStyles';
@@ -8,10 +14,10 @@ import Toast from 'react-native-simple-toast';
 import {scale, theme} from '../../utils';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useState} from 'react';
-import {API, postAPICall} from '../../utils/AppApi';
 import ApiService from '../../utils/ApiService';
 import {useDispatch} from 'react-redux';
 import {isLogin, loginAction} from '../../redux/Actions/UserActions';
+import axios from 'axios';
 
 const SignUp = () => {
   const navigation = useNavigation();
@@ -22,29 +28,32 @@ const SignUp = () => {
   const dispatch = useDispatch();
 
   const handleSignup = async () => {
-    try {
-      const mobileFrm = {
-        phonenumber: mobile,
-        code: otp,
-      };
-      const options = {payloads: mobileFrm};
-      const response = await ApiService.post('verifyOTP', options);
-      console.log('resposemn >> ', response);
-      if (response.data.valid) {
-        Toast.show('Signup successfully');
-        dispatch(loginAction(response));
-        dispatch(isLogin(true));
-        navigation.navigate('Tabs');
-      } else {
-        // setSendOtp(true);
+    if (mobile.length !== 10 && otp.length !== 6) {
+      Toast.show('Not allow blank.', Toast.SHORT);
+    } else {
+      try {
+        const mobileFrm = {
+          phonenumber: mobile,
+          code: otp,
+        };
+        const options = {payloads: mobileFrm};
+        const response = await ApiService.post('verifyOTP', options);
+        if (response.success) {
+          Toast.show('Signup successfully.');
+          dispatch(isLogin(true));
+          navigation.navigate('Tabs');
+        } else {
+          // setSendOtp(true);
+        }
+      } catch (error) {
+        // console.log('error ', error.response.data.error.message);
+        Toast.show('something went wrong', Toast.SHORT);
       }
-    } catch (error) {
-      Toast.show('error', Toast.SHORT);
     }
   };
   const handleotpSend = async () => {
     if (mobile.trim() === '') {
-      Toast.show('Mobile Number is not allow blank', Toast.SHORT);
+      Toast.show('Mobile Number is not allow blank.', Toast.SHORT);
     } else {
       try {
         const registerFrm = {
@@ -53,15 +62,18 @@ const SignUp = () => {
         };
         const options = {payloads: registerFrm};
         const response = await ApiService.post('register', options);
-        console.log('Register frm >> ', response);
-        if (response.code === 0) {
+        console.log('respose .>> ', response);
+        if (response.success) {
+          axios.defaults.headers.common.Authorization = `Bearer ${response.token}`;
           Toast.show('OTP is sent to your mobile number');
+          dispatch(loginAction(response));
           setSendOtp(true);
         } else {
-          setSendOtp(true);
+          Toast.show('Phone number exist');
+          setSendOtp(false);
         }
       } catch (error) {
-        Toast.show('error', Toast.SHORT);
+        Toast.show('something want wrong', Toast.SHORT);
       }
     }
   };
@@ -100,6 +112,7 @@ const SignUp = () => {
               setMobile(txt);
             }}
             keyboardType="numeric"
+            maxLength={10}
           />
           <TouchableOpacity style={styles.sendOtpBtn} onPress={handleotpSend}>
             <Text style={styles.Sendcode}>
@@ -111,6 +124,7 @@ const SignUp = () => {
             Labeltitle="OTP"
             placeholder="Enter OTP"
             value={otp}
+            maxLength={6}
             onChangeText={txt => {
               setOtp(txt);
             }}

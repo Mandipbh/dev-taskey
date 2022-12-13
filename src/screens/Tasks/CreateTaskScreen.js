@@ -4,6 +4,8 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
+  Image,
+  ImageBackground,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -11,14 +13,14 @@ import Toast from 'react-native-simple-toast';
 import Feather from 'react-native-vector-icons/Feather';
 import LottieView from 'lottie-react-native';
 import {scale, theme} from '../../utils';
-import {Label} from '../../components/Label';
-import {CreateFolderModel, InputBox} from '../../components';
+import {Label, Title} from '../../components/Label';
+import {CreateFolderModel, InputBox, Loader} from '../../components';
 import CommonHeader from '../../components/CommonHeader';
 import ColorPickerModel from '../../components/appModel/ColorPickerModel';
 import {metaData, typeData} from '../../utils/mockData';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-
+import Foundation from 'react-native-vector-icons/Foundation';
 import ApiService from '../../utils/ApiService';
 
 const CreateTaskScreen = props => {
@@ -26,13 +28,15 @@ const CreateTaskScreen = props => {
   const [type, setType] = useState(0);
   const [selMeta, setMeta] = useState(0);
   const [colorPicker, setColorPicker] = useState(false);
-  const [selColor, setColor] = useState(null);
+  const [selColor, setColor] = useState(theme.colors.primary);
   const [open, setOpen] = useState(false);
   const [newFolderM, setnewFolderM] = useState(false);
-  const [selectedFolder, setSelFolder] = useState(null);
+  const [selectedFolder, setSelFolder] = useState('');
+  const [defaultFolder, setDefaultFolder] = useState(null);
   const [folders, setFolders] = useState([]);
   const [amount, setAmount] = useState(null);
   const [title, setTitle] = useState(null);
+  const [isLoading, setLoading] = useState(false);
   const navigation = useNavigation();
   const handleCloseClolorpicker = c => {
     setColor(c);
@@ -52,16 +56,30 @@ const CreateTaskScreen = props => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   getAllFolders();
-  // }, [isFocused]);
+  useEffect(() => {
+    getAllFolders();
+  }, [isFocused, type]);
 
   const getAllFolders = async () => {
-    ApiService.get('folder').then(res => {
-      if (res.code === 0) {
-        setFolders(res.data);
+    if (type != 0) {
+      try {
+        const taskType =
+          type === 1 ? 'CRONO' : type === 2 ? 'TIMER' : 'COUNTER';
+        ApiService.get('getfolder/' + taskType).then(res => {
+          if (res.success) {
+            setFolders(res.data);
+            res.data.map(i => {
+              if (i.isDefault) {
+                setSelFolder(i);
+                console.log('folder is deufalt ', i);
+              }
+            });
+          }
+        });
+      } catch (error) {
+        console.log('error >', error);
       }
-    });
+    }
   };
   const handleMeta = id => {
     if (type === 1) {
@@ -78,27 +96,54 @@ const CreateTaskScreen = props => {
       setMeta(id);
     }
   };
-
+  const clearData = () => {
+    setType(0);
+    setMeta(0);
+    setColorPicker(false);
+    setColor(theme.colors.primary);
+    setSelFolder('');
+    setAmount(null);
+    setTitle(null);
+  };
   const handleSave = () => {
     if (!handleValidation()) {
-      // let folderFrm = new FormData();
-      // folderFrm.append('name', title);
-      // folderFrm.append('type', type);
-      // folderFrm.append('color', selColor);
-      // folderFrm.append('order', 1);
-      // folderFrm.append('meta', meta);
-      // folderFrm.append('amount', amount);
-      // folderFrm.append('status', 'play');
-      // folderFrm.append('icon', selColor);
+      let folderFrm = new FormData();
+      folderFrm.append('name', title);
+      folderFrm.append(
+        'type',
+        type === 1 ? 'CRONO' : type === 2 ? 'TIMER' : 'COUNTER',
+      );
 
-      // ApiService.post('folder')
-      //   .then(res => {
-      //     if (res.code === -1) {
-      //     }
-      //   })
-      //   .catch(error => {
-      //     console.log('error ', error);
-      //   });
+      let frmData = {
+        name: title,
+        type: type === 1 ? 'CRONO' : type === 2 ? 'TIMER' : 'COUNTER',
+        color: selColor,
+        order: 0,
+        meta: selMeta == 1 ? 'Achievement' : 'Registry',
+        amount: amount,
+        status: 'Paused',
+        folderId: selectedFolder?._id,
+        // folderFrm.append('icon', null);
+      };
+      setLoading(true);
+      let options = {payloads: frmData};
+      ApiService.post('task', options)
+        .then(res => {
+          setLoading(false);
+          // navigation.goBack();
+          console.log('response << >>> ', res);
+          if (res.code === -1) {
+          } else {
+            setLoading(false);
+            clearData();
+            navigation.goBack();
+          }
+        })
+        .catch(error => {
+          setLoading(false);
+          // Toast.show(error.response.data.message, Toast.SHORT);
+          console.log('error ', error.response.data.message?.message);
+        });
     }
   };
   var error = false;
@@ -123,45 +168,33 @@ const CreateTaskScreen = props => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
-        <CommonHeader
-          headerTitle={
-            props?.route?.params?.editData ? 'Edit task' : 'Create new task'
-          }
-          iconName="save"
-          IconType={Feather}
-          IconColor={theme.colors.primary2}
-          onRightIconPress={() => {
-            handleSave();
-            // navigation.navigate('Home');
-          }}
-          headerLeft={
-            props?.route?.params?.editData
-              ? () => (
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.replace('Tabs');
-                    }}>
-                    <AntDesign name="left" size={25} />
-                  </TouchableOpacity>
-                )
-              : null
-          }
-        />
         <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
-          <View style={styles.secondCon}>
-            <Label title="Title :" style={styles.label} />
-            <InputBox
-              placeholder="Task name"
-              value={title}
-              style={styles.input}
-              onChangeText={txt => {
-                setTitle(txt);
-              }}
-            />
-          </View>
+          <ImageBackground
+            source={{
+              uri: 'https://img.freepik.com/free-vector/football-2022-tournament-cup-background_206725-601.jpg?w=1380&t=st=1670921618~exp=1670922218~hmac=eec46c1f5b22936f11c06a7f2e0097f68230e655cfcc44d03ac906cc121de506',
+            }}
+            style={styles.header}>
+            <View style={styles.secondCon}>
+              <Title title="Create task" style={{color: theme.colors.white}} />
+              <Label
+                title="Create a task to control your time investment
+and registry yout achievements."
+                style={{color: theme.colors.white}}
+              />
+              <Label title="Set name " style={styles.label} />
+              <InputBox
+                placeholder="Task name"
+                value={title}
+                style={styles.input}
+                onChangeText={txt => {
+                  setTitle(txt);
+                }}
+              />
+            </View>
+          </ImageBackground>
           <View style={styles.secondCon}>
             <View style={styles.row}>
-              <Label title="Type :" style={styles.label} />
+              <Label title="Type " style={styles.label} />
               <View style={styles.row}>
                 {typeData?.map((t, i) => {
                   return (
@@ -193,7 +226,7 @@ const CreateTaskScreen = props => {
                               {
                                 backgroundColor:
                                   type === t.id
-                                    ? theme.colors.primary
+                                    ? theme.colors.gray
                                     : theme.colors.white,
                               },
                             ]}
@@ -207,7 +240,7 @@ const CreateTaskScreen = props => {
                               fontWeight: type === t.id ? '700' : '300',
                               color:
                                 type === t.id
-                                  ? theme.colors.primary
+                                  ? theme.colors.gray
                                   : theme.colors.black,
                             },
                           ]}
@@ -222,7 +255,7 @@ const CreateTaskScreen = props => {
           </View>
           <View style={styles.secondCon}>
             <View style={[styles.row]}>
-              <Label title="Meta :" style={styles.label} />
+              <Label title="Meta " style={styles.label} />
               <View style={styles.row}>
                 {metaData?.map((t, i) => {
                   return (
@@ -254,7 +287,7 @@ const CreateTaskScreen = props => {
                               {
                                 backgroundColor:
                                   selMeta === t.id
-                                    ? theme.colors.primary
+                                    ? theme.colors.gray
                                     : theme.colors.white,
                               },
                             ]}
@@ -268,7 +301,7 @@ const CreateTaskScreen = props => {
                               fontWeight: selMeta === t.id ? '700' : '300',
                               color:
                                 selMeta === t.id
-                                  ? theme.colors.primary
+                                  ? theme.colors.gray
                                   : theme.colors.black,
                             },
                           ]}
@@ -282,7 +315,7 @@ const CreateTaskScreen = props => {
             </View>
             {selMeta === 1 && (
               <View style={styles.amount}>
-                <Label title="Amount :" />
+                <Label title="Amount " />
                 <InputBox
                   style={{width: theme.SCREENWIDTH * 0.2, height: scale(35)}}
                   placeholder="1 min"
@@ -300,12 +333,12 @@ const CreateTaskScreen = props => {
             <View
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <View style={styles.row}>
-                <Label title="Icon :" style={styles.label} />
+                <Label title="Icon " style={styles.label} />
 
                 <TouchableOpacity style={[styles.iconPic]} />
               </View>
               <View style={[styles.row, {marginTop: scale(7)}]}>
-                <Label title="Color :" style={styles.label} />
+                <Label title="Color " style={styles.label} />
 
                 <TouchableOpacity
                   style={[
@@ -339,9 +372,9 @@ const CreateTaskScreen = props => {
                   />
                   <Label
                     title={
-                      selectedFolder === null
+                      selectedFolder === ''
                         ? 'Globle list folder'
-                        : selectedFolder
+                        : selectedFolder?.name
                     }
                     style={styles.selFolderTxt}
                   />
@@ -370,14 +403,34 @@ const CreateTaskScreen = props => {
                       key={i.toString()}
                       style={styles.optionView}
                       onPress={() => {
-                        handleOptions(f.name);
+                        handleOptions(f);
                       }}>
-                      <Label title={f.name} />
+                      <Label title={f.name} style={{fontSize: scale(12)}} />
                     </TouchableOpacity>
                   );
                 })}
               </ScrollView>
             )}
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={() =>
+                props?.route?.params?.editData ? null : handleSave()
+              }>
+              {props?.route?.params?.editData ? (
+                <Foundation
+                  name="play"
+                  size={scale(40)}
+                  color={theme.colors.green}
+                />
+              ) : (
+                <Feather
+                  name="save"
+                  size={scale(40)}
+                  color={theme.colors.primary}
+                />
+              )}
+              {/* <Foundation name="play" size={40} color={theme.colors.green} /> */}
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </View>
@@ -391,6 +444,7 @@ const CreateTaskScreen = props => {
           setnewFolderM(false);
         }}
       />
+      {isLoading && <Loader />}
     </SafeAreaView>
   );
 };
@@ -400,8 +454,7 @@ export default CreateTaskScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.white,
-    paddingHorizontal: scale(13),
+    backgroundColor: theme.colors.backgroundColor,
   },
   row: {
     flexDirection: 'row',
@@ -409,10 +462,12 @@ const styles = StyleSheet.create({
   },
   secondCon: {
     marginTop: scale(20),
+    marginHorizontal: scale(13),
   },
   label: {
-    fontSize: scale(14),
+    fontSize: scale(16),
     fontWeight: '600',
+    color: theme.colors.white,
   },
   input: {
     width: '100%',
@@ -422,7 +477,7 @@ const styles = StyleSheet.create({
   checkBoxCon: {
     height: scale(18),
     width: scale(18),
-    borderColor: theme.colors.black,
+    borderColor: theme.colors.gray,
     borderWidth: scale(1.5),
     borderRadius: scale(9),
     alignItems: 'center',
@@ -430,10 +485,10 @@ const styles = StyleSheet.create({
     marginTop: scale(3),
   },
   check: {
-    height: scale(11),
-    width: scale(11),
+    height: scale(12),
+    width: scale(12),
     borderRadius: scale(5),
-    backgroundColor: theme.colors.black,
+    backgroundColor: theme.colors.gray,
   },
   checkboxLbl: {
     marginLeft: scale(3),
@@ -473,6 +528,8 @@ const styles = StyleSheet.create({
   },
   selFolderTxt: {
     marginRight: scale(10),
+    fontSize: scale(12),
+    width: '80%',
   },
   circule: {
     borderWidth: scale(2),
@@ -490,11 +547,29 @@ const styles = StyleSheet.create({
   },
   optionView: {
     height: scale(20),
+    borderBottomColor: theme.colors.gray,
+    borderBottomWidth: scale(0.6),
+    width: '50%',
   },
   amount: {
     marginTop: scale(15),
     marginLeft: theme.SCREENWIDTH * 0.15,
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  btn: {
+    alignSelf: 'center',
+    // borderWidth: 2,
+    padding: 10,
+    width: scale(57),
+    alignItems: 'center',
+    borderRadius: 35,
+    marginTop: scale(45),
+    // borderColor: theme.colors.orange,
+  },
+  header: {
+    height: scale(200),
+    width: '100%',
+    resizeMode: 'cover',
   },
 });

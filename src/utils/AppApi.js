@@ -74,13 +74,13 @@
 import axios from 'axios';
 import {handleError, handleResponse} from './helper';
 
-export const getBaseUrl = 'https://taskey-app.herokuapp.com/api/';
+export const getBaseUrl = 'https://8421-43-228-229-22.in.ngrok.io/api/';
 
 export const appAPI = axios.create({
   baseURL: getBaseUrl,
   headers: {
     Accept: 'application/json',
-    'Content-Type': 'multipart/form-data',
+    // 'Content-Type': 'multipart/form-data',
     // 'Content-Type': 'application/x-www-form-urlencoded',
   },
 });
@@ -106,6 +106,7 @@ export const getAPICall = (url, startOffset, size = 5, isDiscount) => {
     });
 };
 export const postAPICall = (url, requestData) => {
+  console.log('post url >>> ', url);
   return appAPI
     .post(url, requestData)
     .then(res => {

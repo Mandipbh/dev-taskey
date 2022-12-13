@@ -27,11 +27,13 @@ const CommonHeader = props => {
         <TouchableOpacity
           style={styles.headerLeftIcon}
           onPress={onRightIconPress}>
-          <IconType
-            name={iconName}
-            size={25}
-            color={IconColor ? IconColor : theme.colors.black}
-          />
+          {iconName && (
+            <IconType
+              name={iconName}
+              size={25}
+              color={IconColor ? IconColor : theme.colors.black}
+            />
+          )}
         </TouchableOpacity>
       ),
     });

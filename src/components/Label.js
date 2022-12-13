@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: theme.colors.black,
-    fontSize: scale(16.5),
+    fontSize: scale(17.5),
     fontWeight: '600',
   },
   error: {

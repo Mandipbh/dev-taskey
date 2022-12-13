@@ -3,9 +3,13 @@ import {Home, Setting, CreateTask} from '../screens';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Entypo from 'react-native-vector-icons/Entypo';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import {scale, theme} from '../utils';
 import StatisticsStack from './StatisticsStack';
 import {Platform} from 'react-native';
+import HomeStack from './HomeStack';
+import ColorPickerModel from '../components/appModel/ColorPickerModel';
+import PayScreenModal from '../components/appModel/PayScreenModal';
 
 const Tab = createBottomTabNavigator();
 
@@ -17,23 +21,17 @@ const BottomTab = () => {
         tabBarShowLabel: false,
         tabBarStyle: {
           position: 'absolute',
-          backgroundColor: theme.colors.black,
+          backgroundColor: theme.colors.main,
           paddingTop: Platform.OS === 'ios' ? scale(20) : 0,
-          borderTopLeftRadius: scale(15),
-          borderTopRightRadius: scale(15),
         },
       }}>
       <Tab.Screen
         name="Home"
-        component={Home}
+        component={HomeStack}
         options={{
           tabBarIcon: ({focused}) => {
             return (
-              <AntDesign
-                name="home"
-                size={scale(19)}
-                color={focused ? theme.colors.white : theme.colors.gray}
-              />
+              <Entypo name="home" size={scale(20)} color={theme.colors.white} />
             );
           },
         }}
@@ -48,8 +46,8 @@ const BottomTab = () => {
             return (
               <Entypo
                 name="bar-graph"
-                size={scale(19)}
-                color={focused ? theme.colors.white : theme.colors.gray}
+                size={scale(20)}
+                color={theme.colors.white}
               />
             );
           },
@@ -63,12 +61,13 @@ const BottomTab = () => {
           tabBarIcon: ({focused}) => {
             return (
               <AntDesign
-                name="plus"
-                size={scale(19)}
-                color={focused ? theme.colors.white : theme.colors.gray}
+                name="pluscircle"
+                size={scale(20)}
+                color={theme.colors.white}
               />
             );
           },
+          tabBarButton: () => <PayScreenModal />,
         }}
       />
 
@@ -78,10 +77,10 @@ const BottomTab = () => {
         options={{
           tabBarIcon: ({focused}) => {
             return (
-              <AntDesign
-                name="setting"
-                size={scale(19)}
-                color={focused ? theme.colors.white : theme.colors.gray}
+              <Ionicons
+                name="ios-settings-sharp"
+                size={scale(20)}
+                color={theme.colors.white}
               />
             );
           },

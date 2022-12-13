@@ -1,7 +1,7 @@
 import axios from 'axios';
 // import { BASE_URL } from '../constants';
 
-const APP_API_URL ='https://taskey-app.herokuapp.com/api/';
+const APP_API_URL ='https://8421-43-228-229-22.in.ngrok.io/api/';
 axios.interceptors.request.use(config => config);
 
 const execute = async (

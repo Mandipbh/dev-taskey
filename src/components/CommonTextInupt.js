@@ -57,5 +57,6 @@ const styles = StyleSheet.create({
     borderRadius: scale(10),
     fontSize: 18,
     paddingVertical: scale(8),
+    color: theme.colors.black,
   },
 });
