@@ -15,13 +15,7 @@ import {Title} from '../Label';
 import Feather from 'react-native-vector-icons/Feather';
 
 const DatePickerModal = props => {
-  const {
-    isVisible,
-    close,
-    onSavePress,
-    markedDates,
-    setMarkedDates,
-  } = props;
+  const {isVisible, close, onSavePress, markedDates, setMarkedDates} = props;
 
   const [startDay, setStartDay] = useState(null);
   const [endDay, setEndDay] = useState(null);
@@ -41,9 +35,20 @@ const DatePickerModal = props => {
   return (
     <Modal animationType={'none'} visible={isVisible} onRequestClose={() => {}}>
       <View style={styles.mainView}>
-        <Icon name="calendar" size={30} style={styles.cancle} />
+        <Icon
+          name="calendar"
+          size={30}
+          style={styles.cancle}
+          color={theme.colors.black}
+        />
         <Title title="Calendar" />
-        <Icon onPress={close} name="x" size={30} style={styles.cancle} />
+        <Icon
+          onPress={close}
+          name="x"
+          size={30}
+          style={styles.cancle}
+          color={theme.colors.black}
+        />
       </View>
       <Calendar
         onDayPress={day => {
@@ -94,7 +99,7 @@ const DatePickerModal = props => {
       <TouchableOpacity
         style={{alignItems: 'center', marginTop: scale(30)}}
         onPress={() => onSavePress(StartDate, Enddate)}>
-        <Feather name="filter" size={scale(30)} />
+        <Feather name="filter" size={scale(30)} color={theme.colors.black} />
       </TouchableOpacity>
     </Modal>
   );

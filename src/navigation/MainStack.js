@@ -13,6 +13,7 @@ const MainStack = () => {
   const isLogin = useSelector(state => state.UserReducer.login);
   const userDetails = useSelector(state => state.UserReducer.userDetails);
   axios.defaults.headers.common.Authorization = `Bearer ${userDetails?.token}`;
+  console.log('userDetails?.tokenuserDetails?.token', userDetails?.token);
   return (
     <Stack.Navigator
       screenOptions={{headerShown: false}}

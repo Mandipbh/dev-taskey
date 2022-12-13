@@ -4,6 +4,8 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
+  Image,
+  ImageBackground,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -11,7 +13,7 @@ import Toast from 'react-native-simple-toast';
 import Feather from 'react-native-vector-icons/Feather';
 import LottieView from 'lottie-react-native';
 import {scale, theme} from '../../utils';
-import {Label} from '../../components/Label';
+import {Label, Title} from '../../components/Label';
 import {CreateFolderModel, InputBox, Loader} from '../../components';
 import CommonHeader from '../../components/CommonHeader';
 import ColorPickerModel from '../../components/appModel/ColorPickerModel';
@@ -167,45 +169,33 @@ const CreateTaskScreen = props => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
-        <CommonHeader
-          headerTitle={
-            props?.route?.params?.editData ? 'Edit task' : 'Create new task'
-          }
-          // iconName="save"
-          // IconType={Feather}
-          // IconColor={theme.colors.primary2}
-          // onRightIconPress={() => {
-          //   handleSave();
-          //   // navigation.navigate('Home');
-          // }}
-          headerLeft={
-            props?.route?.params?.editData
-              ? () => (
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.replace('Tabs');
-                    }}>
-                    <AntDesign name="left" size={25} />
-                  </TouchableOpacity>
-                )
-              : null
-          }
-        />
         <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
-          <View style={styles.secondCon}>
-            <Label title="Title :" style={styles.label} />
-            <InputBox
-              placeholder="Task name"
-              value={title}
-              style={styles.input}
-              onChangeText={txt => {
-                setTitle(txt);
-              }}
-            />
-          </View>
+          <ImageBackground
+            source={{
+              uri: 'https://img.freepik.com/free-vector/football-2022-tournament-cup-background_206725-601.jpg?w=1380&t=st=1670921618~exp=1670922218~hmac=eec46c1f5b22936f11c06a7f2e0097f68230e655cfcc44d03ac906cc121de506',
+            }}
+            style={styles.header}>
+            <View style={styles.secondCon}>
+              <Title title="Create task" style={{color: theme.colors.white}} />
+              <Label
+                title="Create a task to control your time investment
+and registry yout achievements."
+                style={{color: theme.colors.white}}
+              />
+              <Label title="Set name " style={styles.label} />
+              <InputBox
+                placeholder="Task name"
+                value={title}
+                style={styles.input}
+                onChangeText={txt => {
+                  setTitle(txt);
+                }}
+              />
+            </View>
+          </ImageBackground>
           <View style={styles.secondCon}>
             <View style={styles.row}>
-              <Label title="Type :" style={styles.label} />
+              <Label title="Type " style={styles.label} />
               <View style={styles.row}>
                 {typeData?.map((t, i) => {
                   return (
@@ -266,7 +256,7 @@ const CreateTaskScreen = props => {
           </View>
           <View style={styles.secondCon}>
             <View style={[styles.row]}>
-              <Label title="Meta :" style={styles.label} />
+              <Label title="Meta " style={styles.label} />
               <View style={styles.row}>
                 {metaData?.map((t, i) => {
                   return (
@@ -326,7 +316,7 @@ const CreateTaskScreen = props => {
             </View>
             {selMeta === 1 && (
               <View style={styles.amount}>
-                <Label title="Amount :" />
+                <Label title="Amount " />
                 <InputBox
                   style={{width: theme.SCREENWIDTH * 0.2, height: scale(35)}}
                   placeholder="1 min"
@@ -344,12 +334,12 @@ const CreateTaskScreen = props => {
             <View
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <View style={styles.row}>
-                <Label title="Icon :" style={styles.label} />
+                <Label title="Icon " style={styles.label} />
 
                 <TouchableOpacity style={[styles.iconPic]} />
               </View>
               <View style={[styles.row, {marginTop: scale(7)}]}>
-                <Label title="Color :" style={styles.label} />
+                <Label title="Color " style={styles.label} />
 
                 <TouchableOpacity
                   style={[
@@ -465,8 +455,7 @@ export default CreateTaskScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.white,
-    paddingHorizontal: scale(13),
+    backgroundColor: theme.colors.backgroundColor,
   },
   row: {
     flexDirection: 'row',
@@ -474,10 +463,12 @@ const styles = StyleSheet.create({
   },
   secondCon: {
     marginTop: scale(20),
+    marginHorizontal: scale(13),
   },
   label: {
-    fontSize: scale(14),
+    fontSize: scale(16),
     fontWeight: '600',
+    color: theme.colors.white,
   },
   input: {
     width: '100%',
@@ -569,12 +560,17 @@ const styles = StyleSheet.create({
   },
   btn: {
     alignSelf: 'center',
-    borderWidth: 2,
+    // borderWidth: 2,
     padding: 10,
     width: scale(57),
     alignItems: 'center',
     borderRadius: 35,
     marginTop: scale(45),
     // borderColor: theme.colors.orange,
+  },
+  header: {
+    height: scale(200),
+    width: '100%',
+    resizeMode: 'cover',
   },
 });

@@ -2,8 +2,7 @@ import {Dimensions} from 'react-native';
 const {width, height} = Dimensions.get('window');
 
 const theme = {
-  fonts: {
-  },
+  fonts: {},
   colors: {
     primary: '#3396FF',
     primary1: '#00D8FF',
@@ -18,11 +17,10 @@ const theme = {
     red: '#FF0000',
     lightBlue: '#DCEDFB',
     green: '#47d649',
-    primary: '#01398d',
-    primary1: '#00d8ff',
-    primary2: '#016bfd',
     orange: '#f9894a',
+    main: '#ea8915',
     lightGreen: '#37cac8',
+    backgroundColor: '#e4f5ff',
   },
   SCREENWIDTH: width,
   SCREENHEIGHT: height,

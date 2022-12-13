@@ -123,19 +123,50 @@ const HomeScreen = () => {
     }
   };
 
-  const updateStatus = task => {
+  const updateStatus = (task, status) => {
+    console.log('task ??/ ', task);
     let taskId = task?._id;
     const taskStatus = task?.status === 'Paused' ? 'Play' : 'Paused';
-    const obj = {
-      id: taskId,
-      status: taskStatus,
-      type: task?.type,
-    };
+    let obj = {};
+    if (task?.type === 'COUNTER') {
+      if (task.meta !== 'Achievement') {
+        obj = {
+          id: taskId,
+          status: status,
+          type: task?.type,
+          meta: task.meta,
+        };
+      } else {
+        obj = {
+          id: taskId,
+          status: status,
+          type: task?.type,
+          meta: task.meta,
+          amount: task?.amount,
+        };
+      }
+    } else {
+      if (task.meta === 'Achievement') {
+        obj = {
+          id: taskId,
+          status: taskStatus,
+          type: task?.type,
+          meta: task.meta,
+          amount: task?.amount,
+        };
+      } else {
+        obj = {
+          id: taskId,
+          status: taskStatus,
+          type: task?.type,
+          meta: task.meta,
+        };
+      }
+    }
+
     const options = {payloads: obj};
     try {
-      console.log('payload >>> ', obj);
       postAPICall('taskStartStop', obj).then(res => {
-        console.log('response of ordering >> ', res);
         if (res.success) {
           Toast.show(res.message, Toast.SHORT);
           getAllTasks();
@@ -147,6 +178,7 @@ const HomeScreen = () => {
   };
 
   const tasksrender = ({item, index, move, moveEnd, isActive}) => {
+    // console.log('percantage of the task done > ', item?.percentageOfTask / 10);
     return (
       <>
         {index < 4 && (
@@ -181,7 +213,7 @@ const HomeScreen = () => {
                     />
                   )}
 
-                  {item?.status !== 'play' ? (
+                  {/* {item?.status !== 'play' ? (
                     <Icon1
                       name="social-zerply"
                       size={scale(20)}
@@ -193,12 +225,15 @@ const HomeScreen = () => {
                       size={scale(20)}
                       color={theme.colors.lightGreen}
                     />
-                  )}
+                  )} */}
                 </>
               ) : (
                 <View style={{marginLeft: scale(-20)}}>
                   <TouchableOpacity
-                    style={{borderColor: theme.colors.green, borderWidth: 1}}>
+                    style={{borderColor: theme.colors.green, borderWidth: 1}}
+                    onPress={() => {
+                      updateStatus(item, 'Plus');
+                    }}>
                     <Icon2
                       name="plus"
                       size={scale(20)}
@@ -208,6 +243,9 @@ const HomeScreen = () => {
                   <TouchableOpacity
                     style={{borderColor: theme.colors.red, borderWidth: 1}}>
                     <Icon2
+                      onPress={() => {
+                        updateStatus(item, 'Minus');
+                      }}
                       name="minus"
                       size={scale(20)}
                       color={theme.colors.red}
@@ -217,13 +255,10 @@ const HomeScreen = () => {
               )}
             </View>
             <View style={styles.taskLabel}>
-              <Label
-                title={item?.name}
-                style={{fontSize: scale(12), color: item?.color}}
-              />
-              {item?.meta === 'Achievement' && (
+              <Label title={item?.name} style={{fontSize: scale(12)}} />
+              {item?.meta === 'Achievement' && item?.percentageOfTask && (
                 <ProgressBar
-                  progress={0.4}
+                  progress={item?.percentageOfTask / 10}
                   color={
                     item?.status !== 'Play'
                       ? theme.colors.gray
@@ -234,16 +269,35 @@ const HomeScreen = () => {
             </View>
             <View style={styles.staticDetails}>
               <Label
-                title={'15:05'}
+                title={
+                  item?.meta === 'Registry'
+                    ? item?.cronoCompletedTime
+                      ? (item?.cronoCompletedTime / 60)?.toFixed(2)
+                      : 0
+                    : `${
+                        item?.timerCompletedTime
+                          ? (item?.timerCompletedTime / 60).toFixed(2)
+                          : 0
+                      }\n${item?.amount?.toFixed(2)}`
+                }
                 style={{fontSize: scale(11), marginLeft: scale(-5)}}
               />
               <Label
-                title={`${
-                  item?.percentage === undefined ? 0 : item?.percentage
-                }  %`}
+                title={
+                  item?.meta === 'Registry'
+                    ? 0
+                    : item?.percentageFolderWise?.toFixed(2)
+                }
                 style={{fontSize: scale(11)}}
               />
-              <Label title="-" />
+              <Label
+                title={
+                  item?.meta === 'Registry'
+                    ? '-'
+                    : item?.percentageOfTask?.toFixed(2)
+                }
+                style={{fontSize: scale(11)}}
+              />
             </View>
           </TouchableOpacity>
         )}
@@ -281,8 +335,12 @@ const HomeScreen = () => {
                     style={[styles.headerTitle, {width: '60%'}]}
                   />
                 </TouchableOpacity>
-
-                <Label title={'100 mins'} style={[styles.headerTitle]} />
+                {item?.totalMin !== undefined && (
+                  <Label
+                    title={`${item?.totalMin} mins`}
+                    style={[styles.headerTitle]}
+                  />
+                )}
                 <Label
                   title={'20%'}
                   style={[styles.headerTitle, {marginVertical: scale(7)}]}
@@ -429,6 +487,7 @@ const HomeScreen = () => {
                             ? setType(type.id - 1)
                             : setType(type.id + 2);
                         }}
+                        color={theme.colors.black}
                       />
                     </View>
                     <View
@@ -450,6 +509,7 @@ const HomeScreen = () => {
                         onPress={() => {
                           selectedType <= 2 ? setType(type.id + 1) : setType(1);
                         }}
+                        color={theme.colors.black}
                       />
                     </View>
                   </View>

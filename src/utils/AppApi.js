@@ -74,7 +74,7 @@
 import axios from 'axios';
 import {handleError, handleResponse} from './helper';
 
-export const getBaseUrl = 'https://taskey-app.herokuapp.com/api/';
+export const getBaseUrl = 'https://8421-43-228-229-22.in.ngrok.io/api/';
 
 export const appAPI = axios.create({
   baseURL: getBaseUrl,

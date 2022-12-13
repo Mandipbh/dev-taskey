@@ -90,7 +90,6 @@ const SignIn = () => {
         };
         const options = {payloads: mobileFrm1};
         const response = await ApiService.post('login', options);
-        console.log('response << > ', response);
         if (response.success) {
           axios.defaults.headers.common.Authorization = `Bearer ${response.token}`;
           setVarified(true);
@@ -102,8 +101,8 @@ const SignIn = () => {
           setSendOtp(true);
         }
       } catch (error) {
-        console.log('errror >>> ', error.response.data.message);
-        Toast.show(error.response.data.message, Toast.SHORT);
+        // console.log('errror >>> ', error?.response?.data?.message);
+        // Toast.show(error.response?.data?.message, Toast.SHORT);
       }
     }
   };

@@ -87,7 +87,7 @@ const InputBox = props => {
 const styles = StyleSheet.create({
   inputContainer: {
     marginHorizontal: scale(10),
-    height: theme.SCREENHEIGHT * 0.065,
+    height: theme.SCREENHEIGHT * 0.052,
     backgroundColor: theme.colors.white,
     borderRadius: scale(12),
     flexDirection: 'row',
@@ -99,13 +99,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.12,
     shadowRadius: 1,
     elevation: 1,
-    borderWidth: scale(1),
-    borderColor: theme.colors.black,
+    // borderWidth: scale(1),
+    // borderColor: theme.colors.black,
   },
   input: {
     flex: 1,
     paddingHorizontal: scale(8),
-    fontSize: scale(14),
+    fontSize: scale(13),
     color: theme.colors.black,
   },
 });

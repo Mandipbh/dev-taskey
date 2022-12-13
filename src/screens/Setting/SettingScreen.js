@@ -79,6 +79,10 @@ const SettingScreen = () => {
           labelField="label"
           valueField="id"
           onChange={item => setvalue(item.value1)}
+          iconColor={theme.colors.black}
+          itemTextStyle={{color: theme.colors.black}}
+          selectedTextStyle={{color: theme.colors.black}}
+          placeholderStyle={{color: theme.colors.black}}
         />
 
         <Accordian title="Default Range of Time" style={{marginTop: scale(15)}}>
@@ -90,7 +94,7 @@ const SettingScreen = () => {
                 onPress={() => setChecked('Today')}
                 color={theme.colors.primary}
               />
-              <Label title="Today" ></Label>
+              <Label title="Today"></Label>
             </View>
             <View style={styles.checkboxContainer}>
               <RadioButton.Android
@@ -172,6 +176,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.gray1,
     borderWidth: Platform.OS === 'android' ? 0.8 : 0.3,
     borderColor: theme.colors.gray,
+    color: theme.colors.black,
   },
   CheckBoxInventory: {
     justifyContent: 'space-between',

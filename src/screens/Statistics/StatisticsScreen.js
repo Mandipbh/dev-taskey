@@ -446,6 +446,10 @@ const StatisticsScreen = () => {
               labelField="label"
               valueField="id"
               onChange={item => setvalue(item.value)}
+              iconColor={theme.colors.black}
+              itemTextStyle={{color: theme.colors.black}}
+              selectedTextStyle={{color: theme.colors.black}}
+              placeholderStyle={{color: theme.colors.black}}
             />
           </View>
         </View>
@@ -495,10 +499,11 @@ const styles = StyleSheet.create({
     paddingBottom: scale(4),
     borderColor: theme.colors.gray,
   },
-  mapText: {fontWeight: '400', fontSize: 16},
+  mapText: {fontWeight: '400', fontSize: 16, color: theme.colors.black},
   label: {
     fontWeight: '600',
     marginLeft: scale(5),
+    color: theme.colors.black,
   },
   row: {
     flexDirection: 'row',
