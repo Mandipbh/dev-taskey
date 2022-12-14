@@ -23,6 +23,7 @@ const MainStack = () => {
       <Stack.Screen name="CreateTask" component={CreateTask} />
       <Stack.Screen name="CreateF" component={CreateFolder} />
       <Stack.Screen name="TaskDetails" component={TaskDetails} />
+      
     </Stack.Navigator>
   );
 };
