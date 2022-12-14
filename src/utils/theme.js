@@ -21,6 +21,7 @@ const theme = {
     main: '#ea8915',
     lightGreen: '#37cac8',
     backgroundColor: '#e4f5ff',
+    orange1: '#ffdab9',
   },
   SCREENWIDTH: width,
   SCREENHEIGHT: height,

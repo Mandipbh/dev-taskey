@@ -258,19 +258,19 @@ const typeData = [
     title: 'Crono',
     icon: 'timer-outline',
     id: 1,
-    url: 'https://assets10.lottiefiles.com/packages/lf20_ag0f5tt4.json',
+    url: 'watch-variant',
   },
   {
     title: 'Timer',
     icon: 'timer-sand',
     id: 2,
-    url: 'https://assets3.lottiefiles.com/packages/lf20_4yofoa5q.json',
+    url: 'timer-sand',
   },
   {
     title: 'Counter',
     icon: 'counter',
     id: 3,
-    url: 'https://assets4.lottiefiles.com/packages/lf20_8sjqrjby.json',
+    url: 'counter',
   },
 ];
 
@@ -279,13 +279,13 @@ const metaData = [
     title: 'Achievement',
     icon: 'certificate',
     id: 1,
-    url: 'https://assets8.lottiefiles.com/packages/lf20_xeUyRVC1G3.json',
+    url: 'md-ribbon-outline',
   },
   {
     title: 'Registry',
     icon: 'notebook',
     id: 2,
-    url: 'https://assets9.lottiefiles.com/packages/lf20_ikyhq0rk.json',
+    url: 'document-text-outline',
   },
 ];
 
