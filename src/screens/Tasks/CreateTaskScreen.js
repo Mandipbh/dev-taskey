@@ -6,6 +6,8 @@ import {
   ScrollView,
   Image,
   ImageBackground,
+  Text,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -18,10 +20,12 @@ import {CreateFolderModel, InputBox, Loader} from '../../components';
 import CommonHeader from '../../components/CommonHeader';
 import ColorPickerModel from '../../components/appModel/ColorPickerModel';
 import {metaData, typeData} from '../../utils/mockData';
+import Ionicon from 'react-native-vector-icons/Ionicons';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import Foundation from 'react-native-vector-icons/Foundation';
 import ApiService from '../../utils/ApiService';
+import {create} from 'react-test-renderer';
 
 const CreateTaskScreen = props => {
   const isFocused = useIsFocused();
@@ -29,6 +33,7 @@ const CreateTaskScreen = props => {
   const [selMeta, setMeta] = useState(0);
   const [colorPicker, setColorPicker] = useState(false);
   const [selColor, setColor] = useState(theme.colors.primary);
+  const [selIcon, setIcon] = useState(false);
   const [open, setOpen] = useState(false);
   const [newFolderM, setnewFolderM] = useState(false);
   const [selectedFolder, setSelFolder] = useState('');
@@ -38,7 +43,6 @@ const CreateTaskScreen = props => {
   const [title, setTitle] = useState(null);
   const [isLoading, setLoading] = useState(false);
   const navigation = useNavigation();
-
   const handleCloseClolorpicker = c => {
     setColor(c);
     setColorPicker(false);
@@ -172,7 +176,7 @@ const CreateTaskScreen = props => {
         <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
           <ImageBackground
             source={{
-              uri: 'https://img.freepik.com/free-photo/yellow-watercolor-paper_95678-446.jpg?w=1380&t=st=1670925892~exp=1670926492~hmac=869733d2bfe3e8827416bb5cf16106d1a3dcea002568cca2e956077d4b40d86a',
+              uri: 'https://t3.ftcdn.net/jpg/05/26/66/48/360_F_526664879_3lRVV1IyTtbK3IBcgfrsyAnp7qko7u51.jpg',
             }}
             style={styles.header}>
             <View style={styles.secondCon}>
@@ -182,9 +186,18 @@ const CreateTaskScreen = props => {
 and registry yout achievements."
                 style={{color: theme.colors.white}}
               />
-              <Label title="Set name " style={styles.label} />
+              <Label
+                title="Set name "
+                style={[
+                  styles.label,
+                  {
+                    color: theme.colors.white,
+                    marginTop: scale(15),
+                  },
+                ]}
+              />
               <InputBox
-                placeholder="Task name"
+                placeholder="task name"
                 value={title}
                 style={styles.input}
                 onChangeText={txt => {
@@ -204,15 +217,11 @@ and registry yout achievements."
                       style={{
                         marginLeft: scale(20),
                       }}>
-                      <LottieView
-                        source={{
-                          uri: t.url,
-                        }}
-                        autoPlay
-                        loop={type === t.id ? true : false}
-                        style={{
-                          height: scale(40),
-                        }}
+                      <Icon
+                        name={t.url}
+                        size={35}
+                        color={theme.colors.orange}
+                        style={{marginLeft: scale(20), margin: scale(5)}}
                       />
                       <View style={[styles.row, {alignItems: 'center'}]}>
                         <TouchableOpacity
@@ -227,7 +236,7 @@ and registry yout achievements."
                               {
                                 backgroundColor:
                                   type === t.id
-                                    ? theme.colors.gray
+                                    ? theme.colors.orange
                                     : theme.colors.white,
                               },
                             ]}
@@ -241,7 +250,7 @@ and registry yout achievements."
                               fontWeight: type === t.id ? '700' : '300',
                               color:
                                 type === t.id
-                                  ? theme.colors.gray
+                                  ? theme.colors.black
                                   : theme.colors.black,
                             },
                           ]}
@@ -265,15 +274,17 @@ and registry yout achievements."
                         paddingHorizontal: scale(20),
                       }}
                       key={i.toString()}>
-                      <LottieView
-                        source={{
-                          uri: t.url,
-                        }}
-                        autoPlay
-                        loop={selMeta === t.id ? true : false}
+                      <Ionicon
+                        name={t.url}
+                        size={35}
+                        color={theme.colors.orange}
                         style={{
-                          height: scale(35),
-                          marginLeft: scale(-6),
+                          alignSelf: 'center',
+                          color:
+                            selMeta === t.id || selMeta === null
+                              ? theme.colors.orange
+                              : theme.colors.orange1,
+                          // color: selIcon ? '' : theme.colors.orange,
                         }}
                       />
                       <View style={styles.row}>
@@ -288,7 +299,7 @@ and registry yout achievements."
                               {
                                 backgroundColor:
                                   selMeta === t.id
-                                    ? theme.colors.gray
+                                    ? theme.colors.orange
                                     : theme.colors.white,
                               },
                             ]}
@@ -299,11 +310,11 @@ and registry yout achievements."
                           style={[
                             styles.checkboxLbl,
                             {
-                              fontWeight: selMeta === t.id ? '700' : '300',
+                              fontWeight: selMeta === t.id ? '700' : '700',
                               color:
-                                selMeta === t.id
-                                  ? theme.colors.gray
-                                  : theme.colors.black,
+                                selMeta === t.id || selMeta ===null
+                                  ? theme.colors.black
+                                  : theme.colors.gray,
                             },
                           ]}
                         />
@@ -328,34 +339,30 @@ and registry yout achievements."
                 />
               </View>
             )}
-            <View style={styles.devider} />
+            {/* <View style={styles.devider} /> */}
           </View>
           <View style={styles.secondCon}>
+            <View style={styles.devider} />
             <View
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <View style={styles.row}>
-                <Label title="Icon " style={styles.label} />
-
-                <TouchableOpacity style={[styles.iconPic]} />
-              </View>
-              <View style={[styles.row, {marginTop: scale(7)}]}>
-                <Label title="Color " style={styles.label} />
-
-                <TouchableOpacity
-                  style={[
-                    styles.colorPicker,
-                    {
-                      backgroundColor:
-                        selColor !== null ? selColor : theme.colors.primary1,
-                    },
-                  ]}
-                  onPress={() => {
-                    setColorPicker(true);
-                  }}
-                />
-              </View>
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                margin: scale(10),
+              }}>
+              <Text style={{color: 'black', fontSize: 18, fontWeight: '700'}}>
+                Add icon
+              </Text>
+              <TouchableOpacity style={styles.choosebtn}>
+                <Text
+                  style={{
+                    color: theme.colors.white,
+                    fontSize: 18,
+                    fontWeight: '800',
+                  }}>
+                  Choose
+                </Text>
+              </TouchableOpacity>
             </View>
-
             <View style={styles.devider} />
           </View>
           <View style={styles.secondCon}>
@@ -367,10 +374,6 @@ and registry yout achievements."
                   onPress={() => {
                     setOpen(!open);
                   }}>
-                  <Icon
-                    name={open ? 'menu-up' : 'menu-down'}
-                    size={scale(25)}
-                  />
                   <Label
                     title={
                       selectedFolder === ''
@@ -379,6 +382,10 @@ and registry yout achievements."
                     }
                     style={styles.selFolderTxt}
                   />
+                  <Icon
+                    name={open ? 'menu-up' : 'menu-down'}
+                    size={scale(25)}
+                  />
                 </TouchableOpacity>
               </View>
 
@@ -386,14 +393,15 @@ and registry yout achievements."
                 style={styles.row}
                 onPress={() => {
                   getAllFolders();
-                  setnewFolderM(true);
+                  // setnewFolderM(true);
+                  navigation.navigate('CreateF');
                 }}>
-                <Icon
-                  name="folder-outline"
-                  size={scale(25)}
-                  style={{marginLeft: scale(20)}}
+                <FontAwesome
+                  name="folder-plus"
+                  size={scale(30)}
+                  color={theme.colors.orange}
+                  style={{marginRight: scale(20)}}
                 />
-                <Label title="New" style={[styles.label]} />
               </TouchableOpacity>
             </View>
             {open && (
@@ -412,39 +420,32 @@ and registry yout achievements."
                 })}
               </ScrollView>
             )}
-            <TouchableOpacity
-              style={styles.btn}
-              onPress={() =>
-                props?.route?.params?.editData ? null : handleSave()
-              }>
-              {props?.route?.params?.editData ? (
-                <Foundation
-                  name="play"
-                  size={scale(40)}
-                  color={theme.colors.green}
-                />
-              ) : (
-                <Feather
-                  name="save"
-                  size={scale(40)}
-                  color={theme.colors.primary}
-                />
-              )}
-              {/* <Foundation name="play" size={40} color={theme.colors.green} /> */}
+            <View style={styles.devider} />
+
+            <TouchableOpacity onPress={handleSave} style={styles.createTaskbtn}>
+              <Ionicon name="play" color={theme.colors.white} size={25} />
+              <Text style={styles.createtxt}>Create task</Text>
             </TouchableOpacity>
+            {props?.route?.params?.editData && (
+              <>
+                <TouchableOpacity
+                  onPress={() => Alert.alert('Delete')}
+                  style={styles.deletebtn}>
+                  <Icon name="delete" color={theme.colors.white} size={25} />
+                  <Text
+                    style={{
+                      color: theme.colors.white,
+                      fontSize: 20,
+                      padding: 5,
+                    }}>
+                    Delete
+                  </Text>
+                </TouchableOpacity>
+              </>
+            )}
           </View>
         </ScrollView>
       </View>
-      <ColorPickerModel
-        isVisible={colorPicker}
-        close={handleCloseClolorpicker}
-      />
-      <CreateFolderModel
-        isVisible={newFolderM}
-        close={() => {
-          setnewFolderM(false);
-        }}
-      />
       {isLoading && <Loader />}
     </SafeAreaView>
   );
@@ -462,18 +463,31 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   secondCon: {
-    marginTop: scale(20),
-    marginHorizontal: scale(13),
+    marginTop: scale(10),
+    marginHorizontal: scale(20),
   },
   label: {
     fontSize: scale(16),
-    fontWeight: '600',
-    color: theme.colors.white,
+    fontWeight: '800',
+    color: theme.colors.black,
   },
   input: {
     width: '100%',
-    marginLeft: scale(0),
-    marginVertical: scale(20),
+    paddingLeft: scale(5),
+    marginTop: scale(5),
+    borderRadius: 30,
+    alignSelf: 'center',
+  },
+  createTaskbtn: {
+    flexDirection: 'row',
+    backgroundColor: theme.colors.orange,
+    width: scale(220),
+    height: scale(35),
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginTop: scale(10),
+    borderRadius: 30,
   },
   checkBoxCon: {
     height: scale(18),
@@ -485,6 +499,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: scale(3),
   },
+  createtxt: {
+    color: theme.colors.white,
+    fontSize: 20,
+    padding: 5,
+    fontWeight: '800',
+  },
+  deletebtn: {
+    flexDirection: 'row',
+    backgroundColor: theme.colors.gray,
+    width: scale(220),
+    height: scale(35),
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginTop: scale(10),
+    borderRadius: 30,
+  },
   check: {
     height: scale(12),
     width: scale(12),
@@ -494,9 +525,19 @@ const styles = StyleSheet.create({
   checkboxLbl: {
     marginLeft: scale(3),
   },
+  choosebtn: {
+    backgroundColor: theme.colors.orange,
+    padding: 5,
+    marginLeft: scale(40),
+    borderRadius: 20,
+    height: scale(35),
+    width: scale(120),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   devider: {
     height: scale(0.5),
-    backgroundColor: theme.colors.black,
+    backgroundColor: theme.colors.gray,
     width: '100%',
     alignSelf: 'center',
     marginVertical: scale(10),
@@ -518,19 +559,20 @@ const styles = StyleSheet.create({
     marginLeft: scale(10),
   },
   folder: {
-    width: theme.SCREENWIDTH * 0.42,
-    borderWidth: scale(1),
+    width: theme.SCREENWIDTH * 0.52,
     height: scale(30),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginLeft: scale(10),
     borderRadius: scale(5),
+    backgroundColor: theme.colors.white,
+    borderRadius: 20,
   },
   selFolderTxt: {
-    marginRight: scale(10),
     fontSize: scale(12),
-    width: '80%',
+    width: '70%',
+    marginLeft: scale(10),
   },
   circule: {
     borderWidth: scale(2),
