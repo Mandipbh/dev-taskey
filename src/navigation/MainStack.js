@@ -3,7 +3,7 @@ import React from 'react';
 import LoginStack from './LoginStack';
 import BottomTab from './BottomTab';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {CreateTask, TaskDetails} from '../screens';
+import {CreateTask, TaskDetails, CreateFolder} from '../screens';
 import {useSelector} from 'react-redux';
 import axios from 'axios';
 
@@ -22,6 +22,7 @@ const MainStack = () => {
       <Stack.Screen name="Tabs" component={BottomTab} />
       <Stack.Screen name="CreateTask" component={CreateTask} />
       <Stack.Screen name="TaskDetails" component={TaskDetails} />
+      
     </Stack.Navigator>
   );
 };

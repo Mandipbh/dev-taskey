@@ -59,7 +59,7 @@ const InputBox = props => {
       <TextInput
         multiline={multiline}
         value={value}
-        placeholderTextColor={theme.colors.black}
+        placeholderTextColor={theme.colors.gray}
         keyboardType={keyboardType ? keyboardType : 'default'}
         onChangeText={onChangeText}
         placeholder={placeholder}
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     paddingHorizontal: scale(8),
-    fontSize: scale(13),
+    fontSize: scale(12),
     color: theme.colors.black,
   },
 });

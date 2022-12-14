@@ -5,14 +5,16 @@ import {
   View,
   Image,
   Platform,
+  ImageBackground,
 } from 'react-native';
 import React, {useState} from 'react';
 import Toast from 'react-native-simple-toast';
 import Icon1 from 'react-native-vector-icons/Foundation';
 import Icon2 from 'react-native-vector-icons/Feather';
-import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon3 from 'react-native-vector-icons/Ionicons';
 import {
   CreateFolderModel,
+  CronoCard,
   DatePickerModal,
   Label,
   Title,
@@ -51,6 +53,7 @@ const HomeScreen = () => {
   };
   useEffect(() => {
     getAllTasks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedType, useIsFocused()]);
 
   const getAllTasks = async () => {
@@ -178,130 +181,143 @@ const HomeScreen = () => {
   };
 
   const tasksrender = ({item, index, move, moveEnd, isActive}) => {
-    // console.log('percantage of the task done > ', item?.percentageOfTask / 10);
     return (
-      <>
-        {index < 4 && (
-          <TouchableOpacity
-            onLongPress={move}
-            onPressOut={moveEnd}
-            key={index}
-            style={styles.taskRow}
-            onPress={() => navigation.navigate('CreateTask', {editData: item})}>
-            <View style={styles.statusView}>
-              {selectedType !== 3 ? (
-                <>
-                  {item.status === 'Paused' ? (
-                    <Icon1
-                      name="play"
-                      size={scale(25)}
-                      color={theme.colors.green}
-                      onPress={() => {
-                        updateStatus(item);
-                        // setModel(!model);
-                      }}
-                    />
-                  ) : (
-                    <Icon2
-                      name="pause"
-                      size={scale(20)}
-                      color={theme.colors.orange}
-                      style={{marginLeft: scale(-5)}}
-                      onPress={() => {
-                        updateStatus(item);
-                      }}
-                    />
-                  )}
+      <CronoCard
+        item={item}
+        index={index}
+        move={move}
+        moveEnd={moveEnd}
+        selectedType={selectedType}
+        updateStatus={updateStatus}
+      />
+      // <>
+      //   {index < 4 && (
+      //     <TouchableOpacity
+      //       onLongPress={move}
+      //       onPressOut={moveEnd}
+      //       key={index}
+      //       style={[
+      //         styles.taskRow,
+      //         {
+      //           backgroundColor:
+      //             index / 2 ? theme.colors.white : theme.colors.white1,
+      //         },
+      //       ]}
+      //       onPress={() => navigation.navigate('CreateTask', {editData: item})}>
+      //       <View style={styles.statusView}>
+      //         {selectedType !== 3 ? (
+      //           <>
+      //             {item.status === 'Paused' ? (
+      //               <Icon1
+      //                 name="play"
+      //                 size={scale(25)}
+      //                 color={theme.colors.main}
+      //                 onPress={() => {
+      //                   updateStatus(item);
+      //                   // setModel(!model);
+      //                 }}
+      //               />
+      //             ) : (
+      //               <Icon3
+      //                 name="md-pause"
+      //                 size={scale(20)}
+      //                 color={theme.colors.main}
+      //                 style={{marginLeft: scale(-5)}}
+      //                 onPress={() => {
+      //                   updateStatus(item);
+      //                 }}
+      //               />
+      //             )}
 
-                  {/* {item?.status !== 'play' ? (
-                    <Icon1
-                      name="social-zerply"
-                      size={scale(20)}
-                      color={theme.colors.green}
-                    />
-                  ) : (
-                    <Icon3
-                      name="clock-time-seven"
-                      size={scale(20)}
-                      color={theme.colors.lightGreen}
-                    />
-                  )} */}
-                </>
-              ) : (
-                <View style={{marginLeft: scale(-20)}}>
-                  <TouchableOpacity
-                    style={{borderColor: theme.colors.green, borderWidth: 1}}
-                    onPress={() => {
-                      updateStatus(item, 'Plus');
-                    }}>
-                    <Icon2
-                      name="plus"
-                      size={scale(20)}
-                      color={theme.colors.green}
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{borderColor: theme.colors.red, borderWidth: 1}}>
-                    <Icon2
-                      onPress={() => {
-                        updateStatus(item, 'Minus');
-                      }}
-                      name="minus"
-                      size={scale(20)}
-                      color={theme.colors.red}
-                    />
-                  </TouchableOpacity>
-                </View>
-              )}
-            </View>
-            <View style={styles.taskLabel}>
-              <Label title={item?.name} style={{fontSize: scale(12)}} />
-              {item?.meta === 'Achievement' && item?.percentageOfTask && (
-                <ProgressBar
-                  progress={item?.percentageOfTask / 10}
-                  color={
-                    item?.status !== 'Play'
-                      ? theme.colors.gray
-                      : theme.colors.green
-                  }
-                />
-              )}
-            </View>
-            <View style={styles.staticDetails}>
-              <Label
-                title={
-                  item?.meta === 'Registry'
-                    ? item?.cronoCompletedTime
-                      ? (item?.cronoCompletedTime / 60)?.toFixed(2)
-                      : 0
-                    : `${
-                        item?.timerCompletedTime
-                          ? (item?.timerCompletedTime / 60).toFixed(2)
-                          : 0
-                      }\n${item?.amount?.toFixed(2)}`
-                }
-                style={{fontSize: scale(11), marginLeft: scale(-5)}}
-              />
-              <Label
-                title={
-                  item?.meta === 'Registry'
-                    ? 0
-                    : item?.percentageFolderWise?.toFixed(2)
-                }
-                style={{fontSize: scale(11)}}
-              />
-              <Label
-                title={
-                  item?.meta === 'Registry'
-                    ? '-'
-                    : item?.percentageOfTask?.toFixed(2)
-                }
-                style={{fontSize: scale(11)}}
-              />
-            </View>
-          </TouchableOpacity>
-        )}
-      </>
+      //             {/* {item?.status !== 'play' ? (
+      //               <Icon1
+      //                 name="social-zerply"
+      //                 size={scale(20)}
+      //                 color={theme.colors.green}
+      //               />
+      //             ) : (
+      //               <Icon3
+      //                 name="clock-time-seven"
+      //                 size={scale(20)}
+      //                 color={theme.colors.lightGreen}
+      //               />
+      //             )} */}
+      //           </>
+      //         ) : (
+      //           <View style={{marginLeft: scale(-20)}}>
+      //             <TouchableOpacity
+      //               style={{borderColor: theme.colors.green, borderWidth: 1}}
+      //               onPress={() => {
+      //                 updateStatus(item, 'Plus');
+      //               }}>
+      //               <Icon2
+      //                 name="plus"
+      //                 size={scale(20)}
+      //                 color={theme.colors.green}
+      //               />
+      //             </TouchableOpacity>
+      //             <TouchableOpacity
+      //               style={{borderColor: theme.colors.red, borderWidth: 1}}>
+      //               <Icon2
+      //                 onPress={() => {
+      //                   updateStatus(item, 'Minus');
+      //                 }}
+      //                 name="minus"
+      //                 size={scale(20)}
+      //                 color={theme.colors.red}
+      //               />
+      //             </TouchableOpacity>
+      //           </View>
+      //         )}
+      //       </View>
+      //       <View style={styles.taskLabel}>
+      //         <Label title={item?.name} style={{fontSize: scale(12)}} />
+      //         {item?.meta === 'Achievement' && item?.percentageOfTask && (
+      //           <ProgressBar
+      //             progress={item?.percentageOfTask / 10}
+      //             color={
+      //               item?.status !== 'Play'
+      //                 ? theme.colors.gray
+      //                 : theme.colors.green
+      //             }
+      //           />
+      //         )}
+      //       </View>
+      //       <View style={styles.staticDetails}>
+      //         <Label
+      //           title={
+      //             item?.meta === 'Registry'
+      //               ? item?.cronoCompletedTime
+      //                 ? (item?.cronoCompletedTime / 60)?.toFixed(2)
+      //                 : 0
+      //               : `${
+      //                   item?.timerCompletedTime
+      //                     ? (item?.timerCompletedTime / 60).toFixed(2)
+      //                     : 0
+      //                 }\n${item?.amount?.toFixed(2)}`
+      //           }
+      //           style={{fontSize: scale(11), marginLeft: scale(-5)}}
+      //         />
+      //         <Label
+      //           title={
+      //             item?.meta === 'Registry'
+      //               ? 0
+      //               : item?.percentageFolderWise?.toFixed(2)
+      //           }
+      //           style={{fontSize: scale(11)}}
+      //         />
+      //         <Label
+      //           title={
+      //             item?.meta === 'Registry'
+      //               ? '-'
+      //               : item?.percentageOfTask?.toFixed(2)
+      //           }
+      //           style={{fontSize: scale(11)}}
+      //         />
+      //       </View>
+      //     </TouchableOpacity>
+      //   )}
+      // </>
     );
   };
 
@@ -309,16 +325,12 @@ const HomeScreen = () => {
     return (
       <>
         <GestureRecognizer
+          style={styles.taskCardContainer}
           onSwipe={(direction, state) => onSwipe(direction, state, index)}
           config={config}>
           <TouchableOpacity onLongPress={move} onPressOut={moveEnd}>
-            <View
-              style={[
-                styles.taskCard,
-                {borderColor: item.color, borderWidth: scale(1)},
-              ]}
-              key={index}>
-              <View style={[styles.taskContainer, {borderColor: item.color}]}>
+            <View style={[styles.taskCard]} key={index}>
+              <View style={styles.taskContainer}>
                 <Icon2
                   name="aperture"
                   size={scale(22)}
@@ -346,7 +358,7 @@ const HomeScreen = () => {
                   style={[styles.headerTitle, {marginVertical: scale(7)}]}
                 />
               </View>
-              <View style={[styles.taskContainer, {borderColor: item?.color}]}>
+              <View style={styles.taskContainer}>
                 <Label title={'Status'} style={[styles.headerTitle]} />
                 <Label
                   title={'Name'}
@@ -360,8 +372,7 @@ const HomeScreen = () => {
                   <Label title={'% '} style={[styles.headerTitle]} />
                   <Icon2 name="folder" size={scale(22)} />
                 </View>
-
-                <Icon2 name="award" size={scale(22)} />
+                {selectedType !== 1 && <Icon2 name="award" size={scale(22)} />}
               </View>
               {Folder?.map((taskItem, Tindex) => {
                 return taskItem?._id === item?._id &&
@@ -432,7 +443,6 @@ const HomeScreen = () => {
     });
     const payload = {data: updateData};
     const options = {payloads: payload};
-    console.log('data >>> ', updateData);
     try {
       ApiService.put('taskorder', options).then(res => {
         if (res.success) {
@@ -447,6 +457,12 @@ const HomeScreen = () => {
   };
   return (
     <SafeAreaView style={styles.container}>
+      <ImageBackground
+        source={{
+          uri: 'https://img.freepik.com/free-photo/yellow-watercolor-paper_95678-446.jpg?w=1380&t=st=1670925892~exp=1670926492~hmac=869733d2bfe3e8827416bb5cf16106d1a3dcea002568cca2e956077d4b40d86a',
+        }}
+        style={styles.header}
+      />
       <View style={styles.container}>
         <View style={{flexDirection: 'row', height: '7%'}}>
           {taskType?.map((type, index) => {
@@ -455,29 +471,15 @@ const HomeScreen = () => {
                 <>
                   <View
                     style={{
-                      width: '20%',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <Image
-                      source={type.icon}
-                      style={{
-                        height: type.id === 2 ? scale(28) : scale(35),
-                        width: type.id === 2 ? scale(28) : scale(35),
-                        resizeMode: 'contain',
-                      }}
-                    />
-                  </View>
-                  <View
-                    style={{
-                      width: '50%',
+                      width: '74%',
                       flexDirection: 'row',
                       justifyContent: 'center',
                       alignItems: 'center',
                     }}>
                     <View
                       style={{
-                        width: '15%',
+                        width: '10%',
+                        marginLeft: '15%',
                       }}>
                       <Icon2
                         name="chevron-left"
@@ -487,20 +489,37 @@ const HomeScreen = () => {
                             ? setType(type.id - 1)
                             : setType(type.id + 2);
                         }}
-                        color={theme.colors.black}
+                        color={theme.colors.white}
                       />
                     </View>
+
                     <View
                       style={{
                         width: '70%',
                         justifyContent: 'center',
                         alignItems: 'center',
+                        flexDirection: 'row',
                       }}>
-                      <Label key={index} title={type?.title} />
-                      <Label
-                        title={`Total = ${type?.totalTime}`}
-                        style={styles.time}
+                      <Image
+                        source={type.icon}
+                        style={{
+                          height: type.id === 2 ? scale(28) : scale(35),
+                          width: type.id === 2 ? scale(28) : scale(35),
+                          resizeMode: 'contain',
+                          tintColor: theme.colors.white,
+                        }}
                       />
+                      <View style={{marginLeft: scale(10)}}>
+                        <Label
+                          key={index}
+                          title={type?.title}
+                          style={{color: theme.colors.white, fontWeight: '600'}}
+                        />
+                        <Label
+                          title={`Total ${type?.totalTime}`}
+                          style={styles.time}
+                        />
+                      </View>
                     </View>
                     <View style={{width: '15%'}}>
                       <Icon2
@@ -509,7 +528,7 @@ const HomeScreen = () => {
                         onPress={() => {
                           selectedType <= 2 ? setType(type.id + 1) : setType(1);
                         }}
-                        color={theme.colors.black}
+                        color={theme.colors.white}
                       />
                     </View>
                   </View>
@@ -521,37 +540,24 @@ const HomeScreen = () => {
           <View
             style={{
               width: '30%',
-              flexDirection: 'row',
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <View
-              style={{
-                width: '70%',
-                alignItems: 'flex-end',
-              }}>
-              <Label
-                title={
-                  startDate === null ? 'Today  ' : `${startDate} / ${endDate} `
-                }
-              />
-            </View>
-            <View
-              style={{
-                width: '30%',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Icon2
-                name="calendar"
-                size={scale(25)}
-                color={theme.colors.primary}
-                onPress={() => {
-                  setCalenderModel(true);
-                  setMarkedDates(null);
-                }}
-              />
-            </View>
+            <Icon2
+              name="calendar"
+              size={scale(25)}
+              color={theme.colors.white}
+              onPress={() => {
+                setCalenderModel(true);
+                setMarkedDates(null);
+              }}
+            />
+            <Label
+              title={
+                startDate === null ? 'Today  ' : `${startDate} / ${endDate} `
+              }
+              style={{color: theme.colors.white, fontSize: scale(11)}}
+            />
           </View>
         </View>
 
@@ -579,7 +585,7 @@ const HomeScreen = () => {
               />
             )}
           </View>
-          <View>
+          {/* <View>
             <TouchableOpacity
               onPress={() => {
                 setlegendView(!legendView);
@@ -607,7 +613,7 @@ const HomeScreen = () => {
                 <Label title="⅒ of tota" style={styles.title} />
               </View>
             )}
-          </View>
+          </View> */}
         </View>
       </View>
       <DatePickerModal
@@ -643,7 +649,7 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.white,
+    backgroundColor: theme.colors.transparent,
   },
   row: {
     flexDirection: 'row',
@@ -660,12 +666,30 @@ const styles = StyleSheet.create({
   time: {
     fontSize: scale(11),
     alignItems: 'center',
+    color: theme.colors.white,
+    fontWeight: '600',
+  },
+  taskCardContainer: {
+    backgroundColor: theme.colors.white,
+    // padding: scale(5),
+    marginVertical: scale(5),
+    marginHorizontal: scale(2),
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 1,
+      height: 1,
+    },
+    shadowRadius: scale(3),
+    shadowOpacity: 0.2,
+    elevation: 2,
+    borderRadius: scale(8),
   },
   taskContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderBottomWidth: scale(1),
+    borderBottomWidth: scale(0.5),
+    borderColor: theme.colors.gray,
     padding: scale(7),
   },
   headerTitle: {
@@ -676,7 +700,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderBottomWidth: scale(0.7),
+    borderBottomWidth: scale(0.5),
+    borderBottomColor: theme.colors.gray,
     paddingVertical: scale(3),
     paddingHorizontal: scale(5),
   },
@@ -731,5 +756,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(10),
     paddingTop: scale(5),
     justifyContent: 'center',
+  },
+  header: {
+    height: scale(200),
+    width: '100%',
+    resizeMode: 'cover',
+    position: 'absolute',
   },
 });

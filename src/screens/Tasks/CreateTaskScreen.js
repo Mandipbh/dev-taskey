@@ -172,7 +172,7 @@ const CreateTaskScreen = props => {
         <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
           <ImageBackground
             source={{
-              uri: 'https://img.freepik.com/free-vector/football-2022-tournament-cup-background_206725-601.jpg?w=1380&t=st=1670921618~exp=1670922218~hmac=eec46c1f5b22936f11c06a7f2e0097f68230e655cfcc44d03ac906cc121de506',
+              uri: 'https://img.freepik.com/free-photo/yellow-watercolor-paper_95678-446.jpg?w=1380&t=st=1670925892~exp=1670926492~hmac=869733d2bfe3e8827416bb5cf16106d1a3dcea002568cca2e956077d4b40d86a',
             }}
             style={styles.header}>
             <View style={styles.secondCon}>
@@ -473,7 +473,7 @@ const styles = StyleSheet.create({
   input: {
     width: '100%',
     marginLeft: scale(0),
-    marginTop: scale(5),
+    marginVertical: scale(20),
   },
   checkBoxCon: {
     height: scale(18),

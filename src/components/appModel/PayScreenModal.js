@@ -1,5 +1,12 @@
 import React, {useState} from 'react';
-import {StyleSheet, View, Button, Text, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Button,
+  Text,
+  TouchableOpacity,
+  Platform,
+} from 'react-native';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/Feather';
 import Icon1 from 'react-native-vector-icons/Foundation';
@@ -29,7 +36,10 @@ export default PayScreen = () => {
           onPress={() => {
             setModalVisible(true);
           }}
-          style={{paddingHorizontal: scale(15)}}
+          style={{
+            paddingHorizontal: scale(15),
+            marginTop: Platform.OS === 'ios' ? 0 : scale(5),
+          }}
         />
       </View>
       <View style={styles.container}>
@@ -76,7 +86,7 @@ export default PayScreen = () => {
 const styles = StyleSheet.create({
   content: {
     backgroundColor: theme.colors.main,
-    padding: scale(5),
+    padding: scale(4),
     paddingTop: scale(8),
     justifyContent: 'center',
     alignItems: 'center',
@@ -92,7 +102,7 @@ const styles = StyleSheet.create({
     width: scale(101),
     // alignSelf: 'center',
     marginLeft: '50%',
-    bottom: '8%',
+    bottom: Platform.OS === 'ios' ? '8%' : '5%',
   },
   bottomtab: {paddingVertical: scale(7), alignItems: 'center'},
 });

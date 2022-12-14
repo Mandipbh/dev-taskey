@@ -22,7 +22,7 @@ const BottomTab = () => {
         tabBarStyle: {
           position: 'absolute',
           backgroundColor: theme.colors.main,
-          paddingTop: Platform.OS === 'ios' ? scale(20) : 0,
+          paddingTop: Platform.OS === 'ios' ? scale(20) : scale(8),
         },
       }}>
       <Tab.Screen
