@@ -8,6 +8,7 @@ import {
   ImageBackground,
   Text,
   Alert,
+  Platform,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -171,9 +172,14 @@ const CreateTaskScreen = props => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <>
       <View style={styles.container}>
-        <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={{flex: 1}}
+          contentContainerStyle={{
+            paddingTop: Platform.OS === 'ios' ? scale(30) : 0,
+          }}>
           <ImageBackground
             source={{
               uri: 'https://t3.ftcdn.net/jpg/05/26/66/48/360_F_526664879_3lRVV1IyTtbK3IBcgfrsyAnp7qko7u51.jpg',
@@ -312,7 +318,7 @@ and registry yout achievements."
                             {
                               fontWeight: selMeta === t.id ? '700' : '700',
                               color:
-                                selMeta === t.id || selMeta ===null
+                                selMeta === t.id || selMeta === null
                                   ? theme.colors.black
                                   : theme.colors.gray,
                             },
@@ -447,7 +453,7 @@ and registry yout achievements."
         </ScrollView>
       </View>
       {isLoading && <Loader />}
-    </SafeAreaView>
+    </>
   );
 };
 
@@ -565,9 +571,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginLeft: scale(10),
-    borderRadius: scale(5),
+    borderRadius: scale(11),
     backgroundColor: theme.colors.white,
-    borderRadius: 20,
   },
   selFolderTxt: {
     fontSize: scale(12),

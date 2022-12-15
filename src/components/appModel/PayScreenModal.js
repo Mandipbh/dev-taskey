@@ -37,7 +37,7 @@ export default PayScreen = () => {
             setModalVisible(true);
           }}
           style={{
-            paddingHorizontal: scale(15),
+            paddingHorizontal: scale(35),
             marginTop: Platform.OS === 'ios' ? 0 : scale(5),
           }}
         />
@@ -66,7 +66,7 @@ export default PayScreen = () => {
               style={styles.bottomtab}
               onPress={() => {
                 setModalVisible(false);
-                setnewFolderM(true);
+                navigation.navigate('CreateF');
               }}>
               <Icon name="folder" size={scale(26)} color={theme.colors.white} />
               <Label title="Folder" style={styles.contentTitle} />

@@ -94,7 +94,7 @@ const CreateFolderModel = props => {
   };
 
   return (
-    <View style={{flex: 1}}>
+    <>
       <View style={styles.container}>
         <ImageBackground
           source={{
@@ -132,7 +132,7 @@ const CreateFolderModel = props => {
               onChangeText={txt => {
                 setFolderName(txt);
               }}
-              value={editFolder?.folder}
+              value={folderName}
               style={{
                 backgroundColor: theme.colors.white,
                 borderRadius: 20,
@@ -140,8 +140,9 @@ const CreateFolderModel = props => {
                 paddingLeft: scale(15),
                 elevation: 5,
                 marginTop: scale(10),
-                fontSize: 15,
+                fontSize: scale(12),
                 color: theme.colors.black,
+                height: scale(40),
               }}
             />
           </View>
@@ -283,7 +284,7 @@ const CreateFolderModel = props => {
         close={handleCloseClolorpicker}
       />
       {isLoading && <Loader />}
-    </View>
+    </>
   );
 };
 
@@ -312,8 +313,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
-    paddingTop: Platform.OS === 'ios' ? scale(30) : scale(5),
-    backgroundColor: theme.colors.white,
+    paddingTop: Platform.OS === 'ios' ? scale(10) : scale(5),
+    backgroundColor: theme.colors.main,
     margin: 0,
   },
   subTitleView: {

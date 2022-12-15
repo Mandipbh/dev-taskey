@@ -322,6 +322,7 @@ const HomeScreen = () => {
   };
 
   const rendertasks = ({item, index, move, moveEnd}) => {
+    console.log('11111>> ', Number(item?.totalMin)?.toFixed(2));
     return (
       <>
         <GestureRecognizer
@@ -349,7 +350,7 @@ const HomeScreen = () => {
                 </TouchableOpacity>
                 {item?.totalMin !== undefined && (
                   <Label
-                    title={`${item?.totalMin} mins`}
+                    title={`${item?.totalMin?.toFixed(2)} mins`}
                     style={[styles.headerTitle]}
                   />
                 )}
@@ -364,6 +365,13 @@ const HomeScreen = () => {
                   title={'Name'}
                   style={[styles.headerTitle, {width: '35%'}]}
                 />
+                {selectedType !== 1 && (
+                  <Icon2
+                    name="award"
+                    size={scale(22)}
+                    style={{marginLeft: scale(-40)}}
+                  />
+                )}
                 <Label
                   title={'Path'}
                   style={[styles.headerTitle, {left: scale(10)}]}
@@ -372,7 +380,6 @@ const HomeScreen = () => {
                   <Label title={'% '} style={[styles.headerTitle]} />
                   <Icon2 name="folder" size={scale(22)} />
                 </View>
-                {selectedType !== 1 && <Icon2 name="award" size={scale(22)} />}
               </View>
               {Folder?.map((taskItem, Tindex) => {
                 return taskItem?._id === item?._id &&

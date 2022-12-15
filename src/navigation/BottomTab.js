@@ -23,6 +23,8 @@ const BottomTab = () => {
           position: 'absolute',
           backgroundColor: theme.colors.main,
           paddingTop: Platform.OS === 'ios' ? scale(20) : scale(8),
+          justifyContent: 'center',
+          alignContent: 'center',
         },
       }}>
       <Tab.Screen

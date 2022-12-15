@@ -83,10 +83,27 @@ const CronoCard = ({
             )}
           </View>
           <View style={styles.taskLabel}>
-            <Label title={item?.name} style={{fontSize: scale(12)}} />
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Label title={item?.name} style={{fontSize: scale(12)}} />
+              {selectedType !== 1 && (
+                <Label
+                  title={
+                    item?.meta === 'Registry'
+                      ? '-'
+                      : item?.percentageOfTask?.toFixed(2)
+                  }
+                  style={{fontSize: scale(11)}}
+                />
+              )}
+            </View>
             {item?.meta === 'Achievement' && item?.percentageOfTask && (
               <ProgressBar
-                progress={item?.percentageOfTask / 10}
+                progress={
+                  selectedType === 3
+                    ? item?.percentageOfTask / 100
+                    : item?.percentageOfTask / 100
+                }
                 color={
                   item?.status !== 'Play'
                     ? theme.colors.gray2
@@ -95,28 +112,37 @@ const CronoCard = ({
                 style={{
                   backgroundColor: theme.colors.backgroundColor,
                   height: scale(4),
+                  marginTop: scale(5),
                 }}
               />
             )}
           </View>
           <View style={styles.staticDetails}>
-            <Label
-              title={
-                item?.meta === 'Registry'
-                  ? item?.cronoCompletedTime
-                    ? (item?.cronoCompletedTime / 60)?.toFixed(2)
-                    : 0
-                  : `${
-                      item?.timerCompletedTime
-                        ? (item?.timerCompletedTime / 60).toFixed(2)
-                        : 0
-                    }\n${item?.amount?.toFixed(2)}`
-              }
-              style={{
-                fontSize: scale(11),
-                marginLeft: item?.meta === 'Registry' ? scale(18) : scale(-5),
-              }}
-            />
+            {selectedType === 3 && (
+              <Label
+                title={item?.counterIncrementDecrement}
+                style={{fontSize: scale(11)}}
+              />
+            )}
+            {selectedType !== 3 && (
+              <Label
+                title={
+                  item?.meta === 'Registry'
+                    ? item?.cronoCompletedTime
+                      ? (item?.cronoCompletedTime / 60)?.toFixed(2)
+                      : 0
+                    : `${
+                        item?.timerCompletedTime
+                          ? (item?.timerCompletedTime / 60).toFixed(2)
+                          : 0
+                      }\n${item?.amount?.toFixed(2)}`
+                }
+                style={{
+                  fontSize: scale(11),
+                  marginLeft: item?.meta === 'Registry' ? scale(18) : scale(-5),
+                }}
+              />
+            )}
             <Label
               title={
                 item?.meta === 'Registry'
@@ -125,16 +151,6 @@ const CronoCard = ({
               }
               style={{fontSize: scale(11)}}
             />
-            {selectedType !== 1 && (
-              <Label
-                title={
-                  item?.meta === 'Registry'
-                    ? '-'
-                    : item?.percentageOfTask?.toFixed(2)
-                }
-                style={{fontSize: scale(11)}}
-              />
-            )}
           </View>
         </TouchableOpacity>
       )}
@@ -166,7 +182,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   taskLabel: {
-    width: '40%',
+    width: '45%',
     // alignItems: 'flex-start',
     marginLeft: scale(-12),
   },
