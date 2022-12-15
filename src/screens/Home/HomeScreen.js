@@ -472,10 +472,7 @@ const HomeScreen = () => {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <ImageBackground
-        source={require('../../assets/Images/banner.jpg')}
-        style={styles.header}
-      />
+      <ImageBackground source={images.banner} style={styles.header} />
       <View style={styles.container}>
         <View style={{flexDirection: 'row', height: '7%'}}>
           {taskType?.map((type, index) => {
@@ -568,7 +565,7 @@ const HomeScreen = () => {
                   marginRight: scale(5),
                   marginTop: scale(5),
                 }}
-                source={require('../../assets/Images/calender-icon-white.png')}
+                source={images.calendar}
               />
             </TouchableOpacity>
             <Label

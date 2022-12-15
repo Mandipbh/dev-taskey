@@ -11,6 +11,7 @@ import {
   Platform,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
+import images from '../../assets/Images';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Toast from 'react-native-simple-toast';
 import Feather from 'react-native-vector-icons/Feather';
@@ -180,9 +181,7 @@ const CreateTaskScreen = props => {
           contentContainerStyle={{
             paddingTop: Platform.OS === 'ios' ? scale(30) : 0,
           }}>
-          <ImageBackground
-            source={require('../../assets/Images/banner.jpg')}
-            style={styles.header}>
+          <ImageBackground source={images.banner} style={styles.header}>
             <View style={styles.secondCon}>
               <Title title="Create task" style={{color: theme.colors.white}} />
               <Label
@@ -409,7 +408,7 @@ and registry yout achievements."
                     width: scale(30),
                     marginRight: scale(20),
                   }}
-                  source={require('../../assets/Images/folder-icon.png')}
+                  source={images.folder}
                 />
               </TouchableOpacity>
             </View>

@@ -11,6 +11,7 @@ import {
   Image,
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import images from '../../assets/Images';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import LottieView from 'lottie-react-native';
@@ -97,9 +98,7 @@ const CreateFolderModel = props => {
   return (
     <>
       <View style={styles.container}>
-        <ImageBackground
-          source={require('../../assets/Images/banner.jpg')}
-          style={styles.header}>
+        <ImageBackground source={images.banner} style={styles.header}>
           <View style={{margin: 20}}>
             <Text
               style={{
