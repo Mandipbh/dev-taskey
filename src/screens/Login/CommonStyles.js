@@ -7,7 +7,11 @@ export const CommonStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  TitleTextStyle: {fontSize: 28, fontWeight: '400'},
+  TitleTextStyle: {
+    fontSize: 28,
+    fontWeight: '600',
+    color: theme.colors.orange,
+  },
   container: {
     backgroundColor: theme.colors.white,
   },
@@ -16,11 +20,11 @@ export const CommonStyles = StyleSheet.create({
     paddingHorizontal: scale(20),
   },
   secondTitle: {
-    color: theme.colors.primary,
+    color: theme.colors.orange,
     fontSize: 20,
   },
   btn: {
-    backgroundColor: theme.colors.primary,
+    backgroundColor: theme.colors.orange,
     marginTop: scale(30),
   },
   navTxtContainer: {
@@ -29,7 +33,7 @@ export const CommonStyles = StyleSheet.create({
     marginTop: scale(30),
   },
   navTxt: {
-    color: theme.colors.primary,
+    color: theme.colors.orange,
     left: 5,
     fontWeight: '600',
   },

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
   Text,
+  Alert,
 } from 'react-native';
 import React from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -32,9 +33,17 @@ import moment from 'moment';
 import CommonHeader from '../../components/CommonHeader';
 import ChartSection from '../../components/ChartSection';
 import {useLayoutEffect} from 'react';
-import {useNavigation} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {MultiSelect} from 'react-native-element-dropdown';
+import {useEffect} from 'react';
+import {useCallback} from 'react';
+import axios from 'axios';
+import ApiService from '../../utils/ApiService';
 
 const CustomDetails = props => {
   const {detailsData} = props;
@@ -93,6 +102,21 @@ const StatisticsScreen = () => {
   const [folderselected, setFolderSelected] = useState([]);
   const [markedDates, setMarkedDates] = useState(null);
 
+  useFocusEffect(() => {
+    getStatasticData();
+  }, []);
+
+  const getStatasticData = () => {
+    const payload = {
+      startDate: '2022/12/01',
+      lastDate: '2022/12/30',
+      type: 'All',
+    };
+    const options = {payloads: payload};
+    ApiService.post('statistics', options)
+      .then(res => console.log('statics data >> ', res))
+      .catch(err => console.log('Error', err));
+  };
   useLayoutEffect(() => {
     naviagtion.setOptions({
       headerTitle: null,

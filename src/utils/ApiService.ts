@@ -1,7 +1,7 @@
 import axios from 'axios';
 // import { BASE_URL } from '../constants';
 
-const APP_API_URL ='https://0e06-43-228-229-22.in.ngrok.io/api/';
+const APP_API_URL ='https://9956-43-228-229-22.in.ngrok.io/api/';
 axios.interceptors.request.use(config => config);
 
 const execute = async (
@@ -15,7 +15,6 @@ const execute = async (
     fileUpload = false as boolean,
   } = {},
 ) => {
-    
   const base = APP_API_URL.replace(/~\/$/, '');
   const url = !fileUpload ? base + path : path;
   console.log('url for api call ',url)

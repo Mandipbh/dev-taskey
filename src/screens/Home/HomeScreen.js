@@ -73,14 +73,22 @@ const HomeScreen = () => {
       ApiService.get('folder/TIMER').then(res => {
         setLoader(false);
         if (res.success) {
-          setFolder(res.data);
+          let OrderWiseData = [...res.data];
+          OrderWiseData?.sort(function (a, b) {
+            return a?.order - b?.order;
+          });
+          setFolder(OrderWiseData);
         }
       });
     } else if (selectedType === 3) {
       ApiService.get('folder/COUNTER').then(res => {
         setLoader(false);
         if (res.success) {
-          setFolder(res.data);
+          let OrderWiseData = [...res.data];
+          OrderWiseData?.sort(function (a, b) {
+            return a?.order - b?.order;
+          });
+          setFolder(OrderWiseData);
         }
       });
     }
