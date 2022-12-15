@@ -87,7 +87,7 @@ const SignUp = () => {
           size={25}
           style={styles.backIcon}
           onPress={() => navigation.goBack()}
-          color={theme.colors.primary}
+          color={theme.colors.orange}
         />
         <View style={CommonStyles.TitleStyle}>
           <Title title="Create Account" style={CommonStyles.TitleTextStyle} />
@@ -157,9 +157,9 @@ const styles = StyleSheet.create({
     marginTop: scale(15),
   },
   Sendcode: {
-    color: theme.colors.primary,
+    color: theme.colors.orange,
     borderBottomWidth: 1,
-    borderColor: theme.colors.primary,
+    borderColor: theme.colors.orange,
     marginBottom: scale(-15),
     // padding: 5,
   },

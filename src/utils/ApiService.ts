@@ -15,7 +15,6 @@ const execute = async (
     fileUpload = false as boolean,
   } = {},
 ) => {
-    
   const base = APP_API_URL.replace(/~\/$/, '');
   const url = !fileUpload ? base + path : path;
   console.log('url for api call ',url)

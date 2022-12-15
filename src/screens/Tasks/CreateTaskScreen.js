@@ -11,6 +11,7 @@ import {
   Platform,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
+import images from '../../assets/Images';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Toast from 'react-native-simple-toast';
 import Feather from 'react-native-vector-icons/Feather';
@@ -180,11 +181,7 @@ const CreateTaskScreen = props => {
           contentContainerStyle={{
             paddingTop: Platform.OS === 'ios' ? scale(30) : 0,
           }}>
-          <ImageBackground
-            source={{
-              uri: 'https://t3.ftcdn.net/jpg/05/26/66/48/360_F_526664879_3lRVV1IyTtbK3IBcgfrsyAnp7qko7u51.jpg',
-            }}
-            style={styles.header}>
+          <ImageBackground source={images.banner} style={styles.header}>
             <View style={styles.secondCon}>
               <Title title="Create task" style={{color: theme.colors.white}} />
               <Label
@@ -223,11 +220,14 @@ and registry yout achievements."
                       style={{
                         marginLeft: scale(20),
                       }}>
-                      <Icon
-                        name={t.url}
-                        size={35}
-                        color={theme.colors.orange}
-                        style={{marginLeft: scale(20), margin: scale(5)}}
+                      <Image
+                        source={t.url}
+                        style={{
+                          height: scale(40),
+                          width: scale(30),
+                          marginLeft: scale(20),
+                          margin: scale(5),
+                        }}
                       />
                       <View style={[styles.row, {alignItems: 'center'}]}>
                         <TouchableOpacity
@@ -280,17 +280,17 @@ and registry yout achievements."
                         paddingHorizontal: scale(20),
                       }}
                       key={i.toString()}>
-                      <Ionicon
-                        name={t.url}
-                        size={35}
-                        color={theme.colors.orange}
+                      <Image
+                        source={t.url}
                         style={{
-                          alignSelf: 'center',
-                          color:
+                          tintColor:
                             selMeta === t.id || selMeta === null
                               ? theme.colors.orange
                               : theme.colors.orange1,
-                          // color: selIcon ? '' : theme.colors.orange,
+                          height: scale(40),
+                          width: scale(30),
+                          marginLeft: scale(20),
+                          margin: scale(5),
                         }}
                       />
                       <View style={styles.row}>
@@ -402,11 +402,13 @@ and registry yout achievements."
                   // setnewFolderM(true);
                   navigation.navigate('CreateF');
                 }}>
-                <FontAwesome
-                  name="folder-plus"
-                  size={scale(30)}
-                  color={theme.colors.orange}
-                  style={{marginRight: scale(20)}}
+                <Image
+                  style={{
+                    height: scale(30),
+                    width: scale(30),
+                    marginRight: scale(20),
+                  }}
+                  source={images.folder}
                 />
               </TouchableOpacity>
             </View>

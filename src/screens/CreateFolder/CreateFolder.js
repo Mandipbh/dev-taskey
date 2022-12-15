@@ -8,8 +8,10 @@ import {
   Text,
   ImageBackground,
   TextInput,
+  Image,
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import images from '../../assets/Images';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import LottieView from 'lottie-react-native';
@@ -96,11 +98,7 @@ const CreateFolderModel = props => {
   return (
     <>
       <View style={styles.container}>
-        <ImageBackground
-          source={{
-            uri: 'https://t3.ftcdn.net/jpg/05/26/66/48/360_F_526664879_3lRVV1IyTtbK3IBcgfrsyAnp7qko7u51.jpg',
-          }}
-          style={styles.header}>
+        <ImageBackground source={images.banner} style={styles.header}>
           <View style={{margin: 20}}>
             <Text
               style={{
@@ -160,11 +158,13 @@ const CreateFolderModel = props => {
                       marginHorizontal: theme.SCREENWIDTH * 0.02,
                       marginLeft: scale(20),
                     }}>
-                    <Icon
-                      name={t.url}
-                      size={35}
-                      color={theme.colors.orange}
-                      style={{marginLeft: scale(20), margin: scale(5)}}
+                    <Image
+                      style={{
+                        height: scale(30),
+                        width: scale(30),
+                        marginLeft: scale(20),
+                      }}
+                      source={t.url}
                     />
                     <View style={[styles.row, {alignItems: 'center'}]}>
                       <TouchableOpacity

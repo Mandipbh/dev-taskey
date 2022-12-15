@@ -184,8 +184,8 @@ const styles = StyleSheet.create({
     padding: scale(4),
   },
   Sendcode: {
-    color: theme.colors.primary,
+    color: theme.colors.orange,
     borderBottomWidth: 1,
-    borderColor: theme.colors.primary,
+    borderColor: theme.colors.orange,
   },
 });

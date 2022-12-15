@@ -258,19 +258,19 @@ const typeData = [
     title: 'Crono',
     icon: 'timer-outline',
     id: 1,
-    url: 'watch-variant',
+    url: require('../assets/Images/crono-icon.png'),
   },
   {
     title: 'Timer',
     icon: 'timer-sand',
     id: 2,
-    url: 'timer-sand',
+    url: require('../assets/Images/timer-icon.png'),
   },
   {
     title: 'Counter',
     icon: 'counter',
     id: 3,
-    url: 'counter',
+    url: require('../assets/Images/counter-icon.png'),
   },
 ];
 
@@ -279,13 +279,13 @@ const metaData = [
     title: 'Achievement',
     icon: 'certificate',
     id: 1,
-    url: 'md-ribbon-outline',
+    url: require('../assets/Images/achievement-icon.png'),
   },
   {
     title: 'Registry',
     icon: 'notebook',
     id: 2,
-    url: 'document-text-outline',
+    url: require('../assets/Images/register-icon.png'),
   },
 ];
 
