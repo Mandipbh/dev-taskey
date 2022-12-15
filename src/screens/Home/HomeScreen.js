@@ -473,9 +473,7 @@ const HomeScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground
-        source={{
-          uri: 'https://img.freepik.com/free-photo/yellow-watercolor-paper_95678-446.jpg?w=1380&t=st=1670925892~exp=1670926492~hmac=869733d2bfe3e8827416bb5cf16106d1a3dcea002568cca2e956077d4b40d86a',
-        }}
+        source={require('../../assets/Images/banner.jpg')}
         style={styles.header}
       />
       <View style={styles.container}>
@@ -558,15 +556,21 @@ const HomeScreen = () => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Icon2
-              name="calendar"
-              size={scale(25)}
-              color={theme.colors.white}
+            <TouchableOpacity
               onPress={() => {
                 setCalenderModel(true);
                 setMarkedDates(null);
-              }}
-            />
+              }}>
+              <Image
+                style={{
+                  height: scale(40),
+                  width: scale(40),
+                  marginRight: scale(5),
+                  marginTop: scale(5),
+                }}
+                source={require('../../assets/Images/calender-icon-white.png')}
+              />
+            </TouchableOpacity>
             <Label
               title={
                 startDate === null ? 'Today  ' : `${startDate} / ${endDate} `

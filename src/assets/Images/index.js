@@ -1,7 +1,7 @@
 const images = {
-  stopWatch: require('./stopwatch.png'),
-  counter: require('./counter.png'),
-  timer: require('./clock.png'),
+  stopWatch: require('./counter-icon.png'),
+  counter: require('./timer-icon.png'),
+  timer: require('./crono-icon.png'),
 };
 
 export default images;
