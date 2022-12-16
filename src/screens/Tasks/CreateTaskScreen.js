@@ -430,27 +430,35 @@ and registry yout achievements."
             )}
             <View style={styles.devider} />
 
-            <TouchableOpacity onPress={handleSave} style={styles.createTaskbtn}>
-              <Ionicon name="play" color={theme.colors.white} size={25} />
-              <Text style={styles.createtxt}>Create task</Text>
-            </TouchableOpacity>
-            {props?.route?.params?.editData && (
-              <>
-                <TouchableOpacity
-                  onPress={() => Alert.alert('Delete')}
-                  style={styles.deletebtn}>
-                  <Icon name="delete" color={theme.colors.white} size={25} />
-                  <Text
-                    style={{
-                      color: theme.colors.white,
-                      fontSize: 20,
-                      padding: 5,
-                    }}>
-                    Delete
-                  </Text>
-                </TouchableOpacity>
-              </>
-            )}
+            <View
+              style={{
+                flexDirection: 'row',
+                marginBottom: scale(60),
+              }}>
+              <TouchableOpacity
+                onPress={handleSave}
+                style={styles.createTaskbtn}>
+                <Ionicon name="play" color={theme.colors.white} size={25} />
+                <Text style={styles.createtxt}>Create task</Text>
+              </TouchableOpacity>
+              {!props?.route?.params?.editData && (
+                <>
+                  <TouchableOpacity
+                    onPress={() => Alert.alert('Delete')}
+                    style={styles.deletebtn}>
+                    <Icon name="delete" color={theme.colors.white} size={25} />
+                    <Text
+                      style={{
+                        color: theme.colors.white,
+                        fontSize: 20,
+                        padding: 5,
+                      }}>
+                      Delete
+                    </Text>
+                  </TouchableOpacity>
+                </>
+              )}
+            </View>
           </View>
         </ScrollView>
       </View>
@@ -489,7 +497,7 @@ const styles = StyleSheet.create({
   createTaskbtn: {
     flexDirection: 'row',
     backgroundColor: theme.colors.orange,
-    width: scale(220),
+    width: scale(150),
     height: scale(35),
     alignItems: 'center',
     justifyContent: 'center',
@@ -516,13 +524,14 @@ const styles = StyleSheet.create({
   deletebtn: {
     flexDirection: 'row',
     backgroundColor: theme.colors.gray,
-    width: scale(220),
+    width: scale(150),
     height: scale(35),
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
     marginTop: scale(10),
     borderRadius: 30,
+    marginLeft: scale(10),
   },
   check: {
     height: scale(12),
