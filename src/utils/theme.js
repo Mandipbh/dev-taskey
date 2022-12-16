@@ -20,6 +20,8 @@ const theme = {
     primary1: '#00d8ff',
     primary2: '#016bfd',
     orange: '#f9894a',
+    orange2: '#fa9d02',
+    orange3: '#f98805',
     lightGreen: '#37cac8',
     main: '#ea8915',
     backgroundColor: '#e4f5ff',

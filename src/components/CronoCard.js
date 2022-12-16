@@ -3,8 +3,9 @@ import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {ProgressBar} from 'react-native-paper';
 import Icon1 from 'react-native-vector-icons/Foundation';
-import Icon2 from 'react-native-vector-icons/Feather';
+import Icon2 from 'react-native-vector-icons/FontAwesome';
 import Icon3 from 'react-native-vector-icons/Ionicons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {scale, theme} from '../utils';
 import {Label} from './Label';
 
@@ -28,7 +29,7 @@ const CronoCard = ({
             styles.taskRow,
             {
               backgroundColor:
-                index / 2 ? theme.colors.white : theme.colors.white1,
+                index % 2 !== 0 ? theme.colors.white : theme.colors.white1,
             },
           ]}
           onPress={() => navigation.navigate('CreateTask', {editData: item})}>
@@ -57,16 +58,16 @@ const CronoCard = ({
                 )}
               </>
             ) : (
-              <View style={{marginLeft: scale(-20)}}>
+              <View style={{flexDirection: 'row'}}>
                 <TouchableOpacity
                   style={styles.add}
                   onPress={() => {
                     updateStatus(item, 'Plus');
                   }}>
-                  <Icon2
+                  <FontAwesome5
                     name="plus"
-                    size={scale(20)}
-                    color={theme.colors.green}
+                    size={scale(16)}
+                    color={theme.colors.white}
                   />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.min}>
@@ -75,8 +76,8 @@ const CronoCard = ({
                       updateStatus(item, 'Minus');
                     }}
                     name="minus"
-                    size={scale(20)}
-                    color={theme.colors.red}
+                    size={scale(16)}
+                    color={theme.colors.white}
                   />
                 </TouchableOpacity>
               </View>
@@ -121,7 +122,10 @@ const CronoCard = ({
             {selectedType === 3 && (
               <Label
                 title={item?.counterIncrementDecrement}
-                style={{fontSize: scale(11)}}
+                style={{
+                  fontSize: scale(11),
+                  marginLeft: scale(20),
+                }}
               />
             )}
             {selectedType !== 3 && (
@@ -184,7 +188,7 @@ const styles = StyleSheet.create({
   taskLabel: {
     width: '45%',
     // alignItems: 'flex-start',
-    marginLeft: scale(-12),
+    marginLeft: scale(5),
   },
   move: {
     borderWidth: scale(1),
@@ -197,6 +201,15 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: scale(-25),
   },
-  add: {borderColor: theme.colors.green, borderWidth: 1},
-  min: {borderColor: theme.colors.red, borderWidth: 1},
+  add: {
+    backgroundColor: theme.colors.orange3,
+    padding: scale(4),
+    borderRadius: scale(3),
+  },
+  min: {
+    backgroundColor: theme.colors.orange2,
+    padding: scale(4),
+    borderRadius: scale(3),
+    marginHorizontal: scale(3),
+  },
 });

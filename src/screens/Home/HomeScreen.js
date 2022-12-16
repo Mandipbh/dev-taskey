@@ -330,7 +330,6 @@ const HomeScreen = () => {
   };
 
   const rendertasks = ({item, index, move, moveEnd}) => {
-    console.log('11111>> ', Number(item?.totalMin)?.toFixed(2));
     return (
       <>
         <GestureRecognizer
