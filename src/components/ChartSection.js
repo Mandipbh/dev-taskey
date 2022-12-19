@@ -8,10 +8,9 @@ const ChartSection = props => {
   const {title, data, style} = props;
   return (
     <View style={[styles.chartView, style]}>
-      <Title style={{fontSize: 20}} title={title}></Title>
       <View style={{flexDirection: 'row', marginTop: scale(10)}}>
         <CustomChart chartData={data} />
-        <View style={{justifyContent: 'center'}}>
+        {/* <View style={{justifyContent: 'center'}}>
           {data.map(i => {
             return (
               <>
@@ -19,12 +18,14 @@ const ChartSection = props => {
                   <View
                     style={[styles.colorBox, {backgroundColor: i.svg.fill}]}
                   />
-                  <Label style={{fontSize: 12}} title={`${i.type} Tasks`} ></Label>
+                  <Label
+                    style={{fontSize: 12}}
+                    title={`${i.type} Tasks`}></Label>
                 </View>
               </>
             );
           })}
-        </View>
+        </View> */}
       </View>
     </View>
   );
@@ -34,9 +35,9 @@ export default ChartSection;
 
 const styles = StyleSheet.create({
   chartView: {
-    backgroundColor: theme.colors.gray1,
     padding: scale(15),
     marginVertical: scale(5),
+    alignSelf: 'center',
   },
   colorBox: {
     height: scale(20),
