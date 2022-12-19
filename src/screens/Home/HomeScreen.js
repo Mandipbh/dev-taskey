@@ -30,6 +30,7 @@ import {ProgressBar} from 'react-native-paper';
 import ApiService from '../../utils/ApiService';
 import axios from 'axios';
 import {appAPI, postAPICall} from '../../utils/AppApi';
+import moment from 'moment';
 
 const HomeScreen = () => {
   const [openFolderModal, setOpenFolderModal] = useState(false);
@@ -135,7 +136,6 @@ const HomeScreen = () => {
   };
 
   const updateStatus = (task, status) => {
-    console.log('task ??/ ', task);
     let taskId = task?._id;
     const taskStatus = task?.status === 'Paused' ? 'Play' : 'Paused';
     let obj = {};
@@ -351,6 +351,31 @@ const HomeScreen = () => {
       console.log('error >>> ', error);
     }
   };
+  const handlefilterModel = (StartDate, Enddate) => {
+    console.log('start & end date >> ', StartDate, Enddate);
+    setStartDate(StartDate);
+    setEndDate(Enddate);
+    setCalenderModel(false);
+    const frmData = {
+      startDate: StartDate,
+      lastDate: Enddate,
+      type:
+        selectedType === 1 ? 'CRONO' : selectedType === 2 ? 'TIMER' : 'COUNTER',
+    };
+    const taskArr = [];
+    const options = {payloads: frmData};
+    ApiService.post('filterFolder', options).then(async res => {
+      if (res.success) {
+        const data = res?.taskdata;
+        await data?.map(item => {
+          taskArr.push(item?.folderId);
+        });
+        console.log('filter arr ', taskArr);
+        setFolder(taskArr);
+      } else {
+      }
+    });
+  };
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground source={images.banner} style={styles.header} />
@@ -451,7 +476,11 @@ const HomeScreen = () => {
             </TouchableOpacity>
             <Label
               title={
-                startDate === null ? 'Today  ' : `${startDate} / ${endDate} `
+                startDate === null
+                  ? 'Today'
+                  : `${moment(startDate).format('MM-DD')} / ${moment(
+                      endDate,
+                    ).format('MM-DD')} `
               }
               style={{color: theme.colors.white, fontSize: scale(11)}}
             />
@@ -496,9 +525,7 @@ const HomeScreen = () => {
         markedDates={markedDates}
         setMarkedDates={setMarkedDates}
         onSavePress={(StartDate, Enddate) => {
-          setStartDate(StartDate);
-          setEndDate(Enddate);
-          setCalenderModel(false);
+          handlefilterModel(StartDate, Enddate);
         }}
       />
 

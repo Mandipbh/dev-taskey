@@ -18,6 +18,10 @@ const CronoCard = ({
   updateStatus,
 }) => {
   const navigation = useNavigation();
+  console.log(
+    'item?.counterIncrementDecrement >> ',
+    item?.counterIncrementDecrement,
+  );
   return (
     <>
       {index < 4 && (
@@ -73,7 +77,9 @@ const CronoCard = ({
                 <TouchableOpacity style={styles.min}>
                   <Icon2
                     onPress={() => {
-                      updateStatus(item, 'Minus');
+                      item?.counterIncrementDecrement > 1
+                        ? updateStatus(item, 'Minus')
+                        : null;
                     }}
                     name="minus"
                     size={scale(16)}

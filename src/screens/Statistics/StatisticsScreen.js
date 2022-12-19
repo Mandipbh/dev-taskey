@@ -202,7 +202,8 @@ const StatisticsScreen = () => {
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
-                }}>
+                }}
+                key={i.toString()}>
                 <Text style={styles.mapText}>{f.label}</Text>
                 <Text style={styles.labeltwo}>{f.value}</Text>
               </View>

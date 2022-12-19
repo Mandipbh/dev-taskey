@@ -98,7 +98,9 @@ const DatePickerModal = props => {
 
       <TouchableOpacity
         style={{alignItems: 'center', marginTop: scale(30)}}
-        onPress={() => onSavePress(StartDate, Enddate)}>
+        onPress={() => {
+          onSavePress(startDay, endDay);
+        }}>
         <Feather name="filter" size={scale(30)} color={theme.colors.black} />
       </TouchableOpacity>
     </Modal>

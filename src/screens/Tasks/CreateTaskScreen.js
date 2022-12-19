@@ -88,6 +88,7 @@ const CreateTaskScreen = props => {
       }
     }
   };
+
   const handleMeta = id => {
     if (type === 1) {
       setMeta(2);
@@ -103,6 +104,7 @@ const CreateTaskScreen = props => {
       setMeta(id);
     }
   };
+
   const clearData = () => {
     setType(0);
     setMeta(0);
@@ -112,6 +114,7 @@ const CreateTaskScreen = props => {
     setAmount(null);
     setTitle(null);
   };
+
   const handleSave = () => {
     if (!handleValidation()) {
       let folderFrm = new FormData();
@@ -153,6 +156,40 @@ const CreateTaskScreen = props => {
         });
     }
   };
+
+  const handleEditTask = () => {
+    let frmData = {
+      name: title,
+      // type: type === 1 ? 'CRONO' : type === 2 ? 'TIMER' : 'COUNTER',
+      // color: selColor,
+      // order: 0,
+      // meta: selMeta == 1 ? 'Achievement' : 'Registry',
+      // amount: amount,
+      // status: 'Paused',
+      // folderId: selectedFolder?._id,
+      // folderFrm.append('icon', null);
+    };
+    setLoading(true);
+    let options = {payloads: frmData};
+    ApiService.put(`task/${props?.route?.params?.editData?._id}`, options)
+      .then(res => {
+        setLoading(false);
+        // navigation.goBack();
+        console.log('response << >>> ', res);
+        if (res.code === -1) {
+        } else {
+          setLoading(false);
+          clearData();
+          navigation.goBack();
+        }
+      })
+      .catch(error => {
+        setLoading(false);
+        // Toast.show(error.response.data.message, Toast.SHORT);
+        console.log('error ', error.response.data.message?.message);
+      });
+  };
+
   var error = false;
   const handleValidation = () => {
     if (title === null) {
@@ -261,10 +298,7 @@ const CreateTaskScreen = props => {
                             styles.checkboxLbl,
                             {
                               fontWeight: type === t.id ? '700' : '300',
-                              color:
-                                type === t.id
-                                  ? theme.colors.black
-                                  : theme.colors.black,
+                              color: theme.colors.black,
                             },
                           ]}
                         />
@@ -437,7 +471,11 @@ const CreateTaskScreen = props => {
             )}
             <View style={styles.devider} />
 
-            <TouchableOpacity onPress={handleSave} style={styles.createTaskbtn}>
+            <TouchableOpacity
+              onPress={() =>
+                props?.route?.params?.editData ? handleEditTask() : handleSave()
+              }
+              style={styles.createTaskbtn}>
               <Ionicon name="play" color={theme.colors.white} size={25} />
               <Text style={styles.createtxt}>
                 {props?.route?.params?.editData ? 'Edit task' : 'Create task'}
