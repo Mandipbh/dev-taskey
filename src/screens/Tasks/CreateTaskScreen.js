@@ -58,8 +58,8 @@ const CreateTaskScreen = props => {
   useEffect(() => {
     if (props?.route?.params?.editData) {
       const {editData} = props?.route?.params;
-      setTitle(editData?.title);
-      setColor(editData.color);
+      console.log('edit task ', editData);
+      setTitle(editData?.name);
     }
   }, []);
 
@@ -183,10 +183,15 @@ const CreateTaskScreen = props => {
           }}>
           <ImageBackground source={images.banner} style={styles.header}>
             <View style={styles.secondCon}>
-              <Title title="Create task" style={{color: theme.colors.white}} />
+              <Title
+                title={
+                  props?.route?.params?.editData ? 'Edit task' : 'Create task'
+                }
+                style={{color: theme.colors.white}}
+              />
               <Label
                 title="Create a task to control your time investment
-and registry yout achievements."
+                      and registry yout achievements."
                 style={{color: theme.colors.white}}
               />
               <Label
@@ -233,7 +238,9 @@ and registry yout achievements."
                         <TouchableOpacity
                           style={styles.checkBoxCon}
                           onPress={() => {
-                            setType(t.id);
+                            props?.route?.params?.editData
+                              ? null
+                              : setType(t.id);
                             setMeta(null);
                           }}>
                           <View
@@ -430,35 +437,29 @@ and registry yout achievements."
             )}
             <View style={styles.devider} />
 
-            <View
-              style={{
-                flexDirection: 'row',
-                marginBottom: scale(60),
-              }}>
-              <TouchableOpacity
-                onPress={handleSave}
-                style={styles.createTaskbtn}>
-                <Ionicon name="play" color={theme.colors.white} size={25} />
-                <Text style={styles.createtxt}>Create task</Text>
-              </TouchableOpacity>
-              {!props?.route?.params?.editData && (
-                <>
-                  <TouchableOpacity
-                    onPress={() => Alert.alert('Delete')}
-                    style={styles.deletebtn}>
-                    <Icon name="delete" color={theme.colors.white} size={25} />
-                    <Text
-                      style={{
-                        color: theme.colors.white,
-                        fontSize: 20,
-                        padding: 5,
-                      }}>
-                      Delete
-                    </Text>
-                  </TouchableOpacity>
-                </>
-              )}
-            </View>
+            <TouchableOpacity onPress={handleSave} style={styles.createTaskbtn}>
+              <Ionicon name="play" color={theme.colors.white} size={25} />
+              <Text style={styles.createtxt}>
+                {props?.route?.params?.editData ? 'Edit task' : 'Create task'}
+              </Text>
+            </TouchableOpacity>
+            {props?.route?.params?.editData && (
+              <>
+                <TouchableOpacity
+                  onPress={() => Alert.alert('Delete')}
+                  style={styles.deletebtn}>
+                  <Icon name="delete" color={theme.colors.white} size={25} />
+                  <Text
+                    style={{
+                      color: theme.colors.white,
+                      fontSize: 20,
+                      padding: 5,
+                    }}>
+                    Delete
+                  </Text>
+                </TouchableOpacity>
+              </>
+            )}
           </View>
         </ScrollView>
       </View>

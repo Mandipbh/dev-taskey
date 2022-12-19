@@ -198,138 +198,14 @@ const HomeScreen = () => {
         selectedType={selectedType}
         updateStatus={updateStatus}
       />
-      // <>
-      //   {index < 4 && (
-      //     <TouchableOpacity
-      //       onLongPress={move}
-      //       onPressOut={moveEnd}
-      //       key={index}
-      //       style={[
-      //         styles.taskRow,
-      //         {
-      //           backgroundColor:
-      //             index / 2 ? theme.colors.white : theme.colors.white1,
-      //         },
-      //       ]}
-      //       onPress={() => navigation.navigate('CreateTask', {editData: item})}>
-      //       <View style={styles.statusView}>
-      //         {selectedType !== 3 ? (
-      //           <>
-      //             {item.status === 'Paused' ? (
-      //               <Icon1
-      //                 name="play"
-      //                 size={scale(25)}
-      //                 color={theme.colors.main}
-      //                 onPress={() => {
-      //                   updateStatus(item);
-      //                   // setModel(!model);
-      //                 }}
-      //               />
-      //             ) : (
-      //               <Icon3
-      //                 name="md-pause"
-      //                 size={scale(20)}
-      //                 color={theme.colors.main}
-      //                 style={{marginLeft: scale(-5)}}
-      //                 onPress={() => {
-      //                   updateStatus(item);
-      //                 }}
-      //               />
-      //             )}
-
-      //             {/* {item?.status !== 'play' ? (
-      //               <Icon1
-      //                 name="social-zerply"
-      //                 size={scale(20)}
-      //                 color={theme.colors.green}
-      //               />
-      //             ) : (
-      //               <Icon3
-      //                 name="clock-time-seven"
-      //                 size={scale(20)}
-      //                 color={theme.colors.lightGreen}
-      //               />
-      //             )} */}
-      //           </>
-      //         ) : (
-      //           <View style={{marginLeft: scale(-20)}}>
-      //             <TouchableOpacity
-      //               style={{borderColor: theme.colors.green, borderWidth: 1}}
-      //               onPress={() => {
-      //                 updateStatus(item, 'Plus');
-      //               }}>
-      //               <Icon2
-      //                 name="plus"
-      //                 size={scale(20)}
-      //                 color={theme.colors.green}
-      //               />
-      //             </TouchableOpacity>
-      //             <TouchableOpacity
-      //               style={{borderColor: theme.colors.red, borderWidth: 1}}>
-      //               <Icon2
-      //                 onPress={() => {
-      //                   updateStatus(item, 'Minus');
-      //                 }}
-      //                 name="minus"
-      //                 size={scale(20)}
-      //                 color={theme.colors.red}
-      //               />
-      //             </TouchableOpacity>
-      //           </View>
-      //         )}
-      //       </View>
-      //       <View style={styles.taskLabel}>
-      //         <Label title={item?.name} style={{fontSize: scale(12)}} />
-      //         {item?.meta === 'Achievement' && item?.percentageOfTask && (
-      //           <ProgressBar
-      //             progress={item?.percentageOfTask / 10}
-      //             color={
-      //               item?.status !== 'Play'
-      //                 ? theme.colors.gray
-      //                 : theme.colors.green
-      //             }
-      //           />
-      //         )}
-      //       </View>
-      //       <View style={styles.staticDetails}>
-      //         <Label
-      //           title={
-      //             item?.meta === 'Registry'
-      //               ? item?.cronoCompletedTime
-      //                 ? (item?.cronoCompletedTime / 60)?.toFixed(2)
-      //                 : 0
-      //               : `${
-      //                   item?.timerCompletedTime
-      //                     ? (item?.timerCompletedTime / 60).toFixed(2)
-      //                     : 0
-      //                 }\n${item?.amount?.toFixed(2)}`
-      //           }
-      //           style={{fontSize: scale(11), marginLeft: scale(-5)}}
-      //         />
-      //         <Label
-      //           title={
-      //             item?.meta === 'Registry'
-      //               ? 0
-      //               : item?.percentageFolderWise?.toFixed(2)
-      //           }
-      //           style={{fontSize: scale(11)}}
-      //         />
-      //         <Label
-      //           title={
-      //             item?.meta === 'Registry'
-      //               ? '-'
-      //               : item?.percentageOfTask?.toFixed(2)
-      //           }
-      //           style={{fontSize: scale(11)}}
-      //         />
-      //       </View>
-      //     </TouchableOpacity>
-      //   )}
-      // </>
     );
   };
 
   const rendertasks = ({item, index, move, moveEnd}) => {
+    const taskObj = {
+      ...item,
+      taskList: [],
+    };
     return (
       <>
         <GestureRecognizer
@@ -347,8 +223,14 @@ const HomeScreen = () => {
                 <TouchableOpacity
                   style={{width: '60%'}}
                   onPress={() => {
-                    setEditFolder(item);
-                    setOpenFolderModal(true);
+                    if (item?.name === 'GLOBAL TIMER') {
+                    } else if (item?.name === 'GLOBAL COUNTER') {
+                    } else if (item?.name === 'GLOBAL CRONO') {
+                    } else {
+                      navigation.navigate('CreateF', {
+                        editFolder: taskObj,
+                      });
+                    }
                   }}>
                   <Label
                     title={item?.name}
@@ -392,15 +274,15 @@ const HomeScreen = () => {
                 return taskItem?._id === item?._id &&
                   item?.taskList?.length !== 0 ? (
                   <>
-                    {
+                    {taskItem?.taskList?.length && (
                       <DraggableFlatList
-                        data={taskItem?.taskList.sort(function (a, b) {
+                        data={taskItem?.taskList?.sort(function (a, b) {
                           return a?.order - b?.order;
                         })}
                         renderItem={tasksrender}
                         showsVerticalScrollIndicator={false}
                         keyExtractor={(item, index) =>
-                          `draggable-item-${item.key}`
+                          `draggable-item-${item.key + 1}`
                         }
                         scrollPercent={5}
                         onMoveEnd={({data, index}) => {
@@ -409,7 +291,7 @@ const HomeScreen = () => {
                           updateData[Tindex].taskList = data;
                         }}
                       />
-                    }
+                    )}
                     <TouchableOpacity
                       onPress={() =>
                         navigation.navigate('AllTask', {
@@ -581,15 +463,17 @@ const HomeScreen = () => {
             style={{
               height:
                 Platform.OS === 'ios'
-                  ? theme.SCREENHEIGHT * 0.71
-                  : theme.SCREENHEIGHT * 0.765,
+                  ? theme.SCREENHEIGHT * 0.77
+                  : theme.SCREENHEIGHT * 0.83,
             }}>
             {Folder && (
               <DraggableFlatList
-                style={{height: theme.SCREENHEIGHT * 0.67}}
+                style={{
+                  height: theme.SCREENHEIGHT * 0.71,
+                }}
                 contentContainerStyle={{
                   paddingVertical: scale(10),
-                  paddingBottom: theme.SCREENHEIGHT * 0.04,
+                  paddingBottom: theme.SCREENHEIGHT * 0.01,
                 }}
                 data={Folder}
                 renderItem={rendertasks}
@@ -600,35 +484,6 @@ const HomeScreen = () => {
               />
             )}
           </View>
-          {/* <View>
-            <TouchableOpacity
-              onPress={() => {
-                setlegendView(!legendView);
-              }}
-              style={[
-                styles.row,
-                {
-                  alignSelf: 'center',
-                  bottom: legendView ? scale(-20) : 0,
-                },
-              ]}>
-              <>
-                <Title title="Folder Legend" />
-                <Label
-                  title={legendView ? '(click to show)' : '(click to hide)'}
-                  style={styles.hide}
-                />
-              </>
-            </TouchableOpacity>
-            {!legendView && (
-              <View style={styles.legendtabView}>
-                <Label title="Icon" style={styles.title} />
-                <Label title="Name" style={styles.title} />
-                <Label title="mn aske" style={styles.title} />
-                <Label title="⅒ of tota" style={styles.title} />
-              </View>
-            )}
-          </View> */}
         </View>
       </View>
       <DatePickerModal

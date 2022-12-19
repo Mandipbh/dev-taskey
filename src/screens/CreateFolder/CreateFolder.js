@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -10,11 +10,8 @@ import {
   TextInput,
   Image,
 } from 'react-native';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import images from '../../assets/Images';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicon from 'react-native-vector-icons/Ionicons';
-import LottieView from 'lottie-react-native';
 import {scale, theme} from '../../utils';
 import InputBox from '../../components/InputBox';
 import {Title, Label} from '../../components/Label';
@@ -23,8 +20,11 @@ import ColorPickerModel from '../../components/appModel/ColorPickerModel';
 import Toast from 'react-native-simple-toast';
 import ApiService from '../../utils/ApiService';
 import Loader from '../../components/appModel/Loader';
+import {useNavigation} from '@react-navigation/native';
 
 const CreateFolderModel = props => {
+  const navigation = useNavigation();
+  console.log('props <<<<>>> ', props?.route?.params?.editFolder?._id);
   const {isVisible, close, editFolder} = props;
   const [type, setType] = useState(0);
   const [typetwo, setTypetwo] = useState(0);
@@ -33,13 +33,19 @@ const CreateFolderModel = props => {
   const [folderName, setFolderName] = useState(null);
   const [isLoading, setLoading] = useState(false);
 
+  useEffect(() => {
+    if (props?.route?.params?.editFolder) {
+      setFolderName(props?.route?.params?.editFolder?.name);
+    }
+  }, [props?.route?.params?.editFolder]);
+
   const handleCloseClolorpicker = c => {
     setColor(c);
     setColorPicker(false);
   };
   const handleSave = () => {
     if (!handleValidation()) {
-      close(selColor, folderName);
+      // close(selColor, folderName);
       // let folderFrm = new FormData();
       // folderFrm.append('name', folderName);
       // folderFrm.append('type', type);
@@ -59,6 +65,7 @@ const CreateFolderModel = props => {
         .then(res => {
           setLoading(false);
           console.log('respoe >>. ', res);
+          navigation.goBack();
           if (res.code === -1) {
           }
         })
@@ -66,10 +73,27 @@ const CreateFolderModel = props => {
           setLoading(false);
           console.log('error ', error);
         });
-      setTimeout(() => {
-        onPressBack();
-      }, 800);
     }
+  };
+
+  const editFolderData = () => {
+    let folderFrmData = {
+      name: folderName,
+    };
+    const options1 = {payloads: folderFrmData};
+    ApiService.put('folder/' + props?.route?.params?.editFolder?._id, options1)
+      .then(res => {
+        Toast.show('edit folder successfully');
+        setLoading(false);
+        console.log('respoe >>. ', res);
+        navigation.goBack();
+        if (res.code === -1) {
+        }
+      })
+      .catch(error => {
+        setLoading(false);
+        console.log('error ', error);
+      });
   };
   var error = false;
   const handleValidation = () => {
@@ -89,12 +113,10 @@ const CreateFolderModel = props => {
   };
 
   const onPressBack = () => {
-    close();
     setColor(theme.colors.primary);
     setFolderName(null);
     setType(0);
   };
-
   return (
     <>
       <View style={styles.container}>
@@ -106,7 +128,9 @@ const CreateFolderModel = props => {
                 fontSize: 20,
                 fontWeight: '800',
               }}>
-              Create folder
+              {props?.route?.params?.editFolder
+                ? 'Edit folder'
+                : 'Create folder'}
             </Text>
             <Text
               style={{
@@ -171,7 +195,8 @@ const CreateFolderModel = props => {
                         style={styles.checkBoxCon}
                         onPress={() => {
                           setType(t.id);
-                        }}>
+                        }}
+                        disabled={props?.route?.params?.editFolder}>
                         <View
                           style={[
                             styles.check,
@@ -236,7 +261,9 @@ const CreateFolderModel = props => {
           </View>
           <View style={styles.devider} />
           <TouchableOpacity
-            onPress={handleSave}
+            onPress={() =>
+              props?.route?.params?.editFolder ? editFolderData() : handleSave()
+            }
             style={{
               flexDirection: 'row',
               backgroundColor: theme.colors.orange,
@@ -250,7 +277,9 @@ const CreateFolderModel = props => {
             }}>
             <Ionicon name="play" color={theme.colors.white} size={25} />
             <Text style={{color: theme.colors.white, fontSize: 20, padding: 5}}>
-              Create task
+              {props?.route?.params?.editFolder
+                ? 'Edit Folder'
+                : 'Create Folder'}
             </Text>
           </TouchableOpacity>
         </View>

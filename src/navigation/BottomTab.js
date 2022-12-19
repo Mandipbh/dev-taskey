@@ -8,7 +8,6 @@ import {scale, theme} from '../utils';
 import StatisticsStack from './StatisticsStack';
 import {Platform} from 'react-native';
 import HomeStack from './HomeStack';
-import ColorPickerModel from '../components/appModel/ColorPickerModel';
 import PayScreenModal from '../components/appModel/PayScreenModal';
 
 const Tab = createBottomTabNavigator();
