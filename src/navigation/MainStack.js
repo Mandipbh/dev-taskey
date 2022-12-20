@@ -16,6 +16,7 @@ const MainStack = () => {
   console.log('userDetails?.tokenuserDetails?.token', userDetails?.token);
   return (
     <Stack.Navigator
+    
       screenOptions={{headerShown: false}}
       initialRouteName={isLogin ? 'Tabs' : 'LoginStack'}>
       <Stack.Screen name="LoginStack" component={LoginStack} />

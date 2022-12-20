@@ -5,6 +5,9 @@ import {
   TouchableOpacity,
   ScrollView,
   Platform,
+  FlatList,
+  Switch,
+  Alert,
 } from 'react-native';
 import React, {useState} from 'react';
 import {scale, theme} from '../../utils';
@@ -14,6 +17,7 @@ import {Label, Title} from '../../components/Label';
 import {Dropdown} from 'react-native-element-dropdown';
 import Accordian from '../../components/Accordian';
 import {RadioButton} from 'react-native-paper';
+import {CheckBox} from '../../components';
 
 const chips = [
   {
@@ -35,126 +39,203 @@ const chips = [
 ];
 
 function ShareBtn(props) {
-  const {onPress, title, iconName, backgroundColor} = props;
+  const {title, onPress, iconName, style} = props;
   return (
-    <TouchableOpacity
-      style={[styles.shareBtnContainer, {backgroundColor: backgroundColor}]}
-      onPress={onPress}>
+    <TouchableOpacity style={style} onPress={onPress}>
+      <AntDesign name={iconName} size={20} color={theme.colors.white} />
       <Title
         title={title}
         style={{
+          marginLeft: scale(5),
           fontSize: 18,
           color: theme.colors.white,
           fontWeight: '600',
         }}></Title>
-      <AntDesign
-        name={iconName}
-        size={18}
-        style={{left: 5}}
-        color={theme.colors.white}
-      />
     </TouchableOpacity>
   );
 }
 
 const SettingScreen = () => {
   const [checked, setChecked] = useState('Today');
+  const [time, setTime] = useState(chips);
+  const [check, setCheck] = useState('Edit folder task');
   const [value, setvalue] = useState(null);
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+
   return (
     <SafeAreaView style={styles.container}>
-      <CommonHeader IconType={AntDesign} />
       <ScrollView
         style={{
           marginBottom: theme.SCREENHEIGHT * 0.1,
         }}
         showsVerticalScrollIndicator={false}>
-        <View style={{paddingHorizontal: scale(15), marginTop: scale(10)}}>
-          <Title title="General" />
+        <Label style={styles.titletxt} title="Time" />
+        <View style={styles.divider}></View>
+        <FlatList data={chips} />
+        {chips.map(i => {
+          return (
+            <>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginLeft: scale(20),
+                  marginTop: scale(5),
+                }}>
+                <RadioButton.Android
+                  value={chips}
+                  status={time === {chips} ? 'checked' : 'unchecked'}
+                  onPress={() => setTime(chips)}
+                  color={theme.colors.orange}
+                />
+                <Label
+                  style={{fontSize: 18, fontWeight: '400'}}
+                  title={i.label}
+                />
+              </View>
+            </>
+          );
+        })}
+
+        <Label style={styles.titletxt} title="Default Range of Time" />
+        <View style={styles.divider}></View>
+
+        <View style={styles.CheckBoxInventory}>
+          <View style={styles.checkboxContainer}>
+            <RadioButton.Android
+              value="Today"
+              status={checked === 'Today' ? 'checked' : 'unchecked'}
+              onPress={() => setChecked('Today')}
+              color={theme.colors.orange}
+            />
+            <Label title="Today"></Label>
+          </View>
+          <View style={styles.checkboxContainer}>
+            <RadioButton.Android
+              value="All time"
+              status={checked === 'All time' ? 'checked' : 'unchecked'}
+              onPress={() => setChecked('All time')}
+              color={theme.colors.orange}
+            />
+            <Label title="All time"></Label>
+          </View>
         </View>
 
-        <Dropdown
-          placeholder="Time"
-          style={styles.Dropdown}
-          data={chips}
-          labelField="label"
-          valueField="id"
-          onChange={item => setvalue(item.value1)}
-          iconColor={theme.colors.black}
-          itemTextStyle={{color: theme.colors.black}}
-          selectedTextStyle={{color: theme.colors.black}}
-          placeholderStyle={{color: theme.colors.black}}
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginHorizontal: scale(30),
+            marginVertical: scale(10),
+          }}>
+          <Label
+            style={{
+              fontSize: 20,
+              fontWeight: '500',
+              color: isEnabled.true ? theme.colors.gray : theme.colors.gray,
+            }}
+            title="Dark Mode"
+          />
+          <Switch
+            trackColor={{false: '#767577', true: theme.colors.orange}}
+            thumbColor={isEnabled ? theme.colors.white : theme.colors.white}
+            onValueChange={toggleSwitch}
+            value={isEnabled}
+          />
+        </View>
+        <View style={styles.divider}></View>
+
+        <Label style={styles.titletxt} title="Administration" />
+        <View style={styles.divider}></View>
+
+        <View style={[styles.CheckBoxInventory, {flexDirection: 'column'}]}>
+          <View style={styles.checkboxContainer}>
+            <RadioButton.Android
+              value="Edit folder task"
+              status={check === 'Edit folder task' ? 'checked' : 'unchecked'}
+              onPress={() => setCheck('Edit folder task')}
+              color={theme.colors.orange}
+            />
+            <Label
+              style={{fontSize: 20, fontWeight: '400'}}
+              title="Edit folder task: click in specific row"></Label>
+          </View>
+          <View style={styles.checkboxContainer}>
+            <RadioButton.Android
+              value="Drag task"
+              status={check === 'Drag task' ? 'checked' : 'unchecked'}
+              onPress={() => setCheck('Drag task')}
+              color={theme.colors.orange}
+            />
+            <Label
+              style={{fontSize: 20, fontWeight: '400'}}
+              title="Drag task or folder: hold specific row"></Label>
+          </View>
+        </View>
+
+        <Label
+          style={[
+            styles.titletxt,
+            {
+              marginTop: scale(140),
+            },
+          ]}
+          title="Social"
         />
+        <View style={styles.divider}></View>
 
-        <Accordian title="Default Range of Time" style={{marginTop: scale(15)}}>
-          <View style={styles.CheckBoxInventory}>
-            <View style={styles.checkboxContainer}>
-              <RadioButton.Android
-                value="Today"
-                status={checked === 'Today' ? 'checked' : 'unchecked'}
-                onPress={() => setChecked('Today')}
-                color={theme.colors.primary}
-              />
-              <Label title="Today"></Label>
-            </View>
-            <View style={styles.checkboxContainer}>
-              <RadioButton.Android
-                value="All time"
-                status={checked === 'All time' ? 'checked' : 'unchecked'}
-                onPress={() => setChecked('All time')}
-                color={theme.colors.primary}
-              />
-              <Label title="All time"></Label>
-            </View>
-          </View>
-        </Accordian>
+        <View style={[styles.accordianDetail, {marginTop: scale(20)}]}>
+          <Label title="Referal Code" />
+          <Label style={{fontWeight: '600'}} title="DISTIMETRACKER" />
+        </View>
+        <View style={styles.accordianDetail}>
+          <Label title="Codes Used" />
+          <Label style={{fontWeight: '600'}} title="10" />
+        </View>
+        <View style={styles.accordianDetail}>
+          <Label title="Achieved Discount" />
+          <Label style={{fontWeight: '600'}} title="10 %" />
+        </View>
+        <View
+          style={{
+            alignItems: 'center',
+            marginTop: scale(20),
+          }}>
+          <ShareBtn style={styles.sharebtn} iconName="sharealt" title="Share" />
+        </View>
 
-        <Accordian title="Social">
-          <View style={styles.accordianDetail}>
-            <Label title="Referal Code" />
-            <Label title="DISTIMETRACKER" />
-          </View>
-          <View style={styles.accordianDetail}>
-            <Label title="Codes Used" />
-            <Label title="10" />
-          </View>
-          <View style={styles.accordianDetail}>
-            <Label title="Achieved Discount" />
-            <Label title="10 €" />
-          </View>
-          <View
-            style={{
-              alignItems: 'center',
-              marginTop: scale(10),
-            }}>
-            <ShareBtn
-              onPress={() => {}}
-              title="Share"
-              iconName="sharealt"
-              backgroundColor="#25D366"
-            />
-          </View>
-        </Accordian>
+        <Label style={styles.titletxt} title="Contact" />
+        <View style={styles.divider}></View>
 
-        <Accordian title="Contact">
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              paddingHorizontal: scale(20),
-              marginTop: scale(5),
-            }}>
-            <ShareBtn
-              onPress={() => {}}
-              title="Suggestions"
-              backgroundColor={theme.colors.primary}
-            />
-            <ShareBtn
-              onPress={() => {}}
-              title="Help"
-              backgroundColor={theme.colors.primary}
-            />
-          </View>
-        </Accordian>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            paddingHorizontal: scale(20),
+            marginTop: scale(20),
+          }}>
+          <ShareBtn
+            style={[styles.sharebtn, {backgroundColor: theme.colors.gray}]}
+            onPress={() => {}}
+            title="Suggestions"
+            backgroundColor={theme.colors.gray}
+          />
+          <ShareBtn
+            style={[styles.sharebtn, {backgroundColor: theme.colors.gray}]}
+            onPress={() => {}}
+            title="Help"
+            backgroundColor={theme.colors.gray}
+          />
+        </View>
+
+        <View style={{alignItems: 'center', marginTop: scale(25)}}>
+          <ShareBtn
+            style={[styles.sharebtn, {backgroundColor: theme.colors.green}]}
+            title="Value this app :)"
+            backgroundColor={theme.colors.green}
+          />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -165,36 +246,43 @@ export default SettingScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.white,
+    backgroundColor: theme.colors.backgroundColor,
   },
-  Dropdown: {
-    borderRadius: scale(15),
-    paddingHorizontal: scale(20),
-    paddingVertical: scale(11),
-    marginTop: scale(15),
-    marginHorizontal: 15,
-    backgroundColor: theme.colors.gray1,
-    borderWidth: Platform.OS === 'android' ? 0.8 : 0.3,
-    borderColor: theme.colors.gray,
-    color: theme.colors.black,
+  sharebtn: {
+    width: theme.SCREENWIDTH * 0.4,
+    borderRadius: scale(20),
+    flexDirection: 'row',
+    height: theme.SCREENHEIGHT * 0.05,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: theme.colors.orange,
+  },
+  titletxt: {
+    marginTop: scale(25),
+    marginLeft: scale(25),
+    fontSize: 20,
+    fontWeight: '500',
   },
   CheckBoxInventory: {
-    justifyContent: 'space-between',
     flexDirection: 'row',
-    paddingHorizontal: scale(40),
     paddingVertical: scale(10),
   },
   checkboxContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginLeft: scale(25),
   },
   accordianDetail: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingTop: scale(10),
-    borderBottomWidth: 0.3,
-    borderBottomColor: theme.colors.gray,
-    padding: 15,
+    marginHorizontal: scale(25),
+  },
+  divider: {
+    borderBottomWidth: scale(0.2),
+    height: theme.SCREENHEIGHT * 0.007,
+    borderBottomColor: 'gray',
+    marginTop: scale(5),
+    marginHorizontal: scale(25),
   },
   shareBtnContainer: {
     flexDirection: 'row',

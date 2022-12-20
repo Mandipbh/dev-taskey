@@ -505,7 +505,7 @@ const HomeScreen = () => {
                   paddingBottom: theme.SCREENHEIGHT * 0.01,
                 }}
                 data={Folder}
-                renderItem={rendertasks}
+                renderItem={rendertasks} 
                 showsVerticalScrollIndicator={false}
                 keyExtractor={item => `draggable-item-${item.key}`}
                 scrollPercent={5}

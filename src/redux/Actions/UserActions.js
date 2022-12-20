@@ -9,6 +9,13 @@ export const isLogin = payload => {
   };
 };
 
+export const isDarkMode = payload => {
+  return {
+    type: types.DARKMODE,
+    payload,
+  };
+};
+
 export const isLoadding = payload => {
   return {
     type: types.IS_LOADING,

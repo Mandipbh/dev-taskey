@@ -10,3 +10,7 @@ export const IS_LOADING = 'IS_LOADING';
 export const ADDNOTE = 'ADDNOTE';
 export const GETNOTE = 'GETNOTE';
 export const NOTELOADING = 'NOTELOADING';
+
+
+// dark mode 
+export const DARKMODE = 'DARKMODE'

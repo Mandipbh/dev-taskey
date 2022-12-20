@@ -4,15 +4,20 @@ const initialState = {
   login: false,
   onBoarding: false,
   userDetails: '',
+  isDarkMode: false,
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case types.IS_LOGIN:
-      console.log('reducers >>. ', action.payload);
       return {
         ...state,
         login: action.payload,
+      };
+    case types.DARKMODE:
+      return {
+        ...state,
+        isDarkMode: action.payload,
       };
     case types.ONBOARDING:
       return {

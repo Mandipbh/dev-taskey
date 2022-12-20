@@ -544,6 +544,10 @@ const styles = StyleSheet.create({
     marginTop: scale(10),
     borderRadius: 30,
   },
+  btnContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   checkBoxCon: {
     height: scale(18),
     width: scale(18),
@@ -570,7 +574,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: scale(10),
     borderRadius: 30,
-    marginLeft: scale(10),
   },
   check: {
     height: scale(12),
