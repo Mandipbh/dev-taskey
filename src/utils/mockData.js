@@ -311,17 +311,17 @@ const statisticdata = [
   {
     id: '1',
     label: 'Number of Task',
-    value: 10000,
+    value: 0,
   },
   {
     id: '2',
     label: 'Total Time',
-    value: 10.0,
+    value: 0,
   },
   {
     id: '3',
     label: 'Total Count',
-    value: 9999,
+    value: 0,
   },
 ];
 
@@ -329,19 +329,20 @@ const statisticdataone = [
   {
     id: '1',
     label: 'Achievement Tasks',
-    value: 4000,
+    value: 0,
   },
   {
     id: '2',
     label: 'Completed Tasks',
-    value: 2000,
+    value: 0,
     CheckBox: true,
+    ischecked: true,
     isCheckBox: true,
   },
   {
     id: '3',
     label: 'Perecentage of Success',
-    value: 50,
+    value: 0,
   },
 ];
 
@@ -349,39 +350,39 @@ const statisticdatatwo = [
   {
     id: '1',
     label: 'Achievement Tasks in progrees',
-    value: 1500,
+    value: 0,
   },
   {
     id: '2',
     label: 'Perecentage of progrees',
-    value: 50,
+    value: 0,
   },
   {
     id: '3',
     label: 'Achievement Tasks time',
-    value: 4.0,
+    value: 0,
   },
   {
     id: '4',
     label: 'Achievement Tasks Counter',
-    value: 1000,
+    value: 0,
   },
 ];
 const statisticdatathree = [
   {
     id: '1',
     label: 'Registry Tasks',
-    value: 600,
+    value: 0,
   },
   {
     id: '2',
     label: 'Registry Tasks Time',
-    value: 2.0,
+    value: 0,
   },
   {
     id: '3',
     label: 'Registry Tasks Counter',
-    value: 500,
+    value: 0,
   },
 ];
 
@@ -389,21 +390,23 @@ const statisticdataFour = [
   {
     id: '1',
     label: 'Deleted Tasks',
-    value: 200,
+    value: 0,
     CheckBox: true,
     isCheckBox: true,
+    ischecked: true,
   },
   {
     id: '2',
+    ischecked: true,
     label: 'Failed Tasks',
-    value: 500,
+    value: 0,
     CheckBox: true,
     isCheckBox: true,
   },
   {
     id: '3',
     label: 'Percentage of failed Tasks',
-    value: '50%',
+    value: '0%',
   },
 ];
 
@@ -411,12 +414,12 @@ const statisticdataFive = [
   {
     id: '1',
     label: 'Total Crono Tasks',
-    value: 2000,
+    value: 0,
   },
   {
     id: '2',
     label: 'Percentage of Crono Tasks',
-    value: '20%',
+    value: '0%',
   },
 ];
 
@@ -424,12 +427,12 @@ const statisticdataSix = [
   {
     id: '1',
     label: 'Total Timer Tasks',
-    value: 3000,
+    value: 0,
   },
   {
     id: '2',
     label: 'Percentage of Timer Tasks',
-    value: '30%',
+    value: '0%',
   },
 ];
 
@@ -437,12 +440,12 @@ const statisticdataSeven = [
   {
     id: '1',
     label: 'Total Counter Tasks',
-    value: 5000,
+    value: 0,
   },
   {
     id: '2',
     label: 'Percentage of Counter Tasks',
-    value: '50%',
+    value: '0%',
   },
 ];
 

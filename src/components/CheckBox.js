@@ -18,8 +18,8 @@ const styles = StyleSheet.create({
   checkboxContainer: {
     padding: scale(1),
     borderWidth: scale(1),
-    height: scale(20),
-    width: scale(20),
+    height: scale(15),
+    width: scale(15),
   },
 });
 

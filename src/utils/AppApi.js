@@ -74,7 +74,7 @@
 import axios from 'axios';
 import {handleError, handleResponse} from './helper';
 
-export const getBaseUrl = 'https://fe1b-43-228-229-22.in.ngrok.io/api/';
+export const getBaseUrl = 'https://383b-43-228-229-22.ap.ngrok.io/api/';
 
 export const appAPI = axios.create({
   baseURL: getBaseUrl,

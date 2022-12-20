@@ -103,12 +103,16 @@ const StatisticsScreen = () => {
   const naviagtion = useNavigation();
   const [value, setvalue] = useState(null);
   const [isChecked, setChecked] = useState(false);
+  const [isCheck, setCheck] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [selectedType, setType] = useState(1);
   const [folderSpecific_checked, setFolderSpecific_checked] = useState([]);
   const [folderselected, setFolderSelected] = useState([]);
   const [markedDates, setMarkedDates] = useState(null);
+  const [statisticData, setstatisticData] = useState(statisticdata);
+  const [statisticDataone, setStatisticDataOne] = useState(statisticdataone);
+  const [statisticDatafive, setStatisticDatafive] = useState(statisticdataFive);
 
   useFocusEffect(() => {
     getStatasticData();
@@ -122,7 +126,20 @@ const StatisticsScreen = () => {
     };
     const options = {payloads: payload};
     ApiService.post('statistics', options)
-      .then(res => console.log('statics data >> ', res))
+      .then(res => {
+        if (res.success) {
+          console.log('statics data >> ', res);
+          let staticdummy = [...statisticData];
+          staticdummy[0].value = res?.outputData.numberOfTask;
+          staticdummy[1].value = res?.outputData.achievementTaskTime;
+          let staticdummyone = [...statisticDataone];
+          staticdummyone[0].value = res?.outputData.achievementTasks;
+          let staticdummytwo = [...statisticDatafive];
+          staticdummytwo[0].value = res?.outputData.totalCronoTask;
+        } else {
+          console.log('null');
+        }
+      })
       .catch(err => console.log('Error', err));
   };
   // useLayoutEffect(() => {
@@ -196,7 +213,7 @@ const StatisticsScreen = () => {
     return (
       <>
         <View style={styles.mapView}>
-          {statisticdata.map((f, i) => {
+          {statisticData.map((f, i) => {
             return (
               <View
                 style={{
@@ -205,20 +222,26 @@ const StatisticsScreen = () => {
                 }}
                 key={i.toString()}>
                 <Text style={styles.mapText}>{f.label}</Text>
-                <Text style={styles.labeltwo}>{f.value}</Text>
+                <Text style={styles.labeltwo}>{f.value?.toFixed(2)}</Text>
               </View>
             );
           })}
         </View>
         <View style={styles.divider}></View>
         <View style={styles.mapView}>
-          {statisticdataone.map((f, i) => {
+          {statisticDataone.map((f, i) => {
             return (
               <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
+                  alignItems: 'center',
                 }}>
+                {f.ischecked && (
+                  <View style={{marginRight: scale(-90)}}>
+                    <CheckBox />
+                  </View>
+                )}
                 <Text style={styles.mapText}>{f.label}</Text>
                 <Text style={styles.labeltwo}>{f.value}</Text>
               </View>
@@ -233,7 +256,13 @@ const StatisticsScreen = () => {
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
+                  alignItems: 'center',
                 }}>
+                {f.ischecked && (
+                  <View style={{marginRight: scale(-90)}}>
+                    <CheckBox />
+                  </View>
+                )}
                 <View>
                   <Text style={styles.mapText}>{f.label}</Text>
                 </View>
@@ -249,12 +278,13 @@ const StatisticsScreen = () => {
             flexDirection: 'row',
             marginTop: theme.SCREENHEIGHT * 0.22,
             margin: scale(20),
+            alignItems: 'center',
           }}>
           <CheckBox />
           <Text style={styles.checkText}>Check to count in statistics</Text>
         </View>
         <View style={styles.mapView}>
-          {statisticdataFive.map((f, i) => {
+          {statisticDatafive.map((f, i) => {
             return (
               <View
                 style={{

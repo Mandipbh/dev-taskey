@@ -10,22 +10,31 @@ const ChartSection = props => {
     <View style={[styles.chartView, style]}>
       <View style={{flexDirection: 'row', marginTop: scale(10)}}>
         <CustomChart chartData={data} />
-        {/* <View style={{justifyContent: 'center'}}>
+        <View style={{justifyContent: 'center'}}>
           {data.map(i => {
             return (
               <>
-                <View style={{flexDirection: 'row'}}>
-                  <View
-                    style={[styles.colorBox, {backgroundColor: i.svg.fill}]}
+                <View
+                  style={{
+                    backgroundColor: '#a9a9a9',
+                    alignItems: 'center',
+                    margin: scale(5),
+                    borderRadius: 5,
+                    padding: scale(2),
+                  }}>
+                  <Label
+                    style={{fontSize: 18, color: '#ffffff', fontWeight: '700'}}
+                    title={`${i.value} %`}
                   />
                   <Label
-                    style={{fontSize: 12}}
-                    title={`${i.type} Tasks`}></Label>
+                    style={{fontSize: 14, color: '#ffffff'}}
+                    title={`${i.type} Tasks`}
+                  />
                 </View>
               </>
             );
           })}
-        </View> */}
+        </View>
       </View>
     </View>
   );
