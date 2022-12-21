@@ -11,6 +11,8 @@ export const ADDNOTE = 'ADDNOTE';
 export const GETNOTE = 'GETNOTE';
 export const NOTELOADING = 'NOTELOADING';
 
+// dark mode
+export const DARKMODE = 'DARKMODE';
 
-// dark mode 
-export const DARKMODE = 'DARKMODE'
+// Time Defualt for task & folder
+export const DEFAULT_TIME = 'DEFAULT_TIME';

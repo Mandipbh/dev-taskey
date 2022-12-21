@@ -18,10 +18,7 @@ const CronoCard = ({
   updateStatus,
 }) => {
   const navigation = useNavigation();
-  console.log(
-    'item?.counterIncrementDecrement >> ',
-    item?.counterIncrementDecrement,
-  );
+
   return (
     <>
       {index < 4 && (

@@ -15,6 +15,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {Dropdown} from 'react-native-element-dropdown';
 import {useState} from 'react';
 import {scale, theme} from '../../utils';
+var math = require('mathjs');
+
 import {CheckBox, DatePickerModal, Label} from '../../components';
 import {
   statisticdata,
@@ -103,97 +105,50 @@ const StatisticsScreen = () => {
   const naviagtion = useNavigation();
   const [value, setvalue] = useState(null);
   const [isChecked, setChecked] = useState(false);
-  const [isCheck, setCheck] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [selectedType, setType] = useState(1);
   const [folderSpecific_checked, setFolderSpecific_checked] = useState([]);
-  const [folderselected, setFolderSelected] = useState([]);
   const [markedDates, setMarkedDates] = useState(null);
   const [statisticData, setstatisticData] = useState(statisticdata);
   const [statisticDataone, setStatisticDataOne] = useState(statisticdataone);
   const [statisticDatafive, setStatisticDatafive] = useState(statisticdataFive);
 
-  useFocusEffect(() => {
+  useEffect(() => {
     getStatasticData();
   }, []);
-
+  console.log('valuevaluevalue ', value?.toUpperCase());
   const getStatasticData = () => {
     const payload = {
       startDate: '2022/12/01',
       lastDate: '2022/12/30',
-      type: 'All',
+      type: value === null ? 'All' : value?.toUpperCase(),
     };
     const options = {payloads: payload};
     ApiService.post('statistics', options)
       .then(res => {
+        console.log('statics data >> ', res);
         if (res.success) {
-          console.log('statics data >> ', res);
           let staticdummy = [...statisticData];
           staticdummy[0].value = res?.outputData.numberOfTask;
-          staticdummy[1].value = res?.outputData.achievementTaskTime;
+          staticdummy[1].value = res?.outputData.totalMin / 60;
+          setstatisticData(staticdummy);
+          let time = math.format(res?.outputData.totalMin, {
+            exponential: {lower: 1e-100, upper: 1e100},
+          });
           let staticdummyone = [...statisticDataone];
           staticdummyone[0].value = res?.outputData.achievementTasks;
+          setStatisticDataOne(staticdummyone);
           let staticdummytwo = [...statisticDatafive];
           staticdummytwo[0].value = res?.outputData.totalCronoTask;
+          setStatisticDatafive(staticdummytwo);
         } else {
           console.log('null');
         }
       })
       .catch(err => console.log('Error', err));
   };
-  // useLayoutEffect(() => {
-  //   naviagtion.setOptions({
-  //     headerTitle: null,
-  //     headerRight: () => (
-  //       <>
-  //         <View
-  //           style={{
-  //             flexDirection: 'row',
-  //             width: '75%',
-  //             left: Platform.OS === 'ios' ? '5%' : '15%',
-  //           }}>
-  //           {Type.map(item => {
-  //             return (
-  //               item.id === selectedType && (
-  //                 <>
-  //                   <View style={{width: '10%'}}>
-  //                     <AntDesign
-  //                       name="left"
-  //                       size={scale(20)}
-  //                       onPress={() => {
-  //                         selectedType > 1
-  //                           ? setType(item.id - 1)
-  //                           : setType(item.id + 2);
-  //                       }}
-  //                     />
-  //                   </View>
-  //                   <View
-  //                     style={{
-  //                       width: '80%',
-  //                       alignItems: 'center',
-  //                       justifyContent: 'center',
-  //                     }}>
-  //                     <Label style={{fontSize: 18}} title={item.name}></Label>
-  //                   </View>
-  //                   <View style={{width: '10%'}}>
-  //                     <AntDesign
-  //                       name="right"
-  //                       size={scale(20)}
-  //                       onPress={() => {
-  //                         selectedType <= 2 ? setType(item.id + 1) : setType(1);
-  //                       }}
-  //                     />
-  //                   </View>
-  //                 </>
-  //               )
-  //             );
-  //           })}
-  //         </View>
-  //       </>
-  //     ),
-  //   });
-  // });
+
   const handlclose = () => {
     setChecked(!isChecked);
     setEndDate(null);
@@ -222,7 +177,7 @@ const StatisticsScreen = () => {
                 }}
                 key={i.toString()}>
                 <Text style={styles.mapText}>{f.label}</Text>
-                <Text style={styles.labeltwo}>{f.value?.toFixed(2)}</Text>
+                <Text style={styles.labeltwo}>{f.value}</Text>
               </View>
             );
           })}
@@ -532,7 +487,9 @@ const StatisticsScreen = () => {
                 data={data}
                 labelField="label"
                 valueField="id"
-                onChange={item => setvalue(item.value)}
+                onChange={item => {
+                  setvalue(item.label);
+                }}
                 itemTextStyle={{color: theme.colors.black}}
                 selectedTextStyle={{color: theme.colors.black}}
                 placeholderStyle={{color: theme.colors.black}}

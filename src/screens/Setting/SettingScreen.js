@@ -57,7 +57,7 @@ function ShareBtn(props) {
 
 const SettingScreen = () => {
   const [checked, setChecked] = useState('Today');
-  const [time, setTime] = useState(chips);
+  const [time, setTime] = useState(null);
   const [check, setCheck] = useState('Edit folder task');
   const [value, setvalue] = useState(null);
   const [isEnabled, setIsEnabled] = useState(false);
@@ -74,6 +74,7 @@ const SettingScreen = () => {
         <View style={styles.divider}></View>
         <FlatList data={chips} />
         {chips.map(i => {
+          console.log('data >> ', i);
           return (
             <>
               <View
@@ -85,8 +86,8 @@ const SettingScreen = () => {
                 }}>
                 <RadioButton.Android
                   value={chips}
-                  status={time === {chips} ? 'checked' : 'unchecked'}
-                  onPress={() => setTime(chips)}
+                  status={time === i?.id ? 'checked' : 'unchecked'}
+                  onPress={() => setTime(i.id)}
                   color={theme.colors.orange}
                 />
                 <Label

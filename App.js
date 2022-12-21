@@ -38,15 +38,12 @@ const App = () => {
     LogBox.ignoreAllLogs();
   }, []);
 
-
   return (
-    <NavigationContainer theme={customDarkTheme}>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <MainStack />
-        </PersistGate>
-      </Provider>
-    </NavigationContainer>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <MainStack />
+      </PersistGate>
+    </Provider>
   );
 };
 export default App;
