@@ -4,6 +4,7 @@ import {theme, scale} from '../utils';
 
 const Label = props => {
   const {title, style, numberOfLines} = props;
+
   return (
     <Text style={[styles.text, style]} numberOfLines={numberOfLines}>
       {title}

@@ -16,3 +16,9 @@ export const DARKMODE = 'DARKMODE';
 
 // Time Defualt for task & folder
 export const DEFAULT_TIME = 'DEFAULT_TIME';
+
+//time for task list
+export const TIME = 'TIME';
+
+//Administration
+export const ADMINISTRATION = 'ADMINISTRATION';

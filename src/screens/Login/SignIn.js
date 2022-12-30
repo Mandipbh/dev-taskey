@@ -10,7 +10,7 @@ import Toast from 'react-native-simple-toast';
 import React from 'react';
 import {Button, Label, TextInput, Title} from '../../components';
 import {CommonStyles} from './CommonStyles';
-import {useNavigation} from '@react-navigation/native';
+import {CommonActions, useNavigation} from '@react-navigation/native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 import {scale, theme} from '../../utils';
@@ -19,6 +19,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import ApiService from '../../utils/ApiService';
 import {isLogin, loginAction} from '../../redux/Actions/UserActions';
 import axios from 'axios';
+import {useEffect} from 'react';
 
 const SignIn = () => {
   const navigation = useNavigation();
@@ -26,7 +27,8 @@ const SignIn = () => {
   const [otp, setOtp] = useState('');
   const [otpSend, setSendOtp] = useState(false);
   const [varified, setVarified] = useState(false);
-  const userDetails = useSelector(state => state.UserReducer.userDetails);
+  const [btnValidation, setBtnValidation] = useState(true);
+
   const dispatch = useDispatch();
   const validation = () => {
     let error = false;
@@ -62,27 +64,32 @@ const SignIn = () => {
           };
           const options = {payloads: mobileFrm};
           const response = await ApiService.post('verifyOTP', options);
-          console.log('resposemn >> ', response);
           if (response) {
+            console.log('resposemn >> ', response);
             Toast.show('Login successfully');
 
             dispatch(isLogin(true));
-            navigation.navigate('Tabs');
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 1,
+                routes: [{name: 'Tabs'}],
+              }),
+            );
           } else {
             // setSendOtp(true);
           }
         } catch (error) {
-          Toast.show(error.response.data.message, Toast.SHORT);
+          Toast.show(error?.response?.data?.message, Toast.SHORT);
         }
       } else {
-        Toast.show('first press send code', Toast.SHORT);
+        Toast.show('First press send code', Toast.SHORT);
       }
     }
   };
 
   const handleotpSend = async () => {
-    if (mobile.trim() === '') {
-      Toast.show('Mobile Number is not allow blank', Toast.SHORT);
+    if (!/^\d{10}$/.test(mobile)) {
+      Toast.show('Please enter valid number', Toast.SHORT);
     } else {
       try {
         const mobileFrm1 = {
@@ -91,7 +98,7 @@ const SignIn = () => {
         const options = {payloads: mobileFrm1};
         const response = await ApiService.post('login', options);
         if (response.success) {
-          axios.defaults.headers.common.Authorization = `Bearer ${response.token}`;
+          axios.defaults.headers.common.Authorization = `Bearer ${response?.token}`;
           setVarified(true);
           Toast.show('OTP is sent to your mobile number');
           setSendOtp(true);
@@ -102,11 +109,17 @@ const SignIn = () => {
         }
       } catch (error) {
         // console.log('errror >>> ', error?.response?.data?.message);
-        // Toast.show(error.response?.data?.message, Toast.SHORT);
+        Toast.show(error?.response?.data?.message, Toast.SHORT);
       }
     }
   };
-
+  useEffect(() => {
+    if (varified) {
+      setBtnValidation(otp.length === 6 ? false : true);
+    } else {
+      setBtnValidation(true);
+    }
+  }, [varified, otp]);
   return (
     <KeyboardAwareScrollView
       style={CommonStyles.container}
@@ -132,8 +145,7 @@ const SignIn = () => {
             style={styles.sendBtn}
             onPress={() => {
               handleotpSend();
-            }}
-            disabled={mobile.length !== 10 ? true : false}>
+            }}>
             <Text style={styles.Sendcode}>
               {otpSend ? 'Re-Send' : 'Send Code'}
             </Text>
@@ -150,17 +162,23 @@ const SignIn = () => {
             maxLength={6}
           />
           <Button
-            style={CommonStyles.btn}
+            style={[
+              CommonStyles.btn,
+              {
+                backgroundColor: btnValidation
+                  ? theme.colors.orange1
+                  : theme.colors.orange,
+              },
+            ]}
             title="Login"
+            disabled={btnValidation}
             onPress={() => {
               handleLogin();
             }}
           />
           <View style={CommonStyles.navTxtContainer}>
             <Label title="Are you a new User ?" />
-            <TouchableOpacity
-              onPress={() => navigation.navigate('SignUp')}
-              disabled={varified}>
+            <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
               <Label style={CommonStyles.navTxt} title="Sign Up" />
             </TouchableOpacity>
           </View>

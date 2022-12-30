@@ -28,6 +28,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import Foundation from 'react-native-vector-icons/Foundation';
 import ApiService from '../../utils/ApiService';
 import {create} from 'react-test-renderer';
+import {useSelector} from 'react-redux';
 
 const CreateTaskScreen = props => {
   const isFocused = useIsFocused();
@@ -44,7 +45,10 @@ const CreateTaskScreen = props => {
   const [amount, setAmount] = useState(null);
   const [title, setTitle] = useState(null);
   const [isLoading, setLoading] = useState(false);
+  const [isBtn, setBtn] = useState(false);
+
   const navigation = useNavigation();
+  const darkmodeState = useSelector(state => state.UserReducer.isDarkMode);
   const handleCloseClolorpicker = c => {
     setColor(c);
     setColorPicker(false);
@@ -58,10 +62,29 @@ const CreateTaskScreen = props => {
   useEffect(() => {
     if (props?.route?.params?.editData) {
       const {editData} = props?.route?.params;
-      console.log('edit task ', editData);
+      const metad = editData.meta;
+      setAmount(JSON.stringify(editData?.amount));
+      setMeta(metad === 'Registry' ? 2 : 1);
       setTitle(editData?.name);
+      if (editData.type === 'CRONO') {
+        setBtn(editData?.cronoCompletedTime ? true : false);
+        setType(1);
+      } else if (editData.type === 'TIMER') {
+        setBtn(editData?.timerCompletedTime ? true : false);
+        setType(2);
+      } else if (editData?.type === 'COUNTER') {
+        setBtn(editData?.counterIncrementDecrement ? true : false);
+        setType(3);
+      }
+    } else {
+      clearData();
     }
   }, []);
+  useEffect(() => {
+    if (!props?.route?.params?.editData) {
+      clearData();
+    }
+  }, [isFocused]);
 
   useEffect(() => {
     getAllFolders();
@@ -91,14 +114,18 @@ const CreateTaskScreen = props => {
 
   const handleMeta = id => {
     if (type === 1) {
-      setMeta(2);
-    } else {
-      Toast.show('Chrono in just registry');
+      if (id === 2) {
+        setMeta(2);
+      } else {
+        Toast.show('Chrono in just registry');
+      }
     }
     if (type === 2) {
-      setMeta(1);
-    } else {
-      Toast.show('Timer in just Achievement');
+      if (id === 1) {
+        setMeta(1);
+      } else {
+        Toast.show('Timer in just Achievement');
+      }
     }
     if (type === 3) {
       setMeta(id);
@@ -113,6 +140,29 @@ const CreateTaskScreen = props => {
     setSelFolder('');
     setAmount(null);
     setTitle(null);
+  };
+
+  var error = false;
+  const handleValidation = () => {
+    if (title === null) {
+      Toast.show('Please enter name', Toast.SHORT);
+      return true;
+    } else if (type === 0) {
+      Toast.show('Please select type', Toast.SHORT);
+      error = true;
+    } else if (selMeta === 0) {
+      Toast.show('Please select meta', Toast.SHORT);
+      error = true;
+    } else if (selMeta === 1 && !amount) {
+      Toast.show('Please add amount ', Toast.SHORT);
+      error = true;
+    } else if (selectedFolder === null) {
+      Toast.show('Please select folder', Toast.SHORT);
+      error = true;
+    } else {
+      error = false;
+    }
+    return error;
   };
 
   const handleSave = () => {
@@ -141,12 +191,11 @@ const CreateTaskScreen = props => {
         .then(res => {
           setLoading(false);
           // navigation.goBack();
-          console.log('response << >>> ', res);
-          if (res.code === -1) {
-          } else {
+          if (res.success) {
             setLoading(false);
             clearData();
             navigation.goBack();
+          } else {
           }
         })
         .catch(error => {
@@ -166,7 +215,7 @@ const CreateTaskScreen = props => {
       // meta: selMeta == 1 ? 'Achievement' : 'Registry',
       // amount: amount,
       // status: 'Paused',
-      // folderId: selectedFolder?._id,
+      folderId: selectedFolder?._id,
       // folderFrm.append('icon', null);
     };
     setLoading(true);
@@ -190,316 +239,468 @@ const CreateTaskScreen = props => {
       });
   };
 
-  var error = false;
-  const handleValidation = () => {
-    if (title === null) {
-      Toast.show('please enter title', Toast.SHORT);
-    } else if (selectedFolder === null) {
-      Toast.show('please select folder', Toast.SHORT);
-      error = true;
-    } else if (type === 0) {
-      Toast.show('please select type', Toast.SHORT);
-      error = true;
-    } else if (selColor === null) {
-      Toast.show('please select color', Toast.SHORT);
-      error = true;
+  //delete task
+  const deleteTask = () => {
+    console.log('removeTask', props?.route?.params?.editData?._id);
+    ApiService.delete(`removeTask/${props?.route?.params?.editData?._id}`).then(
+      res => {
+        console.log('remove task <>> ', res.data);
+        navigation.goBack();
+      },
+    );
+  };
+
+  //complate task
+  const complateTask = () => {
+    const taskDetails = props?.route?.params?.editData;
+    const taskMeta = props?.route?.params?.editData?.meta;
+    if (taskMeta === 'Registry') {
+      const payload = {
+        id: props?.route?.params?.editData?._id,
+        status: taskDetails?.status,
+        type: taskDetails?.type,
+      };
+      const options = {payloads: payload};
+      ApiService.post('completeRegistryTask', options).then(res => {
+        console.log('response >> ', res);
+        navigation.goBack();
+        Toast.show('Task complate success');
+      });
+      console.log('pay load >> ', payload);
+    } else if (taskMeta === 'Achievement') {
+      const payload1 = {
+        id: props?.route?.params?.editData?._id,
+        status: taskDetails?.status,
+        type: taskDetails?.type,
+      };
+      const options = {payloads: payload1};
+      ApiService.post('completeAchievementTask', options).then(res => {
+        navigation.goBack();
+        console.log('response >> ', res);
+        Toast.show('Task complate success');
+      });
+      console.log('pay load >> ', payload1);
     } else {
-      error = false;
     }
-    return error;
+  };
+
+  // faild task
+  const handleFaildTask = () => {
+    const taskDetails = props?.route?.params?.editData;
+    const payload = {
+      id: props?.route?.params?.editData?._id,
+      status: taskDetails?.status,
+      type: taskDetails?.type,
+    };
+    const options = {payloads: payload};
+    ApiService.post('failedTask', options).then(res => {
+      console.log('response >> ', res);
+      navigation.goBack();
+      Toast.show('Failed task success');
+    });
   };
 
   return (
     <>
-      <View style={styles.container}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          style={{flex: 1}}
-          contentContainerStyle={{
-            paddingTop: Platform.OS === 'ios' ? scale(30) : 0,
-          }}>
-          <ImageBackground source={images.banner} style={styles.header}>
-            <View style={styles.secondCon}>
-              <Title
-                title={
-                  props?.route?.params?.editData ? 'Edit task' : 'Create task'
-                }
-                style={{color: theme.colors.white}}
-              />
-              <Label
-                title="Create a task to control your time investment
-                      and registry yout achievements."
-                style={{color: theme.colors.white}}
-              />
-              <Label
-                title="Set name "
-                style={[
-                  styles.label,
-                  {
-                    color: theme.colors.white,
-                    marginTop: scale(15),
-                  },
-                ]}
-              />
-              <InputBox
-                placeholder="task name"
-                value={title}
-                style={styles.input}
-                onChangeText={txt => {
-                  setTitle(txt);
-                }}
-              />
-            </View>
-          </ImageBackground>
-          <View style={styles.secondCon}>
-            <View style={styles.row}>
-              <Label title="Type " style={styles.label} />
-              <View style={styles.row}>
-                {typeData?.map((t, i) => {
-                  return (
-                    <View
-                      key={i.toString()}
-                      style={{
-                        marginLeft: scale(20),
-                      }}>
-                      <Image
-                        source={t.url}
-                        style={{
-                          height: scale(40),
-                          width: scale(30),
-                          marginLeft: scale(20),
-                          margin: scale(5),
-                        }}
-                      />
-                      <View style={[styles.row, {alignItems: 'center'}]}>
-                        <TouchableOpacity
-                          style={styles.checkBoxCon}
-                          onPress={() => {
-                            props?.route?.params?.editData
-                              ? null
-                              : setType(t.id);
-                            setMeta(null);
-                          }}>
-                          <View
-                            style={[
-                              styles.check,
-                              {
-                                backgroundColor:
-                                  type === t.id
-                                    ? theme.colors.orange
-                                    : theme.colors.white,
-                              },
-                            ]}
-                          />
-                        </TouchableOpacity>
-                        <Label
-                          title={t.title}
-                          style={[
-                            styles.checkboxLbl,
-                            {
-                              fontWeight: type === t.id ? '700' : '300',
-                              color: theme.colors.black,
-                            },
-                          ]}
-                        />
-                      </View>
-                    </View>
-                  );
-                })}
-              </View>
-            </View>
-            <View style={styles.devider} />
-          </View>
-          <View style={styles.secondCon}>
-            <View style={[styles.row]}>
-              <Label title="Meta " style={styles.label} />
-              <View style={styles.row}>
-                {metaData?.map((t, i) => {
-                  return (
-                    <View
-                      style={{
-                        paddingHorizontal: scale(20),
-                      }}
-                      key={i.toString()}>
-                      <Image
-                        source={t.url}
-                        style={{
-                          tintColor:
-                            selMeta === t.id || selMeta === null
-                              ? theme.colors.orange
-                              : theme.colors.orange1,
-                          height: scale(40),
-                          width: scale(30),
-                          marginLeft: scale(20),
-                          margin: scale(5),
-                        }}
-                      />
-                      <View style={styles.row}>
-                        <TouchableOpacity
-                          style={styles.checkBoxCon}
-                          onPress={() => {
-                            handleMeta(t.id);
-                          }}>
-                          <View
-                            style={[
-                              styles.check,
-                              {
-                                backgroundColor:
-                                  selMeta === t.id
-                                    ? theme.colors.orange
-                                    : theme.colors.white,
-                              },
-                            ]}
-                          />
-                        </TouchableOpacity>
-                        <Label
-                          title={t.title}
-                          style={[
-                            styles.checkboxLbl,
-                            {
-                              fontWeight: selMeta === t.id ? '700' : '700',
-                              color:
-                                selMeta === t.id || selMeta === null
-                                  ? theme.colors.black
-                                  : theme.colors.gray,
-                            },
-                          ]}
-                        />
-                      </View>
-                    </View>
-                  );
-                })}
-              </View>
-              <></>
-            </View>
-            {selMeta === 1 && (
-              <View style={styles.amount}>
-                <Label title="Amount " />
+      <View
+        style={[
+          styles.container,
+          {
+            backgroundColor: darkmodeState
+              ? theme.colors.black
+              : theme.colors.backgroundColor,
+          },
+        ]}>
+        {Platform.OS === 'ios' && (
+          <View
+            style={{
+              height: scale(40),
+              backgroundColor: darkmodeState
+                ? theme.colors.darkMode
+                : theme.colors.white,
+            }}
+          />
+        )}
+        <View>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            style={{height: theme.SCREENHEIGHT * 0.9}}
+            contentContainerStyle={{
+              paddingBottom: scale(35),
+            }}>
+            <ImageBackground source={images.banner} style={styles.header}>
+              <View style={styles.secondCon}>
+                <Title
+                  title={
+                    props?.route?.params?.editData ? 'Edit task' : 'Create task'
+                  }
+                  style={{color: theme.colors.white}}
+                />
+                <Label
+                  title="Create a task to control your time investment
+                      and registry your achievements."
+                  style={{color: theme.colors.white}}
+                />
+                <Label
+                  title="Set name "
+                  style={[
+                    styles.label,
+                    {
+                      color: theme.colors.white,
+                      marginTop: scale(15),
+                    },
+                  ]}
+                />
                 <InputBox
-                  style={{width: theme.SCREENWIDTH * 0.2, height: scale(35)}}
-                  placeholder="1 min"
-                  inputStyle={{fontSize: 14}}
-                  value={amount}
+                  placeholder="Task name"
+                  value={title}
+                  style={styles.input}
                   onChangeText={txt => {
-                    setAmount(txt);
+                    setTitle(txt);
                   }}
                 />
               </View>
-            )}
-            {/* <View style={styles.devider} /> */}
-          </View>
-          <View style={styles.secondCon}>
-            <View style={styles.devider} />
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                margin: scale(10),
-              }}>
-              <Text style={{color: 'black', fontSize: 18, fontWeight: '700'}}>
-                Add icon
-              </Text>
-              <TouchableOpacity style={styles.choosebtn}>
+            </ImageBackground>
+            <View style={styles.secondCon}>
+              <View style={styles.row}>
+                <Label
+                  title="Type "
+                  style={[
+                    styles.label,
+                    {
+                      color: darkmodeState
+                        ? theme.colors.white
+                        : theme.colors.black,
+                    },
+                  ]}
+                />
+                <View style={styles.row}>
+                  {typeData?.map((t, i) => {
+                    return (
+                      <View
+                        key={i.toString()}
+                        style={{
+                          marginLeft: scale(20),
+                        }}>
+                        <Image
+                          source={t.url}
+                          style={{
+                            height: scale(40),
+                            width: scale(30),
+                            marginLeft: scale(20),
+                            margin: scale(5),
+                          }}
+                        />
+                        <View style={[styles.row, {alignItems: 'center'}]}>
+                          <TouchableOpacity
+                            style={styles.checkBoxCon}
+                            onPress={() => {
+                              props?.route?.params?.editData
+                                ? null
+                                : setType(t.id);
+                              setMeta(0);
+                            }}>
+                            <View
+                              style={[
+                                styles.check,
+                                {
+                                  backgroundColor:
+                                    type === t.id
+                                      ? theme.colors.orange
+                                      : theme.colors.white,
+                                },
+                              ]}
+                            />
+                          </TouchableOpacity>
+                          <Label
+                            title={t.title}
+                            style={[
+                              styles.checkboxLbl,
+                              {
+                                fontWeight: type === t.id ? '700' : '300',
+                                color: darkmodeState
+                                  ? theme.colors.white
+                                  : theme.colors.black,
+                              },
+                            ]}
+                          />
+                        </View>
+                      </View>
+                    );
+                  })}
+                </View>
+              </View>
+              <View style={styles.devider} />
+            </View>
+            <View style={styles.secondCon}>
+              <View style={[styles.row]}>
+                <Label
+                  title="Meta "
+                  style={[
+                    styles.label,
+                    {
+                      color: darkmodeState
+                        ? theme.colors.white
+                        : theme.colors.black,
+                    },
+                  ]}
+                />
+                <View style={styles.row}>
+                  {metaData?.map((t, i) => {
+                    return (
+                      <View
+                        style={{
+                          paddingHorizontal: scale(20),
+                        }}
+                        key={i.toString()}>
+                        <Image
+                          source={t.url}
+                          style={{
+                            tintColor:
+                              selMeta === t.id || selMeta === null
+                                ? theme.colors.orange
+                                : theme.colors.orange1,
+                            height: scale(40),
+                            width: scale(30),
+                            marginLeft: scale(20),
+                            margin: scale(5),
+                          }}
+                        />
+                        <View style={styles.row}>
+                          <TouchableOpacity
+                            style={styles.checkBoxCon}
+                            onPress={() => {
+                              handleMeta(t.id);
+                            }}>
+                            <View
+                              style={[
+                                styles.check,
+                                {
+                                  backgroundColor:
+                                    selMeta === t.id
+                                      ? theme.colors.orange
+                                      : theme.colors.white,
+                                },
+                              ]}
+                            />
+                          </TouchableOpacity>
+                          <Label
+                            title={t.title}
+                            style={[
+                              styles.checkboxLbl,
+                              {
+                                fontWeight: selMeta === t.id ? '700' : '700',
+                                color: darkmodeState
+                                  ? theme.colors.white
+                                  : theme.colors.black,
+                              },
+                            ]}
+                          />
+                        </View>
+                      </View>
+                    );
+                  })}
+                </View>
+                <></>
+              </View>
+              {selMeta === 1 && (
+                <View style={styles.amount}>
+                  <Label title="Amount " />
+                  <InputBox
+                    style={{width: theme.SCREENWIDTH * 0.2, height: scale(35)}}
+                    placeholder="1 min"
+                    inputStyle={{fontSize: 14}}
+                    value={amount}
+                    keyboardType="numeric"
+                    onChangeText={txt => {
+                      setAmount(txt);
+                    }}
+                  />
+                </View>
+              )}
+              {/* <View style={styles.devider} /> */}
+            </View>
+            <View style={styles.secondCon}>
+              <View style={styles.devider} />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  margin: scale(10),
+                }}>
                 <Text
                   style={{
-                    color: theme.colors.white,
+                    color: darkmodeState
+                      ? theme.colors.white
+                      : theme.colors.black,
                     fontSize: 18,
-                    fontWeight: '800',
+                    fontWeight: '700',
                   }}>
-                  Choose
+                  Add icon
                 </Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.devider} />
-          </View>
-          <View style={styles.secondCon}>
-            <View style={[styles.row, {justifyContent: 'space-between'}]}>
-              <View style={styles.row}>
-                <Label title="Folder " style={styles.label} />
-                <TouchableOpacity
-                  style={styles.folder}
-                  onPress={() => {
-                    setOpen(!open);
-                  }}>
-                  <Label
-                    title={
-                      selectedFolder === ''
-                        ? 'Globle list folder'
-                        : selectedFolder?.name
-                    }
-                    style={styles.selFolderTxt}
-                  />
-                  <Icon
-                    name={open ? 'menu-up' : 'menu-down'}
-                    size={scale(25)}
-                  />
-                </TouchableOpacity>
-              </View>
-
-              <TouchableOpacity
-                style={styles.row}
-                onPress={() => {
-                  getAllFolders();
-                  // setnewFolderM(true);
-                  navigation.navigate('CreateF');
-                }}>
-                <Image
-                  style={{
-                    height: scale(30),
-                    width: scale(30),
-                    marginRight: scale(20),
-                  }}
-                  source={images.folder}
-                />
-              </TouchableOpacity>
-            </View>
-            {open && (
-              <ScrollView style={styles.optionsContainer}>
-                {folders.map((f, i) => {
-                  return (
-                    <TouchableOpacity
-                      key={i.toString()}
-                      style={styles.optionView}
-                      onPress={() => {
-                        handleOptions(f);
-                      }}>
-                      <Label title={f.name} style={{fontSize: scale(12)}} />
-                    </TouchableOpacity>
-                  );
-                })}
-              </ScrollView>
-            )}
-            <View style={styles.devider} />
-
-            <TouchableOpacity
-              onPress={() =>
-                props?.route?.params?.editData ? handleEditTask() : handleSave()
-              }
-              style={styles.createTaskbtn}>
-              <Ionicon name="play" color={theme.colors.white} size={25} />
-              <Text style={styles.createtxt}>
-                {props?.route?.params?.editData ? 'Edit task' : 'Create task'}
-              </Text>
-            </TouchableOpacity>
-            {props?.route?.params?.editData && (
-              <>
-                <TouchableOpacity
-                  onPress={() => Alert.alert('Delete')}
-                  style={styles.deletebtn}>
-                  <Icon name="delete" color={theme.colors.white} size={25} />
+                <TouchableOpacity style={styles.choosebtn}>
                   <Text
                     style={{
                       color: theme.colors.white,
-                      fontSize: 20,
-                      padding: 5,
+                      fontSize: 18,
+                      fontWeight: '800',
                     }}>
-                    Delete
+                    Choose
                   </Text>
                 </TouchableOpacity>
-              </>
-            )}
-          </View>
-        </ScrollView>
+              </View>
+              <View style={styles.devider} />
+            </View>
+            <View style={styles.secondCon}>
+              <View style={[styles.row, {justifyContent: 'space-between'}]}>
+                <View style={styles.row}>
+                  <Label
+                    title="Folder "
+                    style={[
+                      styles.label,
+                      {
+                        color: darkmodeState
+                          ? theme.colors.white
+                          : theme.colors.black,
+                      },
+                    ]}
+                  />
+                  <TouchableOpacity
+                    style={styles.folder}
+                    onPress={() => {
+                      type === 0 ? Toast.show('Select type.') : setOpen(!open);
+                    }}>
+                    <Label
+                      title={
+                        selectedFolder === ''
+                          ? 'Globle list folder'
+                          : selectedFolder?.name
+                      }
+                      style={styles.selFolderTxt}
+                    />
+                    <Icon
+                      name={open ? 'menu-up' : 'menu-down'}
+                      size={scale(25)}
+                    />
+                  </TouchableOpacity>
+                </View>
+
+                <TouchableOpacity
+                  style={styles.row}
+                  onPress={() => {
+                    getAllFolders();
+                    // setnewFolderM(true);
+                    navigation.navigate('CreateF');
+                  }}>
+                  <Image
+                    style={{
+                      height: scale(30),
+                      width: scale(30),
+                      marginRight: scale(20),
+                    }}
+                    source={images.folder}
+                  />
+                </TouchableOpacity>
+              </View>
+              {open && (
+                <ScrollView style={styles.optionsContainer}>
+                  {folders.map((f, i) => {
+                    return (
+                      <TouchableOpacity
+                        key={i.toString()}
+                        style={styles.optionView}
+                        onPress={() => {
+                          handleOptions(f);
+                        }}>
+                        <Label
+                          title={f.name}
+                          style={{
+                            fontSize: scale(12),
+                            color: darkmodeState
+                              ? theme.colors.white
+                              : theme.colors.black,
+                          }}
+                        />
+                      </TouchableOpacity>
+                    );
+                  })}
+                </ScrollView>
+              )}
+              <View style={styles.devider} />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: props?.route?.params?.editData
+                    ? 'space-between'
+                    : 'center',
+                }}>
+                <TouchableOpacity
+                  onPress={() =>
+                    props?.route?.params?.editData
+                      ? handleEditTask()
+                      : handleSave()
+                  }
+                  style={styles.createTaskbtn}>
+                  <Ionicon name="play" color={theme.colors.white} size={25} />
+                  <Text style={styles.createtxt}>
+                    {props?.route?.params?.editData
+                      ? 'Edit task'
+                      : 'Create task'}
+                  </Text>
+                </TouchableOpacity>
+                {props?.route?.params?.editData && (
+                  <>
+                    <TouchableOpacity
+                      onPress={() => {
+                        deleteTask();
+                      }}
+                      style={styles.deletebtn}>
+                      <Icon
+                        name="delete"
+                        color={theme.colors.white}
+                        size={25}
+                      />
+                      <Text
+                        style={{
+                          color: theme.colors.white,
+                          fontSize: 20,
+                          padding: 5,
+                        }}>
+                        Delete
+                      </Text>
+                    </TouchableOpacity>
+                  </>
+                )}
+              </View>
+              {props?.route?.params?.editData && (
+                <View style={styles.btnsCon}>
+                  {isBtn && (
+                    <TouchableOpacity
+                      onPress={() => {
+                        complateTask();
+                      }}
+                      style={[
+                        styles.createTaskbtn,
+                        {backgroundColor: theme.colors.green},
+                      ]}>
+                      <Text style={styles.createtxt}>{'Closed task'}</Text>
+                    </TouchableOpacity>
+                  )}
+                  <TouchableOpacity
+                    onPress={() => {
+                      handleFaildTask();
+                    }}
+                    style={[
+                      styles.createTaskbtn,
+                      {backgroundColor: theme.colors.red},
+                    ]}>
+                    <Text style={styles.createtxt}>{'Failed task'}</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
+          </ScrollView>
+        </View>
       </View>
       {isLoading && <Loader />}
     </>
@@ -672,5 +873,9 @@ const styles = StyleSheet.create({
     height: scale(200),
     width: '100%',
     resizeMode: 'cover',
+  },
+  btnsCon: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });

@@ -11,14 +11,15 @@ import {
   DefaultTheme,
   NavigationContainer,
 } from '@react-navigation/native';
+import {scale} from '../utils';
 
 const Stack = createNativeStackNavigator();
 
 const MainStack = () => {
   const isLogin = useSelector(state => state.UserReducer.login);
   const userDetails = useSelector(state => state.UserReducer.userDetails);
+  const darkmodeState = useSelector(state => state.UserReducer.isDarkMode);
   axios.defaults.headers.common.Authorization = `Bearer ${userDetails?.token}`;
-  console.log('userDetails?.tokenuserDetails?.token', userDetails?.token);
   const customDarkTheme = {
     ...DarkTheme,
     colors: {
@@ -41,7 +42,8 @@ const MainStack = () => {
     },
   };
   return (
-    <NavigationContainer theme={customDarkTheme}>
+    <NavigationContainer
+      theme={darkmodeState ? customDarkTheme : customDefaultTheme}>
       <Stack.Navigator
         screenOptions={{headerShown: false}}
         initialRouteName={isLogin ? 'Tabs' : 'LoginStack'}>

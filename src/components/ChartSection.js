@@ -16,7 +16,7 @@ const ChartSection = props => {
               <>
                 <View
                   style={{
-                    backgroundColor: '#a9a9a9',
+                    backgroundColor: i?.svg?.fill,
                     alignItems: 'center',
                     margin: scale(5),
                     borderRadius: 5,

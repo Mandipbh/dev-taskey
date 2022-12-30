@@ -9,10 +9,11 @@ import StatisticsStack from './StatisticsStack';
 import {Platform} from 'react-native';
 import HomeStack from './HomeStack';
 import PayScreenModal from '../components/appModel/PayScreenModal';
+import {useSelector} from 'react-redux';
 
 const Tab = createBottomTabNavigator();
-
 const BottomTab = () => {
+  const darkmodeState = useSelector(state => state.UserReducer.isDarkMode);
   return (
     <Tab.Navigator
       screenOptions={{
@@ -20,19 +21,33 @@ const BottomTab = () => {
         tabBarShowLabel: false,
         tabBarStyle: {
           position: 'absolute',
-          backgroundColor: theme.colors.main,
-          paddingTop: Platform.OS === 'ios' ? scale(20) : scale(8),
+          backgroundColor: darkmodeState
+            ? theme.colors.darkMode
+            : theme.colors.main,
+          // paddingTop: Platform.OS === 'ios' ? scale(5) : scale(8),
           justifyContent: 'center',
           alignContent: 'center',
+          height: Platform.OS === 'ios' ? scale(65) : scale(55),
         },
       }}>
       <Tab.Screen
         name="Home"
         component={HomeStack}
         options={{
+          tabBarLabel: 'home',
           tabBarIcon: ({focused}) => {
             return (
-              <Entypo name="home" size={scale(20)} color={theme.colors.white} />
+              <Entypo
+                name="home"
+                size={scale(20)}
+                color={
+                  darkmodeState
+                    ? focused
+                      ? theme.colors.main
+                      : theme.colors.icon
+                    : theme.colors.white
+                }
+              />
             );
           },
         }}
@@ -42,13 +57,20 @@ const BottomTab = () => {
         name="StatisticsStack"
         component={StatisticsStack}
         options={{
+          tabBarLabel: 'stats',
           headerShown: false,
           tabBarIcon: ({focused}) => {
             return (
               <Entypo
                 name="bar-graph"
                 size={scale(20)}
-                color={theme.colors.white}
+                color={
+                  darkmodeState
+                    ? focused
+                      ? theme.colors.main
+                      : theme.colors.icon
+                    : theme.colors.white
+                }
               />
             );
           },
@@ -59,16 +81,11 @@ const BottomTab = () => {
         name="CreateFolder"
         component={CreateTask}
         options={{
+          tabBarLabel: 'Add',
           tabBarIcon: ({focused}) => {
-            return (
-              <AntDesign
-                name="pluscircle"
-                size={scale(20)}
-                color={theme.colors.white}
-              />
-            );
+            return <AntDesign name="pluscircle" size={scale(20)} />;
           },
-          tabBarButton: () => <PayScreenModal />,
+          tabBarButton: props => <PayScreenModal focus={props} />,
         }}
       />
 
@@ -76,12 +93,19 @@ const BottomTab = () => {
         name="Settings"
         component={Setting}
         options={{
+          tabBarLabel: 'settings',
           tabBarIcon: ({focused}) => {
             return (
               <Ionicons
                 name="ios-settings-sharp"
                 size={scale(20)}
-                color={theme.colors.white}
+                color={
+                  darkmodeState
+                    ? focused
+                      ? theme.colors.main
+                      : theme.colors.icon
+                    : theme.colors.white
+                }
               />
             );
           },

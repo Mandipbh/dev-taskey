@@ -5,10 +5,10 @@ import {
   TouchableOpacity,
   Text,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Button, Label, TextInput, Title} from '../../components';
 import {CommonStyles} from './CommonStyles';
-import {useNavigation} from '@react-navigation/native';
+import {CommonActions, useNavigation} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Toast from 'react-native-simple-toast';
 import {scale, theme} from '../../utils';
@@ -24,11 +24,26 @@ const SignUp = () => {
   const [name, setName] = useState('');
   const [mobile, setMobile] = useState('');
   const [otp, setOtp] = useState('');
+  const [btnValidation, setBtnValidation] = useState(true);
+  // const
   const [sentOtp, setSendOtp] = useState(false);
   const dispatch = useDispatch();
 
+  let error = false;
+  const validationReg = () => {
+    if (name.trim() === '') {
+      Toast.show('Please enter name', Toast.SHORT);
+      error = true;
+    } else if (!/^\d{10}$/.test(mobile)) {
+      Toast.show('Please enter proper number.', Toast.SHORT);
+      error = true;
+    } else {
+      error = false;
+    }
+    return error;
+  };
   const handleSignup = async () => {
-    if (mobile.length !== 10 && otp.length !== 6) {
+    if (validationReg()) {
       Toast.show('Not allow blank.', Toast.SHORT);
     } else {
       try {
@@ -41,20 +56,24 @@ const SignUp = () => {
         if (response.success) {
           Toast.show('Signup successfully.');
           dispatch(isLogin(true));
-          navigation.navigate('Tabs');
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 1,
+              routes: [{name: 'Tabs'}],
+            }),
+          );
+          // navigation.navigate('Tabs');
         } else {
           // setSendOtp(true);
         }
       } catch (error) {
-        // console.log('error ', error.response.data.error.message);
         Toast.show('something went wrong', Toast.SHORT);
       }
     }
   };
+
   const handleotpSend = async () => {
-    if (mobile.trim() === '') {
-      Toast.show('Mobile Number is not allow blank.', Toast.SHORT);
-    } else {
+    if (!validationReg()) {
       try {
         const registerFrm = {
           name: name,
@@ -75,8 +94,16 @@ const SignUp = () => {
       } catch (error) {
         Toast.show('something want wrong', Toast.SHORT);
       }
+    } else {
     }
   };
+  useEffect(() => {
+    if (sentOtp) {
+      setBtnValidation(otp.length === 6 ? false : true);
+    } else {
+      setBtnValidation(true);
+    }
+  }, [sentOtp, otp]);
   return (
     <KeyboardAwareScrollView
       style={CommonStyles.container}
@@ -131,7 +158,15 @@ const SignUp = () => {
             keyboardType="numeric"
           />
           <Button
-            style={CommonStyles.btn}
+            disabled={btnValidation}
+            style={[
+              CommonStyles.btn,
+              {
+                backgroundColor: btnValidation
+                  ? theme.colors.orange1
+                  : theme.colors.orange,
+              },
+            ]}
             title="SignUp"
             onPress={() => {
               handleSignup();

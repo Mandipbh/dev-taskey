@@ -67,13 +67,13 @@ const CreateFolderModel = props => {
   var error = false;
   const handleValidation = () => {
     if (folderName === null) {
-      Toast.show('please enter folder name', Toast.SHORT);
+      Toast.show('Please enter folder name', Toast.SHORT);
       error = true;
     } else if (type === 0) {
-      Toast.show('please select type', Toast.SHORT);
+      Toast.show('Please select type', Toast.SHORT);
       error = true;
     } else if (selColor === null) {
-      Toast.show('please select color', Toast.SHORT);
+      Toast.show('Please select color', Toast.SHORT);
       error = true;
     } else {
       error = false;

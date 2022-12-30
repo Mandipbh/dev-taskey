@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
-  Modal,
   Platform,
   TouchableOpacity,
   Text,
@@ -13,26 +12,23 @@ import {
 import images from '../../assets/Images';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import {scale, theme} from '../../utils';
-import InputBox from '../../components/InputBox';
-import {Title, Label} from '../../components/Label';
-import {typeData, metaData} from '../../utils/mockData';
+import {Label} from '../../components/Label';
+import {typeData} from '../../utils/mockData';
 import ColorPickerModel from '../../components/appModel/ColorPickerModel';
 import Toast from 'react-native-simple-toast';
 import ApiService from '../../utils/ApiService';
 import Loader from '../../components/appModel/Loader';
 import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 
 const CreateFolderModel = props => {
   const navigation = useNavigation();
-  console.log('props <<<<>>> ', props?.route?.params?.editFolder?._id);
-  const {isVisible, close, editFolder} = props;
   const [type, setType] = useState(0);
-  const [typetwo, setTypetwo] = useState(0);
   const [colorPicker, setColorPicker] = useState(false);
   const [selColor, setColor] = useState(theme.colors.primary);
   const [folderName, setFolderName] = useState(null);
   const [isLoading, setLoading] = useState(false);
-
+  const darkmodeState = useSelector(state => state.UserReducer.isDarkMode);
   useEffect(() => {
     if (props?.route?.params?.editFolder) {
       setFolderName(props?.route?.params?.editFolder?.name);
@@ -64,7 +60,6 @@ const CreateFolderModel = props => {
       ApiService.post('folder', options)
         .then(res => {
           setLoading(false);
-          console.log('respoe >>. ', res);
           navigation.goBack();
           if (res.code === -1) {
           }
@@ -95,16 +90,17 @@ const CreateFolderModel = props => {
         console.log('error ', error);
       });
   };
+
   var error = false;
   const handleValidation = () => {
     if (folderName === null) {
-      Toast.show('please enter folder name', Toast.SHORT);
+      Toast.show('Please enter folder name', Toast.SHORT);
       error = true;
     } else if (type === 0) {
-      Toast.show('please select type', Toast.SHORT);
+      Toast.show('Please select type', Toast.SHORT);
       error = true;
     } else if (selColor === null) {
-      Toast.show('please select color', Toast.SHORT);
+      Toast.show('Please select color', Toast.SHORT);
       error = true;
     } else {
       error = false;
@@ -119,7 +115,17 @@ const CreateFolderModel = props => {
   };
   return (
     <>
-      <View style={styles.container}>
+      <View style={[styles.container]}>
+        {Platform.OS === 'ios' && (
+          <View
+            style={{
+              height: scale(40),
+              backgroundColor: darkmodeState
+                ? theme.colors.darkMode
+                : theme.colors.white,
+            }}
+          />
+        )}
         <ImageBackground source={images.banner} style={styles.header}>
           <View style={{margin: 20}}>
             <Text
@@ -150,7 +156,7 @@ const CreateFolderModel = props => {
               Set name
             </Text>
             <TextInput
-              placeholder="folder name"
+              placeholder="Folder name"
               onChangeText={txt => {
                 setFolderName(txt);
               }}
@@ -170,9 +176,27 @@ const CreateFolderModel = props => {
           </View>
         </ImageBackground>
 
-        <View style={styles.secondCon}>
+        <View
+          style={[
+            styles.secondCon,
+            {
+              backgroundColor: darkmodeState
+                ? theme.colors.black
+                : theme.colors.backgroundColor,
+            },
+          ]}>
           <View style={styles.row}>
-            <Label title="Type" style={styles.label} />
+            <Label
+              title="Type"
+              style={[
+                styles.label,
+                {
+                  color: darkmodeState
+                    ? theme.colors.white
+                    : theme.colors.black,
+                },
+              ]}
+            />
             <View style={styles.row}>
               {typeData?.map((t, i) => {
                 return (
@@ -215,10 +239,9 @@ const CreateFolderModel = props => {
                           styles.checkboxLbl,
                           {
                             fontWeight: type === t.id ? '700' : '300',
-                            color:
-                              type === t.id
-                                ? theme.colors.black
-                                : theme.colors.black,
+                            color: darkmodeState
+                              ? theme.colors.white
+                              : theme.colors.black,
                           },
                         ]}
                       />
@@ -235,7 +258,13 @@ const CreateFolderModel = props => {
               alignItems: 'center',
               margin: scale(10),
             }}>
-            <Text style={{color: 'black', fontSize: 18, fontWeight: '700'}}>
+            <Text
+              style={{
+                color: 'black',
+                fontSize: 18,
+                fontWeight: '700',
+                color: darkmodeState ? theme.colors.white : theme.colors.black,
+              }}>
               Add icon
             </Text>
             <TouchableOpacity
@@ -342,8 +371,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
-    paddingTop: Platform.OS === 'ios' ? scale(10) : scale(5),
-    backgroundColor: theme.colors.main,
     margin: 0,
   },
   subTitleView: {
@@ -351,7 +378,7 @@ const styles = StyleSheet.create({
   },
   secondCon: {
     padding: scale(20),
-    backgroundColor: theme.colors.lightBlue,
+    backgroundColor: theme.colors.backgroundColor,
     flex: 1,
   },
   row: {
@@ -365,7 +392,7 @@ const styles = StyleSheet.create({
   checkBoxCon: {
     height: scale(18),
     width: scale(18),
-    borderColor: theme.colors.black,
+    borderColor: theme.colors.orange,
     borderWidth: scale(1.5),
     borderRadius: scale(9),
     alignItems: 'center',

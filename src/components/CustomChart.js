@@ -10,6 +10,7 @@ const CustomChart = ({chartData}) => {
         innerRadius={'80%'}
         style={{height: 200, borderRadius: 10, width: 200}}
         data={chartData}
+        padAngle={0}
       />
     </View>
   );

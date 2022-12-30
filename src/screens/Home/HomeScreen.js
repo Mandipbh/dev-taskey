@@ -9,9 +9,7 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import Toast from 'react-native-simple-toast';
-import Icon1 from 'react-native-vector-icons/Foundation';
 import Icon2 from 'react-native-vector-icons/Feather';
-import Icon3 from 'react-native-vector-icons/Ionicons';
 import {
   CreateFolderModel,
   CronoCard,
@@ -26,18 +24,16 @@ import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import DraggableFlatList from 'react-native-draggable-dynamic-flatlist';
 import {useEffect} from 'react';
 import ComplateTaskModel from '../../components/appModel/ComplateTaskModel';
-import {ProgressBar} from 'react-native-paper';
 import ApiService from '../../utils/ApiService';
-import axios from 'axios';
-import {appAPI, postAPICall} from '../../utils/AppApi';
+import {postAPICall} from '../../utils/AppApi';
 import moment from 'moment';
+import {useSelector} from 'react-redux';
 
 const HomeScreen = () => {
   const [openFolderModal, setOpenFolderModal] = useState(false);
   const [openIndex, setOpenIndex] = useState(null);
   const [selectedType, setType] = useState(1);
   const [calenderModel, setCalenderModel] = useState(false);
-  const [legendView, setlegendView] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [data, setData] = useState(tasksData);
@@ -56,7 +52,7 @@ const HomeScreen = () => {
     getAllTasks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedType, useIsFocused()]);
-
+  const defualtTimes = useSelector(state => state.UserReducer?.defaultTime);
   const getAllTasks = async () => {
     if (selectedType === 1) {
       setLoader(true);
@@ -68,6 +64,20 @@ const HomeScreen = () => {
             return a?.order - b?.order;
           });
           setFolder(OrderWiseData);
+          ApiService.get('folder/COMPLETED').then(resData => {
+            setLoader(false);
+            if (resData.success) {
+              let folderData = resData.data;
+              folderData.map(item => {
+                if (
+                  selectedType === 1 &&
+                  item?.name === 'COMPLETED CRONO TASK'
+                ) {
+                  setFolder([...OrderWiseData, item]);
+                }
+              });
+            }
+          });
         }
       });
     } else if (selectedType === 2) {
@@ -79,6 +89,20 @@ const HomeScreen = () => {
             return a?.order - b?.order;
           });
           setFolder(OrderWiseData);
+          ApiService.get('folder/COMPLETED').then(resData => {
+            setLoader(false);
+            if (resData.success) {
+              let folderData = resData.data;
+              folderData.map(item => {
+                if (
+                  selectedType === 2 &&
+                  item?.name == 'COMPLETED TIMER TASK'
+                ) {
+                  setFolder([...OrderWiseData, item]);
+                }
+              });
+            }
+          });
         }
       });
     } else if (selectedType === 3) {
@@ -90,6 +114,20 @@ const HomeScreen = () => {
             return a?.order - b?.order;
           });
           setFolder(OrderWiseData);
+          ApiService.get('folder/COMPLETED').then(resData => {
+            setLoader(false);
+            if (resData.success) {
+              let folderData = resData.data;
+              folderData.map(item => {
+                if (
+                  selectedType === 3 &&
+                  item?.name === 'COMPLETED COUNTER TASK'
+                ) {
+                  setFolder([...OrderWiseData, item]);
+                }
+              });
+            }
+          });
         }
       });
     }
@@ -100,7 +138,7 @@ const HomeScreen = () => {
       id: 1,
       title: 'CRONO TASKS',
       totalTime: '200 min',
-      icon: images.stopWatch,
+      icon: images.crono,
     },
     {
       id: 2,
@@ -119,6 +157,7 @@ const HomeScreen = () => {
     velocityThreshold: 0.3,
     directionalOffsetThreshold: 20,
   };
+
   const onSwipe = (gestureName, index) => {
     const {SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT} = swipeDirections;
     switch (gestureName) {
@@ -175,7 +214,6 @@ const HomeScreen = () => {
       }
     }
 
-    const options = {payloads: obj};
     try {
       postAPICall('taskStartStop', obj).then(res => {
         if (res.success) {
@@ -184,7 +222,7 @@ const HomeScreen = () => {
         }
       });
     } catch (error) {
-      console.log('error >>> ', error.response.data);
+      console.log('error >>> ', error.response);
     }
   };
 
@@ -200,16 +238,19 @@ const HomeScreen = () => {
       />
     );
   };
-
+  const darkmodeState = useSelector(state => state.UserReducer.isDarkMode);
   const rendertasks = ({item, index, move, moveEnd}) => {
-    const taskObj = {
-      ...item,
-      taskList: [],
-    };
     return (
       <>
         <GestureRecognizer
-          style={styles.taskCardContainer}
+          style={[
+            styles.taskCardContainer,
+            {
+              backgroundColor: darkmodeState
+                ? theme.colors.darkMode
+                : theme.colors.white,
+            },
+          ]}
           onSwipe={(direction, state) => onSwipe(direction, state, index)}
           config={config}>
           <TouchableOpacity onLongPress={move} onPressOut={moveEnd}>
@@ -227,32 +268,73 @@ const HomeScreen = () => {
                     } else if (item?.name === 'GLOBAL COUNTER') {
                     } else if (item?.name === 'GLOBAL CRONO') {
                     } else {
-                      navigation.navigate('CreateF', {
-                        editFolder: taskObj,
-                      });
+                      // navigation.navigate('CreateF', {
+                      //   editFolder: {name: item.name, _id: item._id},
+                      // });
                     }
                   }}>
                   <Label
                     title={item?.name}
-                    style={[styles.headerTitle, {width: '60%'}]}
+                    style={[
+                      styles.headerTitle,
+                      {
+                        width: '60%',
+                        color: darkmodeState
+                          ? theme.colors.white
+                          : theme.colors.black,
+                      },
+                    ]}
                   />
                 </TouchableOpacity>
                 {item?.totalMin !== undefined && (
                   <Label
                     title={`${item?.totalMin?.toFixed(2)} mins`}
-                    style={[styles.headerTitle]}
+                    style={[
+                      styles.headerTitle,
+                      {
+                        color: darkmodeState
+                          ? theme.colors.white
+                          : theme.colors.black,
+                      },
+                    ]}
                   />
                 )}
                 <Label
-                  title={'20%'}
-                  style={[styles.headerTitle, {marginVertical: scale(7)}]}
+                  // title={'20%'}
+                  style={[
+                    styles.headerTitle,
+                    {
+                      marginVertical: scale(7),
+                      color: darkmodeState
+                        ? theme.colors.white
+                        : theme.colors.black,
+                    },
+                  ]}
                 />
               </View>
               <View style={styles.taskContainer}>
-                <Label title={'Status'} style={[styles.headerTitle]} />
+                <Label
+                  title={'Status'}
+                  style={[
+                    styles.headerTitle,
+                    {
+                      color: darkmodeState
+                        ? theme.colors.white
+                        : theme.colors.black,
+                    },
+                  ]}
+                />
                 <Label
                   title={'Name'}
-                  style={[styles.headerTitle, {width: '35%'}]}
+                  style={[
+                    styles.headerTitle,
+                    {
+                      width: '35%',
+                      color: darkmodeState
+                        ? theme.colors.white
+                        : theme.colors.black,
+                    },
+                  ]}
                 />
                 {selectedType !== 1 && (
                   <Icon2
@@ -263,11 +345,35 @@ const HomeScreen = () => {
                 )}
                 <Label
                   title={'Path'}
-                  style={[styles.headerTitle, {left: scale(10)}]}
+                  style={[
+                    styles.headerTitle,
+                    {
+                      left: scale(10),
+                      color: darkmodeState
+                        ? theme.colors.white
+                        : theme.colors.black,
+                    },
+                  ]}
                 />
                 <View style={styles.row}>
-                  <Label title={'% '} style={[styles.headerTitle]} />
-                  <Icon2 name="folder" size={scale(22)} />
+                  <Label
+                    title={'% '}
+                    style={[
+                      styles.headerTitle,
+                      {
+                        color: darkmodeState
+                          ? theme.colors.white
+                          : theme.colors.black,
+                      },
+                    ]}
+                  />
+                  <Icon2
+                    name="folder"
+                    size={scale(22)}
+                    color={
+                      darkmodeState ? theme.colors.white : theme.colors.black
+                    }
+                  />
                 </View>
               </View>
               {Folder?.map((taskItem, Tindex) => {
@@ -281,9 +387,7 @@ const HomeScreen = () => {
                         })}
                         renderItem={tasksrender}
                         showsVerticalScrollIndicator={false}
-                        keyExtractor={(item, index) =>
-                          `draggable-item-${item.key + 1}`
-                        }
+                        keyExtractor={(item, index) => index}
                         scrollPercent={5}
                         onMoveEnd={({data, index}) => {
                           handleTaskOrder(data);
@@ -297,11 +401,19 @@ const HomeScreen = () => {
                         navigation.navigate('AllTask', {
                           taskItem,
                           folderName: item?.folder,
+                          selectedType,
                         })
                       }
                       style={styles.seeMore}>
                       {taskItem?.taskList?.length > 3 && (
-                        <Label title="See more" />
+                        <Label
+                          title="See more"
+                          style={{
+                            color: darkmodeState
+                              ? theme.colors.white
+                              : theme.colors.black,
+                          }}
+                        />
                       )}
                     </TouchableOpacity>
                   </>
@@ -313,6 +425,7 @@ const HomeScreen = () => {
       </>
     );
   };
+
   const handleMoveFolder = data => {
     setFolder(data);
     const updateData = [];
@@ -324,7 +437,7 @@ const HomeScreen = () => {
     try {
       ApiService.put('folderorder', options).then(res => {
         if (res.success) {
-          Toast.show('folder order updated', Toast.SHORT);
+          Toast.show('Folder order updated', Toast.SHORT);
           console.log('response of ordering >> ', res);
         }
       });
@@ -332,6 +445,7 @@ const HomeScreen = () => {
       console.log('error >>> ', error);
     }
   };
+
   const handleTaskOrder = taskOrder => {
     const updateData = [];
     taskOrder.map((item, index) => {
@@ -343,38 +457,59 @@ const HomeScreen = () => {
       ApiService.put('taskorder', options).then(res => {
         if (res.success) {
           getAllTasks();
-          Toast.show('task order updated', Toast.SHORT);
-          console.log('response of ordering >> ', res);
+          Toast.show('Task order updated', Toast.SHORT);
         }
       });
     } catch (error) {
       console.log('error >>> ', error);
     }
   };
+
   const handlefilterModel = (StartDate, Enddate) => {
-    console.log('start & end date >> ', StartDate, Enddate);
-    setStartDate(StartDate);
-    setEndDate(Enddate);
-    setCalenderModel(false);
-    const frmData = {
-      startDate: StartDate,
-      lastDate: Enddate,
-      type:
-        selectedType === 1 ? 'CRONO' : selectedType === 2 ? 'TIMER' : 'COUNTER',
-    };
-    const taskArr = [];
-    const options = {payloads: frmData};
-    ApiService.post('filterFolder', options).then(async res => {
-      if (res.success) {
-        const data = res?.taskdata;
-        await data?.map(item => {
-          taskArr.push(item?.folderId);
-        });
-        console.log('filter arr ', taskArr);
-        setFolder(taskArr);
-      } else {
+    if (StartDate === undefined && Enddate === undefined) {
+      setStartDate(null);
+      setEndDate(null);
+      getAllTasks();
+    } else {
+      let endDate = moment(
+        moment(Enddate).add(1, 'd').format('YYYY-MM-DD'),
+      ).format('YYYY-MM-DD');
+      setStartDate(StartDate);
+      setEndDate(Enddate);
+      setCalenderModel(false);
+      const frmData = {
+        startDate: StartDate,
+        lastDate: endDate,
+        type:
+          selectedType === 1
+            ? 'CRONO'
+            : selectedType === 2
+            ? 'TIMER'
+            : 'COUNTER',
+      };
+      const taskArr = [];
+      const options = {payloads: frmData};
+      try {
+        ApiService.post('filterFolder', options)
+          .then(async res => {
+            if (res.success) {
+              const data = res?.filteredData;
+              await data?.map(item => {
+                taskArr.push(item?.folderId);
+              });
+              console.log('filter arr ', taskArr);
+              setFolder(taskArr);
+            } else {
+              Toast.show(res.message);
+            }
+          })
+          .catch(c => {
+            console.log('chatch ?? ', c.response);
+          });
+      } catch (error) {
+        console.log('eror >> ', error.response);
       }
-    });
+    }
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -453,12 +588,7 @@ const HomeScreen = () => {
             );
           })}
 
-          <View
-            style={{
-              width: '30%',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+          <View style={styles.calendarCon}>
             <TouchableOpacity
               onPress={() => {
                 setCalenderModel(true);
@@ -474,6 +604,7 @@ const HomeScreen = () => {
                 source={images.calendar}
               />
             </TouchableOpacity>
+
             <Label
               title={
                 startDate === null
@@ -503,11 +634,12 @@ const HomeScreen = () => {
                 contentContainerStyle={{
                   paddingVertical: scale(10),
                   paddingBottom: theme.SCREENHEIGHT * 0.01,
+                  marginTop: scale(10),
                 }}
                 data={Folder}
                 renderItem={rendertasks}
                 showsVerticalScrollIndicator={false}
-                keyExtractor={item => `draggable-item-${item.key}`}
+                keyExtractor={(item, index) => index}
                 scrollPercent={5}
                 onMoveEnd={({data}) => handleMoveFolder(data)}
               />
@@ -536,7 +668,6 @@ const HomeScreen = () => {
         />
       )}
       <ComplateTaskModel isVisible={model} close={handleProgressClose} />
-      {/* {!loader && <Loader />} */}
     </SafeAreaView>
   );
 };
@@ -556,6 +687,11 @@ const styles = StyleSheet.create({
     marginVertical: scale(4),
     borderRadius: scale(8),
     paddingBottom: scale(10),
+  },
+  calendarCon: {
+    width: '30%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   mainCOntainer: {
     paddingHorizontal: scale(13),

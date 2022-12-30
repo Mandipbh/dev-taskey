@@ -15,32 +15,44 @@ import {scale, theme} from '../../utils';
 import {Label} from '../Label';
 import {useNavigation} from '@react-navigation/native';
 import CreateFolderModel from './CreateFolderModel';
-export default PayScreen = () => {
+import {useSelector} from 'react-redux';
+export default PayScreen = props => {
   const [modalVisible, setModalVisible] = useState(false);
   const [newFolderM, setnewFolderM] = useState(false);
   const navigation = useNavigation();
+  const darkmodeState = useSelector(state => state.UserReducer.isDarkMode);
+  const isSelected = props?.focus?.accessibilityState?.selected;
   return (
     <>
-      {/* <Button
-        onPress={() => {
-          setModalVisible(true);
-        }}
-        buttonStyle={styles.buttonStyle}
-        icon={<Icon name={'creditCard'} width="80" height="80" />}
-      /> */}
       <View>
         <Icon2
           name="circle-with-plus"
           size={scale(22)}
-          color={theme.colors.white}
+          color={
+            darkmodeState
+              ? isSelected
+                ? theme.colors.main
+                : theme.colors.icon
+              : theme.colors.white
+          }
           onPress={() => {
             setModalVisible(true);
           }}
-          style={{
-            paddingHorizontal: scale(35),
-            marginTop: Platform.OS === 'ios' ? 0 : scale(5),
-          }}
+          style={styles.btn}
         />
+        {/* <Label
+          title="Add"
+          style={[
+            styles.lbl,
+            {
+              color: darkmodeState
+                ? isSelected
+                  ? theme.colors.main
+                  : theme.colors.icon
+                : theme.colors.white,
+            },
+          ]}
+        /> */}
       </View>
       <View style={styles.container}>
         <Modal
@@ -105,4 +117,13 @@ const styles = StyleSheet.create({
     bottom: Platform.OS === 'ios' ? '8%' : '5%',
   },
   bottomtab: {paddingVertical: scale(7), alignItems: 'center'},
+  btn: {
+    paddingHorizontal: scale(35),
+    marginTop: Platform.OS === 'ios' ? scale(8) : scale(15),
+  },
+  lbl: {
+    fontSize: scale(10),
+    marginTop: scale(1),
+    textAlign: 'center',
+  },
 });

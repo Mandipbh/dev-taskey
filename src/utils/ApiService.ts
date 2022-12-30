@@ -1,7 +1,7 @@
 import axios from 'axios';
 // import { BASE_URL } from '../constants';
 
-const APP_API_URL ='https://7147-2409-4041-61d-9f8b-58df-4b0a-550-c44d.in.ngrok.io/api/';
+const APP_API_URL ='http://35.158.183.225:4000/api/';
 axios.interceptors.request.use(config => config);
 
 const execute = async (

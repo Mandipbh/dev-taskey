@@ -8,7 +8,11 @@ const Stack = createNativeStackNavigator();
 
 const HomeStack = () => {
   return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
+    <Stack.Navigator
+      defaultScreenOptions={{
+        gestureResponseDistance: {vertical: 200, horizontal: 150},
+      }}
+      screenOptions={{headerShown: false}}>
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="AllTask" component={AllTasks} />
     </Stack.Navigator>

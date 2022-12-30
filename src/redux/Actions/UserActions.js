@@ -9,13 +9,26 @@ export const isLogin = payload => {
   };
 };
 
-export const defaultTime = payload => {
+export const setDefaultTime = payload => {
   return {
     type: types.DEFAULT_TIME,
     payload,
   };
 };
 
+export const setDefTaskTime = payload => {
+  return {
+    type: types.TIME,
+    payload,
+  };
+};
+
+export const setAdministration = payload => {
+  return {
+    type: types.ADMINISTRATION,
+    payload,
+  };
+};
 export const isDarkMode = payload => {
   return {
     type: types.DARKMODE,

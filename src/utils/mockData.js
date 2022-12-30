@@ -453,19 +453,19 @@ const TypeTask_Distribution = [
   {
     key: 1,
     value: 20,
-    svg: {fill: '#daa520'},
+    svg: {fill: '#e6850e'},
     type: 'crono',
   },
   {
     key: 2,
     value: 30,
-    svg: {fill: 'white'},
+    svg: {fill: '#c26602'},
     type: 'Timer',
   },
   {
     key: 3,
     value: 50,
-    svg: {fill: '#600080'},
+    svg: {fill: '#743a01'},
     type: 'Counter',
   },
 ];
@@ -474,20 +474,20 @@ const AchievementTasksStatus = [
   {
     key: 1,
     value: 50,
-    svg: {fill: '#4682b4'},
+    svg: {fill: '#743a01'},
     type: 'Completed',
   },
   {
     key: 2,
     value: 12,
-    svg: {fill: '#ff0000'},
+    svg: {fill: '#c26602'},
     type: 'Failed',
   },
   {
     key: 3,
     value: 38,
-    svg: {fill: '#008000'},
-    type: 'inProgress',
+    svg: {fill: '#e6850e'},
+    type: 'In-Progress',
   },
 ];
 

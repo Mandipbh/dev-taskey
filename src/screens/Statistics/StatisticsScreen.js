@@ -1,5 +1,4 @@
 import {
-  Platform,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -7,48 +6,34 @@ import {
   TouchableOpacity,
   View,
   Text,
-  Alert,
   ImageBackground,
 } from 'react-native';
 import React from 'react';
-import Icon from 'react-native-vector-icons/Ionicons';
 import {Dropdown} from 'react-native-element-dropdown';
 import {useState} from 'react';
 import {scale, theme} from '../../utils';
-var math = require('mathjs');
 
 import {CheckBox, DatePickerModal, Label} from '../../components';
 import {
   statisticdata,
   statisticdataone,
-  statisticdatathree,
-  statisticdatatwo,
   statisticdataFour,
   statisticdataFive,
   statisticdataSix,
   statisticdataSeven,
   TypeTask_Distribution,
   AchievementTasksStatus,
-  Timefolders,
   TimerSpecificfolders,
 } from '../../utils/mockData';
 import moment from 'moment';
-import CommonHeader from '../../components/CommonHeader';
 import images from '../../assets/Images/index';
 import ChartSection from '../../components/ChartSection';
-import {useLayoutEffect} from 'react';
-import {
-  useFocusEffect,
-  useIsFocused,
-  useNavigation,
-} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {MultiSelect} from 'react-native-element-dropdown';
 import {useEffect} from 'react';
-import {useCallback} from 'react';
-import axios from 'axios';
 import ApiService from '../../utils/ApiService';
-import {DonutChart} from 'react-native-circular-chart';
+import {useSelector} from 'react-redux';
 
 const CustomDetails = props => {
   const {detailsData} = props;
@@ -62,8 +47,24 @@ const CustomDetails = props => {
                 flexDirection: 'row',
                 justifyContent: 'space-between',
               }}>
-              <Label style={styles.mapText} title={item?.label} />
-              <Label style={styles.mapText} title={item?.value} />
+              <Label
+                style={[
+                  styles.mapText,
+                  {
+                    color: theme.colors.black,
+                  },
+                ]}
+                title={item?.label}
+              />
+              <Label
+                style={[
+                  styles.mapText,
+                  {
+                    color: theme.colors.black,
+                  },
+                ]}
+                title={item?.value}
+              />
             </View>
           );
         })}
@@ -71,6 +72,10 @@ const CustomDetails = props => {
   );
 };
 const data = [
+  {
+    id: -1,
+    label: 'All',
+  },
   {id: 0, label: 'Crono'},
   {id: 1, label: 'Timer'},
   {id: 2, label: 'Counter'},
@@ -90,12 +95,6 @@ const TimeSpecificFolder = [
   {label: 'Other', value: '4'},
 ];
 
-const Type = [
-  {id: 1, name: 'All Data'},
-  {id: 2, name: 'Only generals'},
-  {id: 3, name: 'Only Specific folders'},
-];
-
 const Task = [
   {id: 1, name: 'Type Task Distribution'},
   {id: 2, name: 'Achievement Tasks Status'},
@@ -112,41 +111,148 @@ const StatisticsScreen = () => {
   const [markedDates, setMarkedDates] = useState(null);
   const [statisticData, setstatisticData] = useState(statisticdata);
   const [statisticDataone, setStatisticDataOne] = useState(statisticdataone);
+  const isFoucs = useIsFocused();
+  const [statisticdataFourData, setstatisticdataFour] =
+    useState(statisticdataFour);
   const [statisticDatafive, setStatisticDatafive] = useState(statisticdataFive);
-
+  const darkmodeState = useSelector(state => state.UserReducer.isDarkMode);
+  const [statisticdatasix, setstatisticdataSix] = useState(statisticdataSix);
+  const [TypeTask_distribution, setTypeTask_Distribution] = useState(
+    TypeTask_Distribution,
+  );
+  const [achievementTasksStatus, setAchievementTasksStatus] = useState(
+    AchievementTasksStatus,
+  );
+  const [statisticdataseven, setstatisticdataSeven] =
+    useState(statisticdataSeven);
   useEffect(() => {
     getStatasticData();
-  }, []);
-  console.log('valuevaluevalue ', value?.toUpperCase());
+  }, [value, startDate]);
+  useEffect(() => {
+    getStatasticData();
+  }, [isFoucs]);
+
   const getStatasticData = () => {
+    let todayDate = moment().format('YYYY/MM/DD');
+
+    var startdate = moment();
+    startdate = startdate.subtract(1, 'month');
+    startdate = startdate.format('YYYY/MM/DD');
     const payload = {
-      startDate: '2022/12/01',
-      lastDate: '2022/12/30',
-      type: value === null ? 'All' : value?.toUpperCase(),
+      startDate: startDate === null ? startdate : startDate,
+      lastDate: endDate === null ? todayDate : endDate,
+      type: value === null || value === 'All' ? 'All' : value?.toUpperCase(),
     };
     const options = {payloads: payload};
     ApiService.post('statistics', options)
       .then(res => {
-        console.log('statics data >> ', res);
         if (res.success) {
+          // console.log('statics response >>> ', res);
           let staticdummy = [...statisticData];
-          staticdummy[0].value = res?.outputData.numberOfTask;
-          staticdummy[1].value = res?.outputData.totalMin / 60;
+          staticdummy[0].value =
+            res?.outputData.numberOfTask === undefined
+              ? '-'
+              : res?.outputData.numberOfTask;
+          staticdummy[1].value =
+            res?.outputData.totalMin === undefined
+              ? '-'
+              : res?.outputData.totalMin / 60;
           setstatisticData(staticdummy);
-          let time = math.format(res?.outputData.totalMin, {
-            exponential: {lower: 1e-100, upper: 1e100},
-          });
           let staticdummyone = [...statisticDataone];
-          staticdummyone[0].value = res?.outputData.achievementTasks;
+          staticdummyone[0].value =
+            res?.outputData.achievementTasks === undefined
+              ? '-'
+              : res?.outputData.achievementTasks;
+          staticdummyone[1].value =
+            res?.outputData.achievementDoneTask === undefined
+              ? '-'
+              : res?.outputData.achievementDoneTask;
+          staticdummyone[2].value =
+            res?.outputData.percentageOfSuccess === undefined
+              ? '-'
+              : res?.outputData.percentageOfSuccess?.toFixed(2) + '%';
+          let three = [...statisticdataFourData];
+
+          three[0].value =
+            res?.outputData.deletedTasks === undefined
+              ? '-'
+              : res?.outputData.deletedTasks;
+          three[1].value =
+            res?.outputData.failedTasks === undefined
+              ? '-'
+              : res?.outputData.failedTasks;
+          three[2].value =
+            res?.outputData?.percentageOfFailedTask === undefined
+              ? '-'
+              : res?.outputData.percentageOfFailedTask?.toFixed(2) === undefined
+              ? res?.outputData.percentageOfFailedTask?.toFixed(2)
+              : res?.outputData.percentageOfFailedTask?.toFixed(2) + '%';
           setStatisticDataOne(staticdummyone);
+
           let staticdummytwo = [...statisticDatafive];
-          staticdummytwo[0].value = res?.outputData.totalCronoTask;
+          staticdummytwo[0].value =
+            res?.outputData.totalCronoTask === undefined
+              ? '-'
+              : res?.outputData.totalCronoTask;
+          staticdummytwo[1].value =
+            res?.outputData.percentageOfCronoTask?.toFixed(2) === undefined
+              ? '-'
+              : res?.outputData.percentageOfCronoTask?.toFixed(2) + '%';
           setStatisticDatafive(staticdummytwo);
+          let six = [...statisticdatasix];
+          six[0].value =
+            res?.outputData.totalTimerTask === undefined
+              ? '-'
+              : res?.outputData.totalTimerTask;
+          six[1].value =
+            res?.outputData.percentageOfTimerTask?.toFixed(2) === undefined
+              ? '-'
+              : res?.outputData.percentageOfTimerTask?.toFixed(2) + '%';
+          setstatisticdataSix(six);
+          let seven = [...statisticdataseven];
+          seven[0].value =
+            res?.outputData.totalCounterTask === undefined
+              ? '-'
+              : res?.outputData.totalCounterTask;
+          seven[1].value =
+            res?.outputData.percentageOfCounterTask?.toFixed(2) === undefined
+              ? '-'
+              : res?.outputData.percentageOfCounterTask?.toFixed(2) + '%';
+          setstatisticdataSeven(seven);
+          let graph = [...TypeTask_distribution];
+          graph[0].value =
+            res?.outputData.percentageOfCronoTask?.toFixed(2) === undefined
+              ? 0
+              : res?.outputData.percentageOfCronoTask?.toFixed(2);
+          graph[1].value =
+            res?.outputData.percentageOfTimerTask?.toFixed(2) === undefined
+              ? 0
+              : res?.outputData.percentageOfTimerTask?.toFixed(2);
+          graph[2].value =
+            res?.outputData.percentageOfCounterTask?.toFixed(2) === undefined
+              ? 0
+              : res?.outputData.percentageOfCounterTask?.toFixed(2);
+          setTypeTask_Distribution(graph);
+          let graph1 = [...AchievementTasksStatus];
+          graph1[0].value =
+            res?.outputData.achievementDeletePer?.toFixed(2) === undefined
+              ? 0
+              : res?.outputData.achievementDeletePer?.toFixed(2);
+          graph1[2].value =
+            res?.outputData.achievementInProgressPer?.toFixed(2) === undefined
+              ? 0
+              : res?.outputData.achievementInProgressPer?.toFixed(2);
+          graph1[1].value =
+            res?.outputData.achievementFailedPer?.toFixed(2) === undefined
+              ? 0
+              : res?.outputData.achievementFailedPer?.toFixed(2);
+
+          setAchievementTasksStatus(graph1);
         } else {
           console.log('null');
         }
       })
-      .catch(err => console.log('Error', err));
+      .catch(err => console.log('Error', err.response));
   };
 
   const handlclose = () => {
@@ -164,7 +270,7 @@ const StatisticsScreen = () => {
     }
   };
 
-  const Main = () => {
+  const Main = ({darkmodeState}) => {
     return (
       <>
         <View style={styles.mapView}>
@@ -176,58 +282,107 @@ const StatisticsScreen = () => {
                   justifyContent: 'space-between',
                 }}
                 key={i.toString()}>
-                <Text style={styles.mapText}>{f.label}</Text>
-                <Text style={styles.labeltwo}>{f.value}</Text>
+                <Text
+                  style={[
+                    styles.mapText,
+                    {
+                      color: darkmodeState
+                        ? theme.colors.white
+                        : theme.colors.black,
+                    },
+                  ]}>
+                  {f.label}
+                </Text>
+                <Text
+                  style={[
+                    styles.labeltwo,
+                    {
+                      color: darkmodeState
+                        ? theme.colors.white
+                        : theme.colors.black,
+                    },
+                  ]}>
+                  {f.value}
+                </Text>
               </View>
             );
           })}
         </View>
-        <View style={styles.divider}></View>
+        <View style={styles.divider} />
         <View style={styles.mapView}>
           {statisticDataone.map((f, i) => {
             return (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}>
-                {f.ischecked && (
-                  <View style={{marginRight: scale(-90)}}>
-                    <CheckBox />
-                  </View>
-                )}
-                <Text style={styles.mapText}>{f.label}</Text>
-                <Text style={styles.labeltwo}>{f.value}</Text>
+              <View style={styles.checkboxRow}>
+                <View style={{flexDirection: 'row'}}>
+                  {f.ischecked && (
+                    <CheckBox btnstyle={{borderRadius: scale(0)}} />
+                  )}
+                  <Text
+                    style={[
+                      styles.mapText,
+                      {
+                        color: darkmodeState
+                          ? theme.colors.white
+                          : theme.colors.black,
+                      },
+                    ]}>
+                    {f.label}
+                  </Text>
+                </View>
+                <Text
+                  style={[
+                    styles.labeltwo,
+                    {
+                      color: darkmodeState
+                        ? theme.colors.white
+                        : theme.colors.black,
+                    },
+                  ]}>
+                  {f.value}
+                </Text>
               </View>
             );
           })}
         </View>
-        <View style={styles.divider}></View>
+        <View style={styles.divider} />
         <View style={styles.mapView}>
-          {statisticdataFour.map((f, i) => {
+          {statisticdataFourData.map((f, i) => {
             return (
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}>
-                {f.ischecked && (
-                  <View style={{marginRight: scale(-90)}}>
-                    <CheckBox />
-                  </View>
-                )}
-                <View>
-                  <Text style={styles.mapText}>{f.label}</Text>
+              <View style={styles.checkboxRow}>
+                <View style={{flexDirection: 'row'}}>
+                  {f.ischecked && (
+                    <CheckBox btnstyle={{borderRadius: scale(0)}} />
+                  )}
+                  <Text
+                    style={[
+                      styles.mapText,
+                      {
+                        color: darkmodeState
+                          ? theme.colors.white
+                          : theme.colors.black,
+                        // marginLeft: f.ischecked ? scale(-40) : 0,
+                      },
+                    ]}>
+                    {f.label}
+                  </Text>
                 </View>
-                <Text style={styles.labeltwo}>{f.value}</Text>
+                <Text
+                  style={[
+                    styles.labeltwo,
+                    {
+                      color: darkmodeState
+                        ? theme.colors.white
+                        : theme.colors.black,
+                    },
+                  ]}>
+                  {f.value}
+                </Text>
               </View>
             );
           })}
         </View>
 
-        <View style={styles.divider}></View>
+        <View style={styles.divider} />
         <View
           style={{
             flexDirection: 'row',
@@ -235,8 +390,17 @@ const StatisticsScreen = () => {
             margin: scale(20),
             alignItems: 'center',
           }}>
-          <CheckBox />
-          <Text style={styles.checkText}>Check to count in statistics</Text>
+          <CheckBox btnstyle={{borderRadius: scale(0)}} />
+          <Text
+            style={[
+              styles.checkText,
+              {
+                color: darkmodeState ? theme.colors.white : theme.colors.black,
+                marginLeft: scale(0),
+              },
+            ]}>
+            Check to count in statistics
+          </Text>
         </View>
         <View style={styles.mapView}>
           {statisticDatafive.map((f, i) => {
@@ -246,86 +410,164 @@ const StatisticsScreen = () => {
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                 }}>
-                <Text style={styles.mapText}>{f.label}</Text>
-                <Text style={styles.labeltwo}>{f.value}</Text>
+                <Text
+                  style={[
+                    styles.mapText,
+                    {
+                      color: darkmodeState
+                        ? theme.colors.white
+                        : theme.colors.black,
+                    },
+                  ]}>
+                  {f.label}
+                </Text>
+                <Text
+                  style={[
+                    styles.labeltwo,
+                    {
+                      color: darkmodeState
+                        ? theme.colors.white
+                        : theme.colors.black,
+                    },
+                  ]}>
+                  {f.value}
+                </Text>
               </View>
             );
           })}
         </View>
-        <View style={styles.divider}></View>
+        <View style={styles.divider} />
 
         <View style={styles.mapView}>
-          {statisticdataSix.map((f, i) => {
+          {statisticdatasix.map((f, i) => {
             return (
               <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                 }}>
-                <Text style={styles.mapText}>{f.label}</Text>
-                <Text style={styles.labeltwo}>{f.value}</Text>
+                <Text
+                  style={[
+                    styles.mapText,
+                    {
+                      color: darkmodeState
+                        ? theme.colors.white
+                        : theme.colors.black,
+                    },
+                  ]}>
+                  {f.label}
+                </Text>
+                <Text
+                  style={[
+                    styles.labeltwo,
+                    {
+                      color: darkmodeState
+                        ? theme.colors.white
+                        : theme.colors.black,
+                    },
+                  ]}>
+                  {f.value}
+                </Text>
               </View>
             );
           })}
         </View>
-        <View style={styles.divider}></View>
+        <View style={styles.divider} />
 
         <View style={styles.mapView}>
-          {statisticdataSeven.map((f, i) => {
+          {statisticdataseven.map((f, i) => {
             return (
               <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                 }}>
-                <Text style={styles.mapText}>{f.label}</Text>
-                <Text style={styles.labeltwo}>{f.value}</Text>
+                <Text
+                  style={[
+                    styles.mapText,
+                    {
+                      color: darkmodeState
+                        ? theme.colors.white
+                        : theme.colors.black,
+                    },
+                  ]}>
+                  {f.label}
+                </Text>
+                <Text
+                  style={[
+                    styles.labeltwo,
+                    {
+                      color: darkmodeState
+                        ? theme.colors.white
+                        : theme.colors.black,
+                    },
+                  ]}>
+                  {f.value}
+                </Text>
               </View>
             );
           })}
         </View>
-        <View style={styles.divider}></View>
+        <View style={styles.divider} />
 
-        <View
-          style={{
-            flexDirection: 'row',
-            alignSelf: 'center',
-            width: '75%',
-            marginTop: scale(40),
-          }}>
+        <View style={styles.taskCon}>
           {Task.map(item => {
             return (
               item.id === selectedType && (
                 <>
                   <View style={{width: '10%'}}>
-                    <AntDesign
-                      name="left"
-                      size={scale(30)}
-                      onPress={() => {
-                        selectedType > 1
-                          ? setType(item.id - 1)
-                          : setType(item.id + 1);
+                    {value !== 'Crono' && (
+                      <AntDesign
+                        name="left"
+                        size={scale(30)}
+                        onPress={() => {
+                          selectedType > 1
+                            ? setType(item.id - 1)
+                            : setType(item.id + 1);
+                        }}
+                        color={
+                          darkmodeState
+                            ? theme.colors.white
+                            : theme.colors.black
+                        }
+                      />
+                    )}
+                  </View>
+                  <View style={styles.dataCon}>
+                    <Label
+                      style={{
+                        fontSize: scale(17),
+                        color: darkmodeState
+                          ? theme.colors.white
+                          : theme.colors.black,
+                      }}
+                      title={item.name}
+                    />
+                    <Label
+                      title={'Slide to view'}
+                      style={{
+                        color: darkmodeState
+                          ? theme.colors.white
+                          : theme.colors.black,
                       }}
                     />
-                  </View>
-                  <View
-                    style={{
-                      width: '80%',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}>
-                    <Label style={{fontSize: 18}} title={item.name}></Label>
-                    <Text>Slide to view</Text>
                   </View>
 
                   <View style={{width: '10%'}}>
-                    <AntDesign
-                      name="right"
-                      size={scale(30)}
-                      onPress={() => {
-                        selectedType <= 1 ? setType(item.id + 1) : setType(1);
-                      }}
-                    />
+                    {value !== 'Crono' && (
+                      <AntDesign
+                        name="right"
+                        size={scale(30)}
+                        onPress={() => {
+                          selectedType <= 1 ? setType(item.id + 1) : setType(1);
+                        }}
+                        color={
+                          darkmodeState
+                            ? theme.colors.white
+                            : theme.colors.black
+                        }
+                      />
+                    )}
                   </View>
                 </>
               )
@@ -337,12 +579,12 @@ const StatisticsScreen = () => {
           <ChartSection
             style={{marginTop: scale(15)}}
             title="Type Tasks Distribution"
-            data={TypeTask_Distribution}
+            data={TypeTask_distribution}
           />
         ) : (
           <ChartSection
             title="Achievement Tasks Status"
-            data={AchievementTasksStatus}
+            data={achievementTasksStatus}
           />
         )}
         {/* <View style={styles.divider} />
@@ -438,7 +680,9 @@ const StatisticsScreen = () => {
   return (
     <SafeAreaView
       style={{
-        backgroundColor: theme.colors.backgroundColor,
+        backgroundColor: darkmodeState
+          ? theme.colors.black
+          : theme.colors.backgroundColor,
         flex: 1,
       }}>
       <ScrollView
@@ -461,7 +705,7 @@ const StatisticsScreen = () => {
                   title={
                     startDate == null ? 'Today' : startDate + ' / ' + endDate
                   }
-                  style={{justifyContent: 'center', marginBottom: scale(-5)}}
+                  style={styles.datetimetxt}
                 />
               </TouchableOpacity>
               <DatePickerModal
@@ -500,10 +744,10 @@ const StatisticsScreen = () => {
 
         {selectedType === 1 ? (
           <>
-            <Main />
+            <Main darkmodeState={darkmodeState} />
           </>
         ) : selectedType === 2 ? (
-          <Main />
+          <Main darkmodeState={darkmodeState} />
         ) : (
           <></>
         )}
@@ -553,6 +797,11 @@ const styles = StyleSheet.create({
     // borderWidth: scale(0.8),
     borderRadius: scale(10),
   },
+  datetimetxt: {
+    justifyContent: 'center',
+    marginBottom: scale(-5),
+    fontSize: scale(12),
+  },
   Dropdown: {
     paddingHorizontal: scale(14),
     // marginLeft: scale(6),
@@ -563,7 +812,7 @@ const styles = StyleSheet.create({
     marginTop: scale(20),
     paddingBottom: scale(4),
     borderColor: theme.colors.gray,
-    paddingHorizontal: scale(30),
+    paddingHorizontal: scale(15),
   },
   mapText: {fontWeight: '300', fontSize: 16, color: theme.colors.black},
   label: {
@@ -583,6 +832,12 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+  },
+  taskCon: {
+    flexDirection: 'row',
+    alignSelf: 'center',
+    width: '75%',
+    marginTop: scale(40),
   },
   divider: {
     borderBottomWidth: scale(0.2),
@@ -611,5 +866,15 @@ const styles = StyleSheet.create({
   textSelectedStyle: {
     marginRight: scale(4),
     fontSize: 14,
+  },
+  checkboxRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    // alignItems: 'center',
+  },
+  dataCon: {
+    width: '80%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

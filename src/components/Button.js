@@ -5,9 +5,10 @@ import {Label} from './index';
 import ICON from 'react-native-vector-icons/Ionicons';
 
 const Button = props => {
-  const {onPress, style, title, titleStyle, Icon} = props;
+  const {onPress, style, title, titleStyle, Icon, disabled} = props;
   return (
     <TouchableOpacity
+      disabled={disabled}
       onPress={onPress}
       style={[styles.buttoncontainer, styles.shadow, style]}>
       {Icon && (
