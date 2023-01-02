@@ -341,6 +341,9 @@ const HomeScreen = () => {
                     name="award"
                     size={scale(22)}
                     style={{marginLeft: scale(-40)}}
+                    color={
+                      darkmodeState ? theme.colors.white : theme.colors.black
+                    }
                   />
                 )}
                 <Label

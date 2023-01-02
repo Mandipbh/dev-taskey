@@ -1,7 +1,7 @@
 import axios from 'axios';
 // import { BASE_URL } from '../constants';
 
-const APP_API_URL ='http://35.158.183.225:4000/api/';
+const APP_API_URL ='http://api.mylead.net/api/';
 axios.interceptors.request.use(config => config);
 
 const execute = async (

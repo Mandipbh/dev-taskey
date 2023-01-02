@@ -74,7 +74,7 @@
 import axios from 'axios';
 import {handleError, handleResponse} from './helper';
 
-export const getBaseUrl = 'http://35.158.183.225:4000/api/';
+export const getBaseUrl = 'http://api.mylead.net/api/';
 
 export const appAPI = axios.create({
   baseURL: getBaseUrl,
