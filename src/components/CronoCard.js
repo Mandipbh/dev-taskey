@@ -131,6 +131,7 @@ const CronoCard = ({
                       : darkmodeState
                       ? theme.colors.white
                       : theme.colors.black,
+                  width: '100%',
                 }}
               />
               {selectedType !== 1 && (

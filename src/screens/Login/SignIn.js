@@ -108,7 +108,7 @@ const SignIn = () => {
           setSendOtp(true);
         }
       } catch (error) {
-        // console.log('errror >>> ', error?.response?.data?.message);
+        console.log('errror >>> ', error);
         Toast.show(error?.response?.data?.message, Toast.SHORT);
       }
     }
