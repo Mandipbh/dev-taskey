@@ -6,8 +6,7 @@
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
 	<string>taskey</string>
-	<key>NSAllowsArbitraryLoads</key>
-	<true/> 
+	 
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -26,7 +25,7 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSAppTransportSecurity</key>
+	<key> </key>
 	<dict>
 		<key>NSExceptionDomains</key>
 		<dict>

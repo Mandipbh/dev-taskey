@@ -213,14 +213,15 @@ const CreateTaskScreen = props => {
       // color: selColor,
       // order: 0,
       // meta: selMeta == 1 ? 'Achievement' : 'Registry',
-      // amount: amount,
+      amount: amount,
       // status: 'Paused',
       folderId: selectedFolder?._id,
+      taskId: props?.route?.params?.editData?._id,
       // folderFrm.append('icon', null);
     };
     setLoading(true);
     let options = {payloads: frmData};
-    ApiService.put(`task/${props?.route?.params?.editData?._id}`, options)
+    ApiService.put(`updateTask`, options)
       .then(res => {
         setLoading(false);
         // navigation.goBack();
@@ -307,7 +308,7 @@ const CreateTaskScreen = props => {
           styles.container,
           {
             backgroundColor: darkmodeState
-              ? theme.colors.black
+              ? theme.colors.darkMode
               : theme.colors.backgroundColor,
           },
         ]}>

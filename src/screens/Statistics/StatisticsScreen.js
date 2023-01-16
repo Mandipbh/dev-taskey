@@ -101,7 +101,6 @@ const Task = [
 ];
 
 const StatisticsScreen = () => {
-  const naviagtion = useNavigation();
   const [value, setvalue] = useState(null);
   const [isChecked, setChecked] = useState(false);
   const [startDate, setStartDate] = useState(null);
@@ -132,6 +131,21 @@ const StatisticsScreen = () => {
     getStatasticData();
   }, [isFoucs]);
 
+  const timeModeState = useSelector(state => state.UserReducer.time);
+  function pad(num) {
+    return ('0' + num).slice(-2);
+  }
+  function hhmmss(secs) {
+    var minutes = Math.floor(secs / 60);
+    secs = secs % 60;
+    var hours = Math.floor(minutes / 60);
+    minutes = minutes % 60;
+    return timeModeState === 1
+      ? `${pad(minutes)}:${pad(secs)}`
+      : Math.floor(minutes / 60) + ':' + pad(minutes) + ':' + pad(secs);
+    // return pad(hours)+":"+pad(minutes)+":"+pad(secs); for old browsers
+  }
+
   const getStatasticData = () => {
     let todayDate = moment().format('YYYY/MM/DD');
 
@@ -143,12 +157,14 @@ const StatisticsScreen = () => {
       lastDate: endDate === null ? todayDate : endDate,
       type: value === null || value === 'All' ? 'All' : value?.toUpperCase(),
     };
+
     const options = {payloads: payload};
     ApiService.post('statistics', options)
       .then(res => {
         if (res.success) {
           // console.log('statics response >>> ', res);
           let staticdummy = [...statisticData];
+
           staticdummy[0].value =
             res?.outputData.numberOfTask === undefined
               ? '-'
@@ -156,7 +172,9 @@ const StatisticsScreen = () => {
           staticdummy[1].value =
             res?.outputData.totalMin === undefined
               ? '-'
-              : res?.outputData.totalMin / 60;
+              : timeModeState === 1
+              ? res?.outputData.totalMin
+              : hhmmss(res?.outputData.totalMin);
           setstatisticData(staticdummy);
           let staticdummyone = [...statisticDataone];
           staticdummyone[0].value =
@@ -269,7 +287,6 @@ const StatisticsScreen = () => {
       setEndDate(moment(eDate).format('DD/MM'));
     }
   };
-
   const Main = ({darkmodeState}) => {
     return (
       <>
@@ -381,12 +398,18 @@ const StatisticsScreen = () => {
             );
           })}
         </View>
-
+        {value !== 'Crono' && (
+          <ChartSection
+            title="Achievement Tasks Status"
+            data={achievementTasksStatus}
+          />
+        )}
+        {console.log('>>>> ', achievementTasksStatus)}
         <View style={styles.divider} />
-        <View
+        {/* <View
           style={{
             flexDirection: 'row',
-            marginTop: theme.SCREENHEIGHT * 0.22,
+            // marginTop: theme.SCREENHEIGHT * 0.22,
             margin: scale(20),
             alignItems: 'center',
           }}>
@@ -401,7 +424,7 @@ const StatisticsScreen = () => {
             ]}>
             Check to count in statistics
           </Text>
-        </View>
+        </View> */}
         <View style={styles.mapView}>
           {statisticDatafive.map((f, i) => {
             return (
@@ -516,7 +539,7 @@ const StatisticsScreen = () => {
               item.id === selectedType && (
                 <>
                   <View style={{width: '10%'}}>
-                    {value !== 'Crono' && (
+                    {/* {value !== 'Crono' && (
                       <AntDesign
                         name="left"
                         size={scale(30)}
@@ -531,7 +554,7 @@ const StatisticsScreen = () => {
                             : theme.colors.black
                         }
                       />
-                    )}
+                    )} */}
                   </View>
                   <View style={styles.dataCon}>
                     <Label
@@ -553,10 +576,12 @@ const StatisticsScreen = () => {
                     />
                   </View>
 
-                  <View style={{width: '10%'}}>
+                  {/* <View style={{width: '10%'}}>
                     {value !== 'Crono' && (
                       <AntDesign
                         name="right"
+
+                        
                         size={scale(30)}
                         onPress={() => {
                           selectedType <= 1 ? setType(item.id + 1) : setType(1);
@@ -568,25 +593,19 @@ const StatisticsScreen = () => {
                         }
                       />
                     )}
-                  </View>
+                  </View> */}
                 </>
               )
             );
           })}
         </View>
 
-        {selectedType === 1 ? (
-          <ChartSection
-            style={{marginTop: scale(15)}}
-            title="Type Tasks Distribution"
-            data={TypeTask_distribution}
-          />
-        ) : (
-          <ChartSection
-            title="Achievement Tasks Status"
-            data={achievementTasksStatus}
-          />
-        )}
+        <ChartSection
+          style={{marginTop: scale(15)}}
+          title="Type Tasks Distribution"
+          data={TypeTask_distribution}
+        />
+
         {/* <View style={styles.divider} />
         <View style={{marginTop: scale(15)}}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -681,7 +700,7 @@ const StatisticsScreen = () => {
     <SafeAreaView
       style={{
         backgroundColor: darkmodeState
-          ? theme.colors.black
+          ? theme.colors.darkMode
           : theme.colors.backgroundColor,
         flex: 1,
       }}>
@@ -799,8 +818,9 @@ const styles = StyleSheet.create({
   },
   datetimetxt: {
     justifyContent: 'center',
-    marginBottom: scale(-5),
+    marginTop: scale(6),
     fontSize: scale(12),
+    width: '130%',
   },
   Dropdown: {
     paddingHorizontal: scale(14),

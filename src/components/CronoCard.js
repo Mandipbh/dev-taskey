@@ -9,7 +9,9 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {scale, theme} from '../utils';
 import {Label} from './Label';
 import {useSelector} from 'react-redux';
-
+import moment from 'moment';
+import {Timer, Countdown} from 'react-native-element-timer';
+import {useRef} from 'react';
 function pad(num) {
   return ('0' + num).slice(-2);
 }
@@ -25,14 +27,18 @@ const CronoCard = ({
   const navigation = useNavigation();
   const darkmodeState = useSelector(state => state.UserReducer.isDarkMode);
   const timeModeState = useSelector(state => state.UserReducer.time);
+  const timerRef = useRef(null);
   function hhmmss(secs) {
     var minutes = Math.floor(secs / 60);
     secs = secs % 60;
     var hours = Math.floor(minutes / 60);
     minutes = minutes % 60;
-    return `${pad(minutes)}:${pad(secs)}`;
+    return timeModeState === 1
+      ? `${pad(minutes)}:${pad(secs)}`
+      : Math.floor(minutes / 60) + ':' + pad(minutes) + ':' + pad(secs);
     // return pad(hours)+":"+pad(minutes)+":"+pad(secs); for old browsers
   }
+
   return (
     <>
       {index < 4 && item?.status !== 'Delete' && (
@@ -51,9 +57,7 @@ const CronoCard = ({
             },
           ]}
           onPress={() => {
-            item?.status === 'Done' || item.status === 'Failed'
-              ? null
-              : navigation.navigate('CreateTask', {editData: item});
+            navigation.navigate('CreateTask', {editData: item});
           }}>
           {item?.status !== 'Done' && item.status !== 'Failed' && (
             <View style={styles.statusView}>
@@ -66,6 +70,7 @@ const CronoCard = ({
                       color={theme.colors.main}
                       onPress={() => {
                         updateStatus(item, null, index);
+                        timerRef.current.start();
                       }}
                     />
                   ) : (
@@ -76,6 +81,7 @@ const CronoCard = ({
                       style={{marginLeft: scale(-5)}}
                       onPress={() => {
                         updateStatus(item, null, index);
+                        timerRef.current.pause();
                       }}
                     />
                   )}
@@ -146,6 +152,7 @@ const CronoCard = ({
                     color: darkmodeState
                       ? theme.colors.white
                       : theme.colors.black,
+                    marginLeft: scale(-50),
                   }}
                 />
               )}
@@ -184,26 +191,64 @@ const CronoCard = ({
               />
             )}
             {selectedType !== 3 && (
-              <Label
-                title={
-                  item?.meta === 'Registry'
-                    ? item?.cronoCompletedTime
-                      ? hhmmss(item?.cronoCompletedTime) // (item?.cronoCompletedTime / 60)?.toFixed(2)
-                      : 0
-                    : `${
-                        item?.timerCompletedTime
-                          ? hhmmss(item?.timerCompletedTime) //  (item?.timerCompletedTime / 60).toFixed(2)
-                          : 0
-                      }\n${item?.amount === null ? 0 : item?.amount}`
-                }
-                style={{
-                  fontSize: scale(11),
-                  marginLeft: scale(18),
-                  color: darkmodeState
-                    ? theme.colors.white
-                    : theme.colors.black,
-                }}
-              />
+              <View>
+                <Timer
+                  ref={timerRef}
+                  style={styles.timer}
+                  textStyle={{
+                    fontSize: scale(11),
+                    marginLeft: scale(18),
+                    color: darkmodeState
+                      ? theme.colors.white
+                      : theme.colors.black,
+                  }}
+                  onTimes={e => {}}
+                  onPause={e => {}}
+                  onEnd={e => {}}
+                  formatTime="hh:mm:ss"
+                  initialSeconds={
+                    item?.meta === 'Registry'
+                      ? item?.cronoCompletedTime
+                        ? item?.cronoCompletedTime // (item?.cronoCompletedTime / 60)?.toFixed(2)
+                        : 0
+                      : `${
+                          item?.timerCompletedTime
+                            ? item?.timerCompletedTime //  (item?.timerCompletedTime / 60).toFixed(2)
+                            : 0
+                        }`
+                  }
+                />
+                <Label
+                  style={{
+                    fontSize: scale(11),
+                    marginLeft: scale(18),
+                    color: darkmodeState
+                      ? theme.colors.white
+                      : theme.colors.black,
+                  }}
+                  title={item?.amount === null ? 0 : item?.amount}
+                />
+              </View>
+              // <Label
+              //   title={
+              //     item?.meta === 'Registry'
+              //       ? item?.cronoCompletedTime
+              //         ? hhmmss(item?.cronoCompletedTime) // (item?.cronoCompletedTime / 60)?.toFixed(2)
+              //         : 0
+              //       : `${
+              //           item?.timerCompletedTime
+              //             ? hhmmss(item?.timerCompletedTime) //  (item?.timerCompletedTime / 60).toFixed(2)
+              //             : 0
+              //         }\n${item?.amount === null ? 0 : item?.amount}`
+              //   }
+              //   style={{
+              //     fontSize: scale(11),
+              //     marginLeft: scale(18),
+              //     color: darkmodeState
+              //       ? theme.colors.white
+              //       : theme.colors.black,
+              //   }}
+              // />
             )}
             <Label
               title={
@@ -214,6 +259,7 @@ const CronoCard = ({
               style={{
                 fontSize: scale(11),
                 color: darkmodeState ? theme.colors.white : theme.colors.black,
+                textAlign: 'center',
               }}
             />
           </View>
@@ -243,8 +289,10 @@ const styles = StyleSheet.create({
   },
   staticDetails: {
     flexDirection: 'row',
-    width: '40%',
-    justifyContent: 'space-around',
+    width: '30%',
+    marginHorizontal: scale(8),
+    justifyContent: 'space-between',
+    // alignItems: 'center',
   },
   taskLabel: {
     width: '45%',
@@ -273,4 +321,5 @@ const styles = StyleSheet.create({
     borderRadius: scale(3),
     marginHorizontal: scale(3),
   },
+  timerText: {},
 });

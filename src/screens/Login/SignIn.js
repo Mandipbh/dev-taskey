@@ -12,10 +12,11 @@ import {Button, Label, TextInput, Title} from '../../components';
 import {CommonStyles} from './CommonStyles';
 import {CommonActions, useNavigation} from '@react-navigation/native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-
+import PhoneInput from 'react-native-phone-input';
 import {scale, theme} from '../../utils';
 import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import ApiService from '../../utils/ApiService';
 import {isLogin, loginAction} from '../../redux/Actions/UserActions';
 import axios from 'axios';
@@ -59,7 +60,7 @@ const SignIn = () => {
       if (otpSend) {
         try {
           const mobileFrm = {
-            phonenumber: mobile,
+            phonenumber: mobile.slice(3),
             code: otp,
           };
           const options = {payloads: mobileFrm};
@@ -88,30 +89,31 @@ const SignIn = () => {
   };
 
   const handleotpSend = async () => {
-    if (!/^\d{10}$/.test(mobile)) {
-      Toast.show('Please enter valid number', Toast.SHORT);
-    } else {
-      try {
-        const mobileFrm1 = {
-          phonenumber: mobile,
-        };
-        const options = {payloads: mobileFrm1};
-        const response = await ApiService.post('login', options);
-        if (response.success) {
-          axios.defaults.headers.common.Authorization = `Bearer ${response?.token}`;
-          setVarified(true);
-          Toast.show('OTP is sent to your mobile number');
-          setSendOtp(true);
-          dispatch(loginAction(response));
-        } else {
-          setVarified(false);
-          setSendOtp(true);
-        }
-      } catch (error) {
-        console.log('errror >>> ', error);
-        Toast.show(error?.response?.data?.message, Toast.SHORT);
+    console.log('number <>> ', mobile.slice(3));
+    // if (!/^\d{10}$/.test(mobile)) {
+    // Toast.show('Please enter valid number', Toast.SHORT);
+    // } else {
+    try {
+      const mobileFrm1 = {
+        phonenumber: mobile.slice(3),
+      };
+      const options = {payloads: mobileFrm1};
+      const response = await ApiService.post('login', options);
+      if (response.success) {
+        axios.defaults.headers.common.Authorization = `Bearer ${response?.token}`;
+        setVarified(true);
+        Toast.show('OTP is sent to your mobile number');
+        setSendOtp(true);
+        dispatch(loginAction(response));
+      } else {
+        setVarified(false);
+        setSendOtp(true);
       }
+    } catch (error) {
+      console.log('errror >>> ', error);
+      Toast.show(error?.response?.data?.message, Toast.SHORT);
     }
+    // }
   };
   useEffect(() => {
     if (varified) {
@@ -130,7 +132,28 @@ const SignIn = () => {
         </View>
         <View style={CommonStyles.secondContainer}>
           <Title style={CommonStyles.secondTitle} title="Login" />
-          <TextInput
+          <View style={{flexDirection: 'row', marginTop: scale(15)}}>
+            <AntDesign
+              name={'mobile1'}
+              size={scale(16)}
+              color={theme.colors.gray}
+            />
+            <Label title="Phone Number" style={styles.labelText} />
+          </View>
+
+          <PhoneInput
+            initialCountry={'es'}
+            textProps={{
+              placeholder: 'Enter a phone number',
+            }}
+            style={styles.numbrtpicker}
+            textStyle={{height: scale(30)}}
+            value={mobile}
+            onChangePhoneNumber={txt => {
+              setMobile(txt);
+            }}
+          />
+          {/* <TextInput
             LabelIcon="mobile1"
             Labeltitle="Phone Number"
             placeholder="Enter Phone Number"
@@ -140,7 +163,7 @@ const SignIn = () => {
             }}
             keyboardType="numeric"
             maxLength={10}
-          />
+          /> */}
           <TouchableOpacity
             style={styles.sendBtn}
             onPress={() => {
@@ -205,5 +228,21 @@ const styles = StyleSheet.create({
     color: theme.colors.orange,
     borderBottomWidth: 1,
     borderColor: theme.colors.orange,
+  },
+  numbrtpicker: {
+    borderWidth: 1,
+    paddingHorizontal: scale(15),
+    marginTop: scale(10),
+    borderColor: theme.colors.gray,
+    borderRadius: scale(10),
+    fontSize: 18,
+    paddingVertical: scale(8),
+    color: theme.colors.black,
+    width: '100%',
+  },
+  labelText: {
+    color: theme.colors.gray,
+    fontSize: 16,
+    left: scale(5),
   },
 });

@@ -18,12 +18,11 @@ const BottomTab = () => {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
+        tabBarHideOnKeyboard: true,
         tabBarShowLabel: false,
         tabBarStyle: {
           position: 'absolute',
-          backgroundColor: darkmodeState
-            ? theme.colors.darkMode
-            : theme.colors.main,
+          backgroundColor: darkmodeState ? '#191920' : theme.colors.main,
           // paddingTop: Platform.OS === 'ios' ? scale(5) : scale(8),
           justifyContent: 'center',
           alignContent: 'center',

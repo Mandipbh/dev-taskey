@@ -11,6 +11,7 @@ import {CommonStyles} from './CommonStyles';
 import {CommonActions, useNavigation} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Toast from 'react-native-simple-toast';
+import PhoneInput from 'react-native-phone-input';
 import {scale, theme} from '../../utils';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useState} from 'react';
@@ -34,10 +35,12 @@ const SignUp = () => {
     if (name.trim() === '') {
       Toast.show('Please enter name', Toast.SHORT);
       error = true;
-    } else if (!/^\d{10}$/.test(mobile)) {
-      Toast.show('Please enter proper number.', Toast.SHORT);
-      error = true;
-    } else {
+    }
+    // else if (!/^\d{10}$/.test(mobile)) {
+    //   Toast.show('Please enter proper number.', Toast.SHORT);
+    //   error = true;
+    // }
+    else {
       error = false;
     }
     return error;
@@ -130,7 +133,28 @@ const SignUp = () => {
               setName(txt);
             }}
           />
-          <TextInput
+          <View style={{flexDirection: 'row', marginTop: scale(15)}}>
+            <AntDesign
+              name={'mobile1'}
+              size={scale(16)}
+              color={theme.colors.gray}
+            />
+            <Label title="Phone Number" style={styles.labelText} />
+          </View>
+
+          <PhoneInput
+            initialCountry={'es'}
+            textProps={{
+              placeholder: 'Enter a phone number',
+            }}
+            style={styles.numbrtpicker}
+            textStyle={{height: scale(30)}}
+            value={mobile}
+            onChangePhoneNumber={txt => {
+              setMobile(txt);
+            }}
+          />
+          {/* <TextInput
             LabelIcon="mobile1"
             Labeltitle="Your Phone Number"
             placeholder="Enter Phone Number"
@@ -140,7 +164,7 @@ const SignUp = () => {
             }}
             keyboardType="numeric"
             maxLength={10}
-          />
+          /> */}
           <TouchableOpacity style={styles.sendOtpBtn} onPress={handleotpSend}>
             <Text style={styles.Sendcode}>
               {sentOtp ? 'Re-Send' : 'Send Code'}
@@ -201,5 +225,21 @@ const styles = StyleSheet.create({
   sendOtpBtn: {
     alignSelf: 'flex-end',
     padding: scale(4),
+  },
+  numbrtpicker: {
+    borderWidth: 1,
+    paddingHorizontal: scale(15),
+    marginTop: scale(10),
+    borderColor: theme.colors.gray,
+    borderRadius: scale(10),
+    fontSize: 18,
+    paddingVertical: scale(8),
+    color: theme.colors.black,
+    width: '100%',
+  },
+  labelText: {
+    color: theme.colors.gray,
+    fontSize: 16,
+    left: scale(5),
   },
 });

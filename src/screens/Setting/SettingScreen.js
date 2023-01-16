@@ -8,10 +8,10 @@ import {
   FlatList,
   Switch,
   Alert,
+  Linking,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {scale, theme} from '../../utils';
-import CommonHeader from '../../components/CommonHeader';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {Label, Title} from '../../components/Label';
 import {Dropdown} from 'react-native-element-dropdown';
@@ -39,10 +39,10 @@ const chips = [
     label: 'One hours',
     id: 2,
   },
-  {
-    label: 'Only months',
-    id: 3,
-  },
+  // {
+  //   label: 'Only months',
+  //   id: 3,
+  // },
 ];
 
 const TimeRange = [
@@ -143,7 +143,7 @@ const SettingScreen = () => {
           styles.container,
           {
             backgroundColor: darkmodeState
-              ? theme.colors.black
+              ? theme.colors.darkMode
               : theme.colors.backgroundColor,
           },
         ]}>
@@ -207,7 +207,13 @@ const SettingScreen = () => {
             );
           })}
 
-          <Label style={styles.titletxt} title="Default Range of Time" />
+          <Label
+            style={[
+              styles.titletxt,
+              {color: darkmodeState ? theme.colors.white : theme.colors.black},
+            ]}
+            title="Default Range of Time"
+          />
           <View
             style={[
               styles.divider,
@@ -357,7 +363,7 @@ const SettingScreen = () => {
             style={[
               styles.titletxt,
               {
-                marginTop: scale(140),
+                // marginTop: scale(140),
                 color: darkmodeState ? theme.colors.white : theme.colors.black,
               },
             ]}
@@ -440,24 +446,28 @@ const SettingScreen = () => {
             }}>
             <ShareBtn
               style={[styles.sharebtn, {backgroundColor: theme.colors.gray}]}
-              onPress={() => {}}
+              onPress={() => {
+                Linking.openURL('https://www.mylead.net/contacto');
+              }}
               title="Suggestions"
               backgroundColor={theme.colors.gray}
             />
             <ShareBtn
               style={[styles.sharebtn, {backgroundColor: theme.colors.gray}]}
-              onPress={() => {}}
+              onPress={() => {
+                Linking.openURL('https://www.mylead.net/contacto');
+              }}
               title="Help"
               backgroundColor={theme.colors.gray}
             />
           </View>
 
           <View style={{alignItems: 'center', marginTop: scale(25)}}>
-            <ShareBtn
+            {/* <ShareBtn
               style={[styles.sharebtn, {backgroundColor: theme.colors.green}]}
               title="Value this app :)"
               backgroundColor={theme.colors.green}
-            />
+            /> */}
           </View>
         </ScrollView>
       </SafeAreaView>

@@ -47,7 +47,7 @@ const execute = async (
     return res.data;
   } catch (err: any) {
     console.log('eror of api call ',err)
-    // if (err.response.status === 401) {
+    // if (err.response?.status === 401) {
     // //   storage.remove();
     // //   navigation.replace('Landing');
     // }

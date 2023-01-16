@@ -30,10 +30,18 @@ const CreateFolderModel = props => {
   const [isLoading, setLoading] = useState(false);
   const darkmodeState = useSelector(state => state.UserReducer.isDarkMode);
   useEffect(() => {
-    if (props?.route?.params?.editFolder) {
-      setFolderName(props?.route?.params?.editFolder?.name);
+    if (props?.route?.params) {
+      const editData = props?.route?.params;
+      setFolderName(editData?.name);
+      if (editData.type === 'CRONO') {
+        setType(1);
+      } else if (editData.type === 'TIMER') {
+        setType(2);
+      } else if (editData?.type === 'COUNTER') {
+        setType(3);
+      }
     }
-  }, [props?.route?.params?.editFolder]);
+  }, [props?.route?.params]);
 
   const handleCloseClolorpicker = c => {
     setColor(c);
@@ -76,7 +84,7 @@ const CreateFolderModel = props => {
       name: folderName,
     };
     const options1 = {payloads: folderFrmData};
-    ApiService.put('folder/' + props?.route?.params?.editFolder?._id, options1)
+    ApiService.put('folder/' + props?.route?.params?._id, options1)
       .then(res => {
         Toast.show('edit folder successfully');
         setLoading(false);
@@ -134,9 +142,7 @@ const CreateFolderModel = props => {
                 fontSize: 20,
                 fontWeight: '800',
               }}>
-              {props?.route?.params?.editFolder
-                ? 'Edit folder'
-                : 'Create folder'}
+              {props?.route?.params?.name ? 'Edit folder' : 'Create folder'}
             </Text>
             <Text
               style={{
@@ -220,7 +226,11 @@ const CreateFolderModel = props => {
                         onPress={() => {
                           setType(t.id);
                         }}
-                        disabled={props?.route?.params?.editFolder}>
+                        disabled={
+                          props?.route?.params?.name === undefined
+                            ? false
+                            : true
+                        }>
                         <View
                           style={[
                             styles.check,
@@ -291,7 +301,7 @@ const CreateFolderModel = props => {
           <View style={styles.devider} />
           <TouchableOpacity
             onPress={() =>
-              props?.route?.params?.editFolder ? editFolderData() : handleSave()
+              props?.route?.params?.name ? editFolderData() : handleSave()
             }
             style={{
               flexDirection: 'row',
@@ -306,7 +316,7 @@ const CreateFolderModel = props => {
             }}>
             <Ionicon name="play" color={theme.colors.white} size={25} />
             <Text style={{color: theme.colors.white, fontSize: 20, padding: 5}}>
-              {props?.route?.params?.editFolder
+              {props?.route?.params?.name !== undefined
                 ? 'Edit Folder'
                 : 'Create Folder'}
             </Text>

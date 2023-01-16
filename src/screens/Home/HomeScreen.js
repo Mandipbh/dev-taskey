@@ -41,6 +41,7 @@ const HomeScreen = () => {
   const [model, setModel] = useState(false);
   const [editFolder, setEditFolder] = useState(null);
   const [loader, setLoader] = useState(false);
+  const [today, setToday] = useState(false);
   const navigation = useNavigation();
 
   const [Folder, setFolder] = useState([]);
@@ -268,9 +269,11 @@ const HomeScreen = () => {
                     } else if (item?.name === 'GLOBAL COUNTER') {
                     } else if (item?.name === 'GLOBAL CRONO') {
                     } else {
-                      // navigation.navigate('CreateF', {
-                      //   editFolder: {name: item.name, _id: item._id},
-                      // });
+                      navigation.navigate('CreateF', {
+                        name: item.name,
+                        _id: item._id,
+                        type: item.type,
+                      });
                     }
                   }}>
                   <Label
@@ -325,6 +328,7 @@ const HomeScreen = () => {
                   ]}
                 />
                 <Label
+                  numberOfLines={1}
                   title={'Name'}
                   style={[
                     styles.headerTitle,
@@ -468,6 +472,19 @@ const HomeScreen = () => {
     }
   };
 
+  useEffect(() => {
+    if (today) {
+      handlefilterModel(
+        moment().format('YYYY-MM-DD'),
+        moment().add(1, 'd').format('YYYY-MM-DD'),
+      );
+      console.log('start date', moment().format('YYYY-MM-DD'));
+      console.log('start date', moment().add(1, 'd').format('YYYY-MM-DD'));
+    } else {
+      getAllTasks();
+    }
+  }, [today]);
+
   const handlefilterModel = (StartDate, Enddate) => {
     if (StartDate === undefined && Enddate === undefined) {
       setStartDate(null);
@@ -477,8 +494,8 @@ const HomeScreen = () => {
       let endDate = moment(
         moment(Enddate).add(1, 'd').format('YYYY-MM-DD'),
       ).format('YYYY-MM-DD');
-      setStartDate(StartDate);
-      setEndDate(Enddate);
+      !today && setStartDate(StartDate);
+      !today && setEndDate(Enddate);
       setCalenderModel(false);
       const frmData = {
         startDate: StartDate,
@@ -547,13 +564,7 @@ const HomeScreen = () => {
                       />
                     </View>
 
-                    <View
-                      style={{
-                        width: '70%',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                      }}>
+                    <View style={styles.mainHeaderContainer}>
                       <Image
                         source={type.icon}
                         style={{
@@ -575,7 +586,7 @@ const HomeScreen = () => {
                         />
                       </View>
                     </View>
-                    <View style={{width: '15%'}}>
+                    <View style={{width: '20%'}}>
                       <Icon2
                         name="chevron-right"
                         size={scale(30)}
@@ -607,17 +618,32 @@ const HomeScreen = () => {
                 source={images.calendar}
               />
             </TouchableOpacity>
-
-            <Label
-              title={
-                startDate === null
-                  ? 'Today'
-                  : `${moment(startDate).format('MM-DD')} / ${moment(
-                      endDate,
-                    ).format('MM-DD')} `
-              }
-              style={{color: theme.colors.white, fontSize: scale(11)}}
-            />
+            {startDate === null ? (
+              <TouchableOpacity
+                style={{}}
+                onPress={() => {
+                  setToday(!today);
+                }}>
+                <Label
+                  title={today ? 'Today' : 'All Day'}
+                  style={{color: theme.colors.white, fontSize: scale(11)}}
+                />
+              </TouchableOpacity>
+            ) : (
+              <Label
+                title={
+                  startDate === null
+                    ? 'Today'
+                    : `${moment(startDate).format('MM-DD')} / ${moment(
+                        endDate,
+                      ).format('MM-DD')} `
+                }
+                style={{
+                  color: theme.colors.white,
+                  fontSize: scale(9.5),
+                }}
+              />
+            )}
           </View>
         </View>
 
@@ -692,12 +718,18 @@ const styles = StyleSheet.create({
     paddingBottom: scale(10),
   },
   calendarCon: {
-    width: '30%',
+    width: '34%',
     justifyContent: 'center',
     alignItems: 'center',
   },
   mainCOntainer: {
     paddingHorizontal: scale(13),
+  },
+  mainHeaderContainer: {
+    width: '80%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
   },
   time: {
     fontSize: scale(11),
