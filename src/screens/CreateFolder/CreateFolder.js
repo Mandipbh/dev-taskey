@@ -20,6 +20,7 @@ import ApiService from '../../utils/ApiService';
 import Loader from '../../components/appModel/Loader';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
+import IconPicker from '../../components/appModel/IconPicker';
 
 const CreateFolderModel = props => {
   const navigation = useNavigation();
@@ -28,6 +29,8 @@ const CreateFolderModel = props => {
   const [selColor, setColor] = useState(theme.colors.primary);
   const [folderName, setFolderName] = useState(null);
   const [isLoading, setLoading] = useState(false);
+  const [selIcon, setIcon] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
   const darkmodeState = useSelector(state => state.UserReducer.isDarkMode);
   useEffect(() => {
     if (props?.route?.params) {
@@ -120,6 +123,11 @@ const CreateFolderModel = props => {
     setColor(theme.colors.primary);
     setFolderName(null);
     setType(0);
+  };
+
+  const IconClosePicker = data => {
+    setModalVisible(false);
+    setIcon(data);
   };
   return (
     <>
@@ -278,6 +286,7 @@ const CreateFolderModel = props => {
               Add icon
             </Text>
             <TouchableOpacity
+              onPress={() => setModalVisible(true)}
               style={{
                 backgroundColor: theme.colors.orange,
                 padding: 5,
@@ -297,6 +306,19 @@ const CreateFolderModel = props => {
                 Choose
               </Text>
             </TouchableOpacity>
+            <IconPicker isVisible={modalVisible} close={IconClosePicker} />
+
+            {selIcon && (
+              <Image
+                resizeMode="contain"
+                style={{
+                  height: theme.SCREENHEIGHT * 0.035,
+                  width: theme.SCREENWIDTH * 0.07,
+                  marginLeft: scale(30),
+                }}
+                source={{uri: selIcon.Image}}
+              />
+            )}
           </View>
           <View style={styles.devider} />
           <TouchableOpacity

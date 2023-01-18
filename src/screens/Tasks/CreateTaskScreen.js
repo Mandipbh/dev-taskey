@@ -23,12 +23,13 @@ import CommonHeader from '../../components/CommonHeader';
 import ColorPickerModel from '../../components/appModel/ColorPickerModel';
 import {metaData, typeData} from '../../utils/mockData';
 import Ionicon from 'react-native-vector-icons/Ionicons';
-import {useIsFocused, useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import Foundation from 'react-native-vector-icons/Foundation';
 import ApiService from '../../utils/ApiService';
 import {create} from 'react-test-renderer';
 import {useSelector} from 'react-redux';
+import IconPicker from '../../components/appModel/IconPicker';
 
 const CreateTaskScreen = props => {
   const isFocused = useIsFocused();
@@ -36,7 +37,7 @@ const CreateTaskScreen = props => {
   const [selMeta, setMeta] = useState(0);
   const [colorPicker, setColorPicker] = useState(false);
   const [selColor, setColor] = useState(theme.colors.primary);
-  const [selIcon, setIcon] = useState(false);
+  const [selIcon, setIcon] = useState(null);
   const [open, setOpen] = useState(false);
   const [newFolderM, setnewFolderM] = useState(false);
   const [selectedFolder, setSelFolder] = useState('');
@@ -46,6 +47,7 @@ const CreateTaskScreen = props => {
   const [title, setTitle] = useState(null);
   const [isLoading, setLoading] = useState(false);
   const [isBtn, setBtn] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const navigation = useNavigation();
   const darkmodeState = useSelector(state => state.UserReducer.isDarkMode);
@@ -301,6 +303,11 @@ const CreateTaskScreen = props => {
     });
   };
 
+  const IconClosePicker = data => {
+    setModalVisible(false);
+    setIcon(data);
+  };
+
   return (
     <>
       <View
@@ -539,7 +546,9 @@ const CreateTaskScreen = props => {
                   }}>
                   Add icon
                 </Text>
-                <TouchableOpacity style={styles.choosebtn}>
+                <TouchableOpacity
+                  onPress={() => setModalVisible(true)}
+                  style={styles.choosebtn}>
                   <Text
                     style={{
                       color: theme.colors.white,
@@ -549,7 +558,20 @@ const CreateTaskScreen = props => {
                     Choose
                   </Text>
                 </TouchableOpacity>
+                {selIcon && (
+                  <Image
+                    resizeMode="contain"
+                    style={{
+                      height: theme.SCREENHEIGHT * 0.035,
+                      width: theme.SCREENWIDTH * 0.07,
+                      marginLeft: scale(30),
+                    }}
+                    source={{uri: selIcon.Image}}
+                  />
+                )}
+                <IconPicker isVisible={modalVisible} close={IconClosePicker} />
               </View>
+
               <View style={styles.devider} />
             </View>
             <View style={styles.secondCon}>
