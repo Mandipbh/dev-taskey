@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   Text,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Button, Label, TextInput, Title} from '../../components';
 import {CommonStyles} from './CommonStyles';
 import {CommonActions, useNavigation} from '@react-navigation/native';

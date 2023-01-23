@@ -43,6 +43,118 @@ const HomeScreen = () => {
   const [loader, setLoader] = useState(false);
   const [today, setToday] = useState(false);
   const navigation = useNavigation();
+  const [indexState, setindexState] = useState();
+  const [taskDumyData, setTaskDummy] = useState([
+    {
+      fid: 0,
+      taskslist: [
+        {
+          id: 0,
+          title: 'Task name eyamole',
+          color: '#ffddff',
+          folder: 'global',
+          status: 1,
+          path: 10,
+          percentage: 10,
+        },
+        {
+          id: 1,
+          title: 'Task• example 2',
+          color: '#ffddff',
+          folder: 'global',
+          status: 0,
+          path: 20,
+          percentage: 20,
+        },
+        {
+          id: 2,
+          title: 'Task examole',
+          color: '#ffddff',
+          folder: 'global',
+          status: 1,
+          path: 20,
+          percentage: 20,
+        },
+        // {
+        //   id: 3,
+        //   title: 'Task• example 2',
+        //   color: '#ffddff',
+        //   folder: 'global',
+        //   status: 0,
+        //   path: 20,
+        //   percentage: 20,
+        // },
+        // {
+        //   id: 4,
+        //   title: 'Task examole',
+        //   color: '#ffddff',
+        //   folder: 'global',
+        //   status: 1,
+        //   path: 20,
+        //   percentage: 20,
+        // },
+        // {
+        //   id: 5,
+        //   title: 'Task• example 2',
+        //   color: '#ffddff',
+        //   folder: 'global',
+        //   status: 0,
+        //   path: 20,
+        //   percentage: 20,
+        // },
+        // {
+        //   id: 6,
+        //   title: 'Task example',
+        //   color: '#ffddff',
+        //   folder: 'global',
+        //   status: 1,
+        //   path: 20,
+        //   percentage: 20,
+        // },
+      ],
+    },
+    {
+      fid: 1,
+      taskslist: [
+        {
+          id: 3,
+          title: 'Task examole 2',
+          color: '#ffddff',
+          folder: 'global',
+          status: 1,
+          path: 20,
+          percentage: 20,
+        },
+        {
+          id: 1,
+          title: 'Task• example 2',
+          color: '#ffddff',
+          folder: 'global',
+          status: 0,
+          path: 20,
+          percentage: 20,
+        },
+        {
+          id: 2,
+          title: 'Task examole',
+          color: '#ffddff',
+          folder: 'global',
+          status: 1,
+          path: 20,
+          percentage: 20,
+        },
+        {
+          id: 3,
+          title: 'Task examole 2',
+          color: '#ffddff',
+          folder: 'global',
+          status: 1,
+          path: 20,
+          percentage: 20,
+        },
+      ],
+    },
+  ]);
 
   const [Folder, setFolder] = useState([]);
 
