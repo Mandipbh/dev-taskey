@@ -40,7 +40,7 @@ const CreateTaskScreen = props => {
   const [selIcon, setIcon] = useState(null);
   const [open, setOpen] = useState(false);
   const [newFolderM, setnewFolderM] = useState(false);
-  const [selectedFolder, setSelFolder] = useState('');
+  const [selectedFolder, setSelFolder] = useState(null);
   const [defaultFolder, setDefaultFolder] = useState(null);
   const [folders, setFolders] = useState([]);
   const [amount, setAmount] = useState(null);
@@ -64,8 +64,11 @@ const CreateTaskScreen = props => {
   useEffect(() => {
     if (props?.route?.params?.editData) {
       const {editData} = props?.route?.params;
+      console.log('editData?.icon ?? ', editData);
       const metad = editData.meta;
       setAmount(JSON.stringify(editData?.amount));
+      setIcon(editData?.icon);
+      setSelFolder(null);
       setMeta(metad === 'Registry' ? 2 : 1);
       setTitle(editData?.name);
       if (editData.type === 'CRONO') {
@@ -102,8 +105,7 @@ const CreateTaskScreen = props => {
             setFolders(res.data);
             res.data.map(i => {
               if (i.isDefault) {
-                setSelFolder(i);
-                console.log('folder is deufalt ', i);
+                props?.route?.params?.editData ? null : setSelFolder(i);
               }
             });
           }
@@ -167,6 +169,7 @@ const CreateTaskScreen = props => {
     return error;
   };
 
+  //save task
   const handleSave = () => {
     if (!handleValidation()) {
       let folderFrm = new FormData();
@@ -185,8 +188,10 @@ const CreateTaskScreen = props => {
         amount: amount,
         status: 'Paused',
         folderId: selectedFolder?._id,
+        icon: selIcon?.iconUrl,
         // folderFrm.append('icon', null);
       };
+      console.log('frmData >> ', frmData);
       setLoading(true);
       let options = {payloads: frmData};
       ApiService.post('task', options)
@@ -208,21 +213,21 @@ const CreateTaskScreen = props => {
     }
   };
 
+  //edit task
   const handleEditTask = () => {
     let frmData = {
       name: title,
-      // type: type === 1 ? 'CRONO' : type === 2 ? 'TIMER' : 'COUNTER',
-      // color: selColor,
-      // order: 0,
-      // meta: selMeta == 1 ? 'Achievement' : 'Registry',
       amount: amount,
-      // status: 'Paused',
-      folderId: selectedFolder?._id,
+      folderId:
+        selectedFolder?._id === undefined
+          ? props?.route?.params?.editData?.folderId
+          : selectedFolder?._id,
       taskId: props?.route?.params?.editData?._id,
-      // folderFrm.append('icon', null);
     };
     setLoading(true);
     let options = {payloads: frmData};
+    console.log('frmData >> ', frmData);
+    console.log('props >> .', props?.route?.params?.editData?.folderId);
     ApiService.put(`updateTask`, options)
       .then(res => {
         setLoading(false);
@@ -565,8 +570,11 @@ const CreateTaskScreen = props => {
                       height: theme.SCREENHEIGHT * 0.035,
                       width: theme.SCREENWIDTH * 0.07,
                       marginLeft: scale(30),
+                      tintColor: darkmodeState
+                        ? theme.colors.white
+                        : theme.colors.black,
                     }}
-                    source={{uri: selIcon.Image}}
+                    source={{uri: selIcon.iconUrl}}
                   />
                 )}
                 <IconPicker isVisible={modalVisible} close={IconClosePicker} />

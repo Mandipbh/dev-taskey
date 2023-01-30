@@ -170,79 +170,90 @@ const HomeScreen = () => {
     if (selectedType === 1) {
       setLoader(true);
       ApiService.get('folder/CRONO').then(res => {
+        console.log(' resresres >>>> ', res?.typeData);
         setLoader(false);
         if (res.success) {
-          let OrderWiseData = [...res.data];
+          let OrderWiseData = [...res?.typeData];
           OrderWiseData?.sort(function (a, b) {
             return a?.order - b?.order;
           });
-          setFolder(OrderWiseData);
-          ApiService.get('folder/COMPLETED').then(resData => {
-            setLoader(false);
-            if (resData.success) {
-              let folderData = resData.data;
-              folderData.map(item => {
-                if (
-                  selectedType === 1 &&
-                  item?.name === 'COMPLETED CRONO TASK'
-                ) {
-                  setFolder([...OrderWiseData, item]);
-                }
-              });
-            }
-          });
+          // setFolder(OrderWiseData);
+          // ApiService.get('folder/COMPLETED').then(resData => {
+          //   setLoader(false);
+          //   if (resData.success) {
+          //     let folderData = resData.data;
+          //     folderData.map(item => {
+          //       if (
+          //         selectedType === 1 &&
+          //         item?.name === 'COMPLETED CRONO TASK'
+          //       ) {
+          setFolder([...OrderWiseData, ...res?.completedData]);
+          //       }
+          //     });
+          //   }
+          // });
         }
       });
     } else if (selectedType === 2) {
-      ApiService.get('folder/TIMER').then(res => {
-        setLoader(false);
-        if (res.success) {
-          let OrderWiseData = [...res.data];
-          OrderWiseData?.sort(function (a, b) {
-            return a?.order - b?.order;
-          });
-          setFolder(OrderWiseData);
-          ApiService.get('folder/COMPLETED').then(resData => {
-            setLoader(false);
-            if (resData.success) {
-              let folderData = resData.data;
-              folderData.map(item => {
-                if (
-                  selectedType === 2 &&
-                  item?.name == 'COMPLETED TIMER TASK'
-                ) {
-                  setFolder([...OrderWiseData, item]);
-                }
-              });
-            }
-          });
-        }
-      });
+      console.log('call >>> ', selectedType);
+      ApiService.get('folder/TIMER')
+        .then(res => {
+          setLoader(false);
+          if (res.success) {
+            let OrderWiseData = [...res?.typeData];
+            OrderWiseData?.sort(function (a, b) {
+              return a?.order - b?.order;
+            });
+            setFolder([...OrderWiseData, ...res?.completedData]);
+            // setFolder(OrderWiseData);
+            // ApiService.get('folder/COMPLETED').then(resData => {
+            //   setLoader(false);
+            //   if (resData.success) {
+            //     let folderData = resData.data;
+            //     folderData.map(item => {
+            //       if (
+            //         selectedType === 2 &&
+            //         item?.name == 'COMPLETED TIMER TASK'
+            //       ) {
+            //         setFolder([...OrderWiseData, item]);
+            //       }
+            //     });
+            //   }
+            // });
+          }
+        })
+        .catch(e => console.log('error >> ', e));
     } else if (selectedType === 3) {
-      ApiService.get('folder/COUNTER').then(res => {
-        setLoader(false);
-        if (res.success) {
-          let OrderWiseData = [...res.data];
-          OrderWiseData?.sort(function (a, b) {
-            return a?.order - b?.order;
-          });
-          setFolder(OrderWiseData);
-          ApiService.get('folder/COMPLETED').then(resData => {
-            setLoader(false);
-            if (resData.success) {
-              let folderData = resData.data;
-              folderData.map(item => {
-                if (
-                  selectedType === 3 &&
-                  item?.name === 'COMPLETED COUNTER TASK'
-                ) {
-                  setFolder([...OrderWiseData, item]);
-                }
-              });
-            }
-          });
-        }
-      });
+      ApiService.get('folder/COUNTER')
+        .then(res => {
+          setLoader(false);
+          if (res.success) {
+            let OrderWiseData = [...res.typeData];
+            OrderWiseData?.sort(function (a, b) {
+              return a?.order - b?.order;
+            });
+            setFolder([...OrderWiseData, ...res?.completedData]);
+            console.log('res?.completedData ?? ', res?.completedData);
+            // setFolder(OrderWiseData);
+            // ApiService.get('folder/COMPLETED').then(resData => {
+            //   setLoader(false);
+            //   if (resData.success) {
+            //     let folderData = resData.data;
+            //     folderData.map(item => {
+            //       if (
+            //         selectedType === 3 &&
+            //         item?.name === 'COMPLETED COUNTER TASK'
+            //       ) {
+            //         setFolder([...OrderWiseData, item]);
+            //       }
+            //     });
+            //   }
+            // });
+          }
+        })
+        .catch(e => {
+          console.log('error ??? ', e);
+        });
     }
   };
 
@@ -369,38 +380,53 @@ const HomeScreen = () => {
           <TouchableOpacity onLongPress={move} onPressOut={moveEnd}>
             <View style={[styles.taskCard]} key={index}>
               <View style={styles.taskContainer}>
-                <Icon2
+                {/* <Icon2
                   name="aperture"
                   size={scale(22)}
                   color={theme.colors.primary2}
-                />
-                <TouchableOpacity
-                  style={{width: '60%'}}
-                  onPress={() => {
-                    if (item?.name === 'GLOBAL TIMER') {
-                    } else if (item?.name === 'GLOBAL COUNTER') {
-                    } else if (item?.name === 'GLOBAL CRONO') {
-                    } else {
-                      navigation.navigate('CreateF', {
-                        name: item.name,
-                        _id: item._id,
-                        type: item.type,
-                      });
-                    }
-                  }}>
-                  <Label
-                    title={item?.name}
+                /> */}
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Image
+                    source={{uri: item?.icon}}
                     style={[
-                      styles.headerTitle,
+                      styles.folderIcon,
                       {
-                        width: '60%',
-                        color: darkmodeState
+                        tintColor: darkmodeState
                           ? theme.colors.white
                           : theme.colors.black,
                       },
                     ]}
                   />
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{width: '70%'}}
+                    onPress={() => {
+                      if (item?.name === 'GLOBAL TIMER') {
+                      } else if (item?.name === 'GLOBAL COUNTER') {
+                      } else if (item?.name === 'GLOBAL CRONO') {
+                      } else {
+                        navigation.navigate('CreateF', {
+                          name: item.name,
+                          _id: item._id,
+                          type: item.type,
+                        });
+                      }
+                    }}>
+                    <Label
+                      title={item?.name}
+                      style={[
+                        styles.headerTitle,
+                        {
+                          width: '90%',
+                          color: darkmodeState
+                            ? theme.colors.white
+                            : theme.colors.black,
+                          marginLeft: scale(5),
+                        },
+                      ]}
+                    />
+                  </TouchableOpacity>
+                </View>
+
                 {item?.totalMin !== undefined && (
                   <Label
                     title={`${item?.totalMin?.toFixed(2)} mins`}
@@ -692,10 +718,10 @@ const HomeScreen = () => {
                           title={type?.title}
                           style={{color: theme.colors.white, fontWeight: '600'}}
                         />
-                        <Label
+                        {/* <Label
                           title={`Total ${type?.totalTime}`}
                           style={styles.time}
-                        />
+                        /> */}
                       </View>
                     </View>
                     <View style={{width: '20%'}}>
@@ -875,6 +901,11 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontWeight: '600',
     fontSize: scale(10),
+  },
+  folderIcon: {
+    height: scale(20),
+    width: scale(20),
+    resizeMode: 'contain',
   },
   taskRow: {
     flexDirection: 'row',

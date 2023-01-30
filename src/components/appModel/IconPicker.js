@@ -7,26 +7,41 @@ import {
   FlatList,
   Image,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {scale, theme} from '../../utils';
 import Modal from 'react-native-modal';
 import {Icon_Data} from '../../utils/mockData';
 import {useNavigation} from '@react-navigation/native';
+import ApiService from '../../utils/ApiService';
+import FastImage from 'react-native-fast-image';
 
 const IconPicker = props => {
   const {isVisible, close} = props;
   const [selected, setSelected] = useState(null);
-
+  const [iconList, setIconList] = useState([]);
+  useEffect(() => {
+    try {
+      ApiService.get('icons').then(res => {
+        setIconList(res.data);
+      });
+    } catch (error) {
+      console.log('error ', error);
+    }
+  }, []);
   const renderItem = ({item}) => {
-    const backgroundColor = selected === item ? theme.colors.main : null;
+    const backgroundColor = selected === item ? theme.colors.orange : null;
+
     return (
       <TouchableOpacity
         onPress={() => setSelected(item)}
-        style={{width: '20%'}}>
-        <Image
-          resizeMode="contain"
+        style={{
+          width: '20%',
+          padding: 3,
+        }}>
+        <FastImage
+          resizeMode={FastImage.resizeMode.contain}
           style={{height: scale(60), margin: 1, backgroundColor}}
-          source={{uri: item.Image}}
+          source={{uri: item?.iconUrl}}
         />
       </TouchableOpacity>
     );
@@ -41,7 +56,7 @@ const IconPicker = props => {
           style={{width: '100%'}}>
           <FlatList
             numColumns={5}
-            data={Icon_Data}
+            data={iconList}
             renderItem={renderItem}
             keyExtractor={item => item.id}
           />

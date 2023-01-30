@@ -70,7 +70,7 @@ const CronoCard = ({
                       color={theme.colors.main}
                       onPress={() => {
                         updateStatus(item, null, index);
-                        timerRef.current.start();
+                        // timerRef.current.start();
                       }}
                     />
                   ) : (
@@ -81,7 +81,7 @@ const CronoCard = ({
                       style={{marginLeft: scale(-5)}}
                       onPress={() => {
                         updateStatus(item, null, index);
-                        timerRef.current.pause();
+                        // timerRef.current.pause();
                       }}
                     />
                   )}
@@ -191,64 +191,64 @@ const CronoCard = ({
               />
             )}
             {selectedType !== 3 && (
-              <View>
-                <Timer
-                  ref={timerRef}
-                  style={styles.timer}
-                  textStyle={{
-                    fontSize: scale(11),
-                    marginLeft: scale(18),
-                    color: darkmodeState
-                      ? theme.colors.white
-                      : theme.colors.black,
-                  }}
-                  onTimes={e => {}}
-                  onPause={e => {}}
-                  onEnd={e => {}}
-                  formatTime="hh:mm:ss"
-                  initialSeconds={
-                    item?.meta === 'Registry'
-                      ? item?.cronoCompletedTime
-                        ? item?.cronoCompletedTime // (item?.cronoCompletedTime / 60)?.toFixed(2)
-                        : 0
-                      : `${
-                          item?.timerCompletedTime
-                            ? item?.timerCompletedTime //  (item?.timerCompletedTime / 60).toFixed(2)
-                            : 0
-                        }`
-                  }
-                />
-                <Label
-                  style={{
-                    fontSize: scale(11),
-                    marginLeft: scale(18),
-                    color: darkmodeState
-                      ? theme.colors.white
-                      : theme.colors.black,
-                  }}
-                  title={item?.amount === null ? 0 : item?.amount}
-                />
-              </View>
-              // <Label
-              //   title={
-              //     item?.meta === 'Registry'
-              //       ? item?.cronoCompletedTime
-              //         ? hhmmss(item?.cronoCompletedTime) // (item?.cronoCompletedTime / 60)?.toFixed(2)
-              //         : 0
-              //       : `${
-              //           item?.timerCompletedTime
-              //             ? hhmmss(item?.timerCompletedTime) //  (item?.timerCompletedTime / 60).toFixed(2)
-              //             : 0
-              //         }\n${item?.amount === null ? 0 : item?.amount}`
-              //   }
-              //   style={{
-              //     fontSize: scale(11),
-              //     marginLeft: scale(18),
-              //     color: darkmodeState
-              //       ? theme.colors.white
-              //       : theme.colors.black,
-              //   }}
-              // />
+              // <View>
+              //   <Timer
+              //     ref={timerRef}
+              //     style={styles.timer}
+              //     textStyle={{
+              //       fontSize: scale(11),
+              //       marginLeft: scale(18),
+              //       color: darkmodeState
+              //         ? theme.colors.white
+              //         : theme.colors.black,
+              //     }}
+              //     onTimes={e => {}}
+              //     onPause={e => {}}
+              //     onEnd={e => {}}
+              //     formatTime="hh:mm:ss"
+              //     initialSeconds={
+              //       item?.meta === 'Registry'
+              //         ? item?.cronoCompletedTime
+              //           ? item?.cronoCompletedTime // (item?.cronoCompletedTime / 60)?.toFixed(2)
+              //           : 0
+              //         : `${
+              //             item?.timerCompletedTime
+              //               ? item?.timerCompletedTime //  (item?.timerCompletedTime / 60).toFixed(2)
+              //               : 0
+              //           }`
+              //     }
+              //   />
+              //   <Label
+              //     style={{
+              //       fontSize: scale(11),
+              //       marginLeft: scale(18),
+              //       color: darkmodeState
+              //         ? theme.colors.white
+              //         : theme.colors.black,
+              //     }}
+              //     title={item?.amount === null ? 0 : item?.amount}
+              //   />
+              // </View>
+              <Label
+                title={
+                  item?.meta === 'Registry'
+                    ? item?.cronoCompletedTime
+                      ? hhmmss(item?.cronoCompletedTime) // (item?.cronoCompletedTime / 60)?.toFixed(2)
+                      : 0
+                    : `${
+                        item?.timerCompletedTime
+                          ? hhmmss(item?.timerCompletedTime) //  (item?.timerCompletedTime / 60).toFixed(2)
+                          : 0
+                      }\n${item?.amount === null ? 0 : item?.amount}`
+                }
+                style={{
+                  fontSize: scale(11),
+                  marginLeft: scale(18),
+                  color: darkmodeState
+                    ? theme.colors.white
+                    : theme.colors.black,
+                }}
+              />
             )}
             <Label
               title={

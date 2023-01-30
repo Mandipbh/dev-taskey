@@ -64,7 +64,7 @@ const CreateFolderModel = props => {
         type: type === 1 ? 'CRONO' : type === 2 ? 'TIMER' : 'COUNTER',
         color: selColor,
         order: 1,
-        // icon: null,
+        icon: selIcon.iconUrl,
       };
       setLoading(true);
       const options = {payloads: folderFrm};
@@ -117,12 +117,6 @@ const CreateFolderModel = props => {
       error = false;
     }
     return error;
-  };
-
-  const onPressBack = () => {
-    setColor(theme.colors.primary);
-    setFolderName(null);
-    setType(0);
   };
 
   const IconClosePicker = data => {
@@ -315,8 +309,11 @@ const CreateFolderModel = props => {
                   height: theme.SCREENHEIGHT * 0.035,
                   width: theme.SCREENWIDTH * 0.07,
                   marginLeft: scale(30),
+                  tintColor: darkmodeState
+                    ? theme.colors.white
+                    : theme.colors.black,
                 }}
-                source={{uri: selIcon.Image}}
+                source={{uri: selIcon.iconUrl}}
               />
             )}
           </View>
