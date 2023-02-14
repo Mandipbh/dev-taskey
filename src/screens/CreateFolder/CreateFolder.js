@@ -50,6 +50,7 @@ const CreateFolderModel = props => {
     setColor(c);
     setColorPicker(false);
   };
+
   const handleSave = () => {
     if (!handleValidation()) {
       // close(selColor, folderName);

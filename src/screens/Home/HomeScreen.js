@@ -1,3 +1,4 @@
+/* eslint-disable no-const-assign */
 import {
   SafeAreaView,
   StyleSheet,
@@ -28,7 +29,26 @@ import ApiService from '../../utils/ApiService';
 import {postAPICall} from '../../utils/AppApi';
 import moment from 'moment';
 import {useSelector} from 'react-redux';
-
+const taskType = [
+  {
+    id: 1,
+    title: 'CRONO TASKS',
+    totalTime: '',
+    icon: images.crono,
+  },
+  {
+    id: 2,
+    title: 'TIMER TASKS',
+    totalTime: 0,
+    icon: images.timer,
+  },
+  {
+    id: 3,
+    title: 'COUNTER TASKS',
+    totalTime: 0,
+    icon: images.counter,
+  },
+];
 const HomeScreen = () => {
   const [openFolderModal, setOpenFolderModal] = useState(false);
   const [openIndex, setOpenIndex] = useState(null);
@@ -41,6 +61,7 @@ const HomeScreen = () => {
   const [model, setModel] = useState(false);
   const [editFolder, setEditFolder] = useState(null);
   const [loader, setLoader] = useState(false);
+  const [typeFolder, setTypeFolder] = useState(taskType);
   const [today, setToday] = useState(false);
   const navigation = useNavigation();
   const [indexState, setindexState] = useState();
@@ -161,6 +182,7 @@ const HomeScreen = () => {
   const handleProgressClose = () => {
     setModel(false);
   };
+
   useEffect(() => {
     getAllTasks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -170,7 +192,6 @@ const HomeScreen = () => {
     if (selectedType === 1) {
       setLoader(true);
       ApiService.get('folder/CRONO').then(res => {
-        console.log(' resresres >>>> ', res?.typeData);
         setLoader(false);
         if (res.success) {
           let OrderWiseData = [...res?.typeData];
@@ -195,7 +216,6 @@ const HomeScreen = () => {
         }
       });
     } else if (selectedType === 2) {
-      console.log('call >>> ', selectedType);
       ApiService.get('folder/TIMER')
         .then(res => {
           setLoader(false);
@@ -223,6 +243,15 @@ const HomeScreen = () => {
           }
         })
         .catch(e => console.log('error >> ', e));
+
+      ApiService.get('getTotalTaskTime/TIMER').then(res => {
+        console.log('resss >>> ', res.data);
+
+        const tmpArr = [...typeFolder];
+        tmpArr[1].totalTime = res?.data === undefined ? 0 : res?.data;
+        console.log('tmpArr>>> ', tmpArr);
+        setTypeFolder(tmpArr);
+      });
     } else if (selectedType === 3) {
       ApiService.get('folder/COUNTER')
         .then(res => {
@@ -254,29 +283,15 @@ const HomeScreen = () => {
         .catch(e => {
           console.log('error ??? ', e);
         });
+
+      ApiService.get('getTotalTaskTime/COUNTER').then(res => {
+        const tmpArr = [...typeFolder];
+        tmpArr[2].totalTime = res?.data;
+        setTypeFolder(tmpArr);
+      });
     }
   };
 
-  const taskType = [
-    {
-      id: 1,
-      title: 'CRONO TASKS',
-      totalTime: '200 min',
-      icon: images.crono,
-    },
-    {
-      id: 2,
-      title: 'TIMER TASKS',
-      totalTime: '200 min',
-      icon: images.timer,
-    },
-    {
-      id: 3,
-      title: 'COUNTER TASKS',
-      totalTime: '200 min',
-      icon: images.counter,
-    },
-  ];
   const config = {
     velocityThreshold: 0.3,
     directionalOffsetThreshold: 20,
@@ -337,7 +352,6 @@ const HomeScreen = () => {
         };
       }
     }
-
     try {
       postAPICall('taskStartStop', obj).then(res => {
         if (res.success) {
@@ -583,7 +597,6 @@ const HomeScreen = () => {
       ApiService.put('folderorder', options).then(res => {
         if (res.success) {
           Toast.show('Folder order updated', Toast.SHORT);
-          console.log('response of ordering >> ', res);
         }
       });
     } catch (error) {
@@ -616,8 +629,6 @@ const HomeScreen = () => {
         moment().format('YYYY-MM-DD'),
         moment().add(1, 'd').format('YYYY-MM-DD'),
       );
-      console.log('start date', moment().format('YYYY-MM-DD'));
-      console.log('start date', moment().add(1, 'd').format('YYYY-MM-DD'));
     } else {
       getAllTasks();
     }
@@ -674,17 +685,11 @@ const HomeScreen = () => {
       <ImageBackground source={images.banner} style={styles.header} />
       <View style={styles.container}>
         <View style={{flexDirection: 'row', height: '7%'}}>
-          {taskType?.map((type, index) => {
+          {typeFolder?.map((type, index) => {
             return (
               type.id === selectedType && (
                 <>
-                  <View
-                    style={{
-                      width: '74%',
-                      flexDirection: 'row',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
+                  <View style={styles.icon}>
                     <View
                       style={{
                         width: '10%',
@@ -718,10 +723,12 @@ const HomeScreen = () => {
                           title={type?.title}
                           style={{color: theme.colors.white, fontWeight: '600'}}
                         />
-                        {/* <Label
-                          title={`Total ${type?.totalTime}`}
-                          style={styles.time}
-                        /> */}
+                        {index !== 0 && type?.totalTime !== undefined && (
+                          <Label
+                            title={`Total ${type?.totalTime} min`}
+                            style={styles.time}
+                          />
+                        )}
                       </View>
                     </View>
                     <View style={{width: '20%'}}>
@@ -973,5 +980,11 @@ const styles = StyleSheet.create({
     width: '100%',
     resizeMode: 'cover',
     position: 'absolute',
+  },
+  icon: {
+    width: '74%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

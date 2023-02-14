@@ -148,16 +148,22 @@ const StatisticsScreen = () => {
 
   const getStatasticData = () => {
     let todayDate = moment().format('YYYY/MM/DD');
-
+    console.log(
+      'todayDate>>> ',
+      moment(new Date()).add(1, 'day').format('YYYY/MM/DD'),
+    );
     var startdate = moment();
     startdate = startdate.subtract(1, 'month');
     startdate = startdate.format('YYYY/MM/DD');
     const payload = {
       startDate: startDate === null ? startdate : startDate,
-      lastDate: endDate === null ? todayDate : endDate,
+      lastDate:
+        endDate === null
+          ? moment(new Date()).add(1, 'day').format('YYYY/MM/DD')
+          : moment(endDate).add(1, 'day').format('YYYY/MM/DD'),
       type: value === null || value === 'All' ? 'All' : value?.toUpperCase(),
     };
-
+    console.log('payloadpayload ???? ', payload);
     const options = {payloads: payload};
     ApiService.post('statistics', options)
       .then(res => {
@@ -404,7 +410,6 @@ const StatisticsScreen = () => {
             data={achievementTasksStatus}
           />
         )}
-        {console.log('>>>> ', achievementTasksStatus)}
         <View style={styles.divider} />
         {/* <View
           style={{

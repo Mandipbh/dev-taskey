@@ -223,6 +223,7 @@ const CreateTaskScreen = props => {
           ? props?.route?.params?.editData?.folderId
           : selectedFolder?._id,
       taskId: props?.route?.params?.editData?._id,
+      type: props?.route?.params?.editData?.type,
     };
     setLoading(true);
     let options = {payloads: frmData};
@@ -518,7 +519,14 @@ const CreateTaskScreen = props => {
               </View>
               {selMeta === 1 && (
                 <View style={styles.amount}>
-                  <Label title="Amount " />
+                  <Label
+                    title="Amount "
+                    style={{
+                      color: darkmodeState
+                        ? theme.colors.white
+                        : theme.colors.black,
+                    }}
+                  />
                   <InputBox
                     style={{width: theme.SCREENWIDTH * 0.2, height: scale(35)}}
                     placeholder="1 min"

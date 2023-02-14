@@ -60,9 +60,10 @@ const SignIn = () => {
       if (otpSend) {
         try {
           const mobileFrm = {
-            phonenumber: mobile.slice(3),
+            phonenumber: mobile,
             code: otp,
           };
+          console.log('mobileFrm >. ', mobileFrm);
           const options = {payloads: mobileFrm};
           const response = await ApiService.post('verifyOTP', options);
           if (response) {
@@ -89,13 +90,13 @@ const SignIn = () => {
   };
 
   const handleotpSend = async () => {
-    console.log('number <>> ', mobile.slice(3));
+    console.log('number <>> ', mobile);
     // if (!/^\d{10}$/.test(mobile)) {
     // Toast.show('Please enter valid number', Toast.SHORT);
     // } else {
     try {
       const mobileFrm1 = {
-        phonenumber: mobile.slice(3),
+        phonenumber: mobile,
       };
       const options = {payloads: mobileFrm1};
       const response = await ApiService.post('login', options);

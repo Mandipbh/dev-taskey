@@ -9,6 +9,7 @@ import {
   Switch,
   Alert,
   Linking,
+  Share,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {scale, theme} from '../../utils';
@@ -84,7 +85,26 @@ const socialData = [
     id: 2,
   },
 ];
-
+const onShare = async () => {
+  try {
+    const result = await Share.share({
+      title: 'Taskey',
+      message: 'Task mangement app',
+      url: 'https://mylead.net/',
+    });
+    if (result.action === Share.sharedAction) {
+      if (result.activityType) {
+        // shared with activity type of result.activityType
+      } else {
+        // shared
+      }
+    } else if (result.action === Share.dismissedAction) {
+      // dismissed
+    }
+  } catch (error) {
+    alert(error.message);
+  }
+};
 function ShareBtn(props) {
   const {title, onPress, iconName, style} = props;
   return (
@@ -417,6 +437,7 @@ const SettingScreen = () => {
               style={styles.sharebtn}
               iconName="sharealt"
               title="Share"
+              onPress={onShare}
             />
           </View>
 
