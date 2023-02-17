@@ -259,9 +259,9 @@ const StatisticsScreen = () => {
           setTypeTask_Distribution(graph);
           let graph1 = [...AchievementTasksStatus];
           graph1[0].value =
-            res?.outputData.achievementDeletePer?.toFixed(2) === undefined
+            res?.outputData.achievementDone?.toFixed(2) === undefined
               ? 0
-              : res?.outputData.achievementDeletePer?.toFixed(2);
+              : res?.outputData.achievementDone?.toFixed(2);
           graph1[2].value =
             res?.outputData.achievementInProgressPer?.toFixed(2) === undefined
               ? 0
@@ -404,12 +404,7 @@ const StatisticsScreen = () => {
             );
           })}
         </View>
-        {value !== 'Crono' && (
-          <ChartSection
-            title="Achievement Tasks Status"
-            data={achievementTasksStatus}
-          />
-        )}
+
         <View style={styles.divider} />
         {/* <View
           style={{
@@ -544,7 +539,7 @@ const StatisticsScreen = () => {
               item.id === selectedType && (
                 <>
                   <View style={{width: '10%'}}>
-                    {/* {value !== 'Crono' && (
+                    {value !== 'Crono' && (
                       <AntDesign
                         name="left"
                         size={scale(30)}
@@ -559,7 +554,7 @@ const StatisticsScreen = () => {
                             : theme.colors.black
                         }
                       />
-                    )} */}
+                    )}
                   </View>
                   <View style={styles.dataCon}>
                     <Label
@@ -571,22 +566,12 @@ const StatisticsScreen = () => {
                       }}
                       title={item.name}
                     />
-                    <Label
-                      title={'Slide to view'}
-                      style={{
-                        color: darkmodeState
-                          ? theme.colors.white
-                          : theme.colors.black,
-                      }}
-                    />
                   </View>
 
-                  {/* <View style={{width: '10%'}}>
+                  <View style={{width: '10%'}}>
                     {value !== 'Crono' && (
                       <AntDesign
                         name="right"
-
-                        
                         size={scale(30)}
                         onPress={() => {
                           selectedType <= 1 ? setType(item.id + 1) : setType(1);
@@ -598,18 +583,29 @@ const StatisticsScreen = () => {
                         }
                       />
                     )}
-                  </View> */}
+                  </View>
                 </>
               )
             );
           })}
         </View>
 
-        <ChartSection
-          style={{marginTop: scale(15)}}
-          title="Type Tasks Distribution"
-          data={TypeTask_distribution}
-        />
+        {selectedType !== 1 ? (
+          <>
+            {value !== 'Crono' && (
+              <ChartSection
+                title="Achievement Tasks Status"
+                data={achievementTasksStatus}
+              />
+            )}
+          </>
+        ) : (
+          <ChartSection
+            style={{marginTop: scale(1)}}
+            title="Type Tasks Distribution"
+            data={TypeTask_distribution}
+          />
+        )}
 
         {/* <View style={styles.divider} />
         <View style={{marginTop: scale(15)}}>
@@ -803,7 +799,7 @@ const styles = StyleSheet.create({
   },
 
   selectTime: {
-    // borderLeftWidth: scale(1),
+    borderLeftWidth: scale(1),
     padding: scale(4),
     width: theme.SCREENWIDTH * 0.35,
     height: theme.SCREENHEIGHT * 0.05,
@@ -823,8 +819,8 @@ const styles = StyleSheet.create({
   },
   datetimetxt: {
     justifyContent: 'center',
-    marginTop: scale(6),
-    fontSize: scale(12),
+    marginTop: scale(3),
+    fontSize: scale(14),
     width: '130%',
   },
   Dropdown: {
@@ -845,7 +841,7 @@ const styles = StyleSheet.create({
     marginLeft: scale(10),
     color: theme.colors.black,
     fontSize: 14,
-    borderRightWidth: 2,
+    // borderRightWidth: 2,
     paddingRight: 15,
   },
   labeltwo: {

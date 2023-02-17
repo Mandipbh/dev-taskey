@@ -131,7 +131,7 @@ const SettingScreen = () => {
   const darkmodeState = useSelector(state => state.UserReducer.isDarkMode);
   const defualtTimes = useSelector(state => state.UserReducer?.defaultTime);
   const taskTimes = useSelector(state => state.UserReducer?.time);
-  const Administration = useSelector(state => state.UserReducer?.admin);
+  // const Administration = useSelector(state => state.UserReducer?.admin);
   const toggleSwitch = () => {
     setIsEnabled(previousState => !previousState);
     dispatch(isDarkMode(!isEnabled));
@@ -142,7 +142,7 @@ const SettingScreen = () => {
     setIsEnabled(darkmodeState);
     setTime(taskTimes);
     setDefTime(defualtTimes);
-    setCheck(Administration);
+    // setCheck(Administration);
   }, []);
 
   return (
@@ -358,8 +358,8 @@ const SettingScreen = () => {
                       }}
                       checked={check === i?.id}
                       onPress={() => {
-                        setCheck(i.id);
-                        dispatch(setAdministration(i.id));
+                        // setCheck(i.id);
+                        // dispatch(setAdministration(i.id));
                       }}
                     />
 

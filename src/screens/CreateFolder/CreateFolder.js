@@ -21,6 +21,7 @@ import Loader from '../../components/appModel/Loader';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import IconPicker from '../../components/appModel/IconPicker';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const CreateFolderModel = props => {
   const navigation = useNavigation();
@@ -94,6 +95,23 @@ const CreateFolderModel = props => {
         setLoading(false);
         console.log('respoe >>. ', res);
         navigation.goBack();
+        if (res.code === -1) {
+        }
+      })
+      .catch(error => {
+        setLoading(false);
+        console.log('error ', error);
+      });
+  };
+
+  const handleDelete = () => {
+    setLoading(true);
+    ApiService.delete('folder/' + props?.route?.params?._id)
+      .then(res => {
+        Toast.show('edit folder successfully');
+        setLoading(false);
+        console.log('respoe >>. ', res);
+        navigation.navigate('Tabs');
         if (res.code === -1) {
         }
       })
@@ -341,6 +359,27 @@ const CreateFolderModel = props => {
                 : 'Create Folder'}
             </Text>
           </TouchableOpacity>
+          {props?.route?.params?.name !== undefined && (
+            <TouchableOpacity
+              onPress={() => handleDelete()}
+              style={{
+                flexDirection: 'row',
+                backgroundColor: theme.colors.orange,
+                width: scale(220),
+                height: scale(40),
+                alignItems: 'center',
+                justifyContent: 'center',
+                alignSelf: 'center',
+                marginTop: scale(30),
+                borderRadius: 30,
+              }}>
+              <AntDesign name="delete" color={theme.colors.white} size={25} />
+              <Text
+                style={{color: theme.colors.white, fontSize: 20, padding: 5}}>
+                {'Delete Folder'}
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
         {/* <View style={styles.secondCon}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -440,7 +479,7 @@ const styles = StyleSheet.create({
   },
   devider: {
     height: scale(0.5),
-    backgroundColor: theme.colors.black,
+    backgroundColor: theme.colors.gray,
     width: '100%',
     alignSelf: 'center',
     marginVertical: scale(10),

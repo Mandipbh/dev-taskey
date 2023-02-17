@@ -19,6 +19,7 @@ import ApiService from '../../utils/ApiService';
 import {useDispatch} from 'react-redux';
 import {isLogin, loginAction} from '../../redux/Actions/UserActions';
 import axios from 'axios';
+import {useEffect} from 'react';
 
 const SignUp = () => {
   const navigation = useNavigation();

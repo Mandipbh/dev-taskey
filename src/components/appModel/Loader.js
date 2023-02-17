@@ -71,7 +71,7 @@ const Loader = props => {
           <ActivityIndicator
             size="large"
             animating={loading}
-            color={theme.colors.primary2}
+            color={theme.colors.orange}
           />
         </View>
       </View>

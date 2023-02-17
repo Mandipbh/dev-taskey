@@ -35,12 +35,21 @@ const IconPicker = props => {
       <TouchableOpacity
         onPress={() => setSelected(item)}
         style={{
-          width: '20%',
-          padding: 3,
+          // width: '33%',
+          // padding: scale(3),
+          backgroundColor: backgroundColor,
+          margin: scale(5),
+          paddingVertical: scale(15),
+          justifyContent: 'center',
+          alignItems: 'center',
         }}>
         <FastImage
           resizeMode={FastImage.resizeMode.contain}
-          style={{height: scale(60), margin: 1, backgroundColor}}
+          style={{
+            height: scale(60),
+            width: theme.SCREENWIDTH * 0.3,
+            margin: 1,
+          }}
           source={{uri: item?.iconUrl}}
         />
       </TouchableOpacity>
@@ -55,7 +64,7 @@ const IconPicker = props => {
           showsVerticalScrollIndicator={false}
           style={{width: '100%'}}>
           <FlatList
-            numColumns={5}
+            numColumns={3}
             data={iconList}
             renderItem={renderItem}
             keyExtractor={item => item.id}
@@ -109,6 +118,6 @@ const styles = StyleSheet.create({
   btnText: {
     fontSize: 16,
     fontWeight: '500',
-    color: theme.colors.black,
+    color: theme.colors.red,
   },
 });

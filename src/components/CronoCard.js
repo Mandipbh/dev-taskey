@@ -1,4 +1,4 @@
-import {View, TouchableOpacity, StyleSheet, Alert} from 'react-native';
+import {View, TouchableOpacity, StyleSheet, Alert, Image} from 'react-native';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {ProgressBar} from 'react-native-paper';
@@ -117,8 +117,24 @@ const CronoCard = ({
           )}
           <View style={styles.taskLabel}>
             <View
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginLeft: scale(-10),
+              }}>
+              <Image
+                source={{uri: item?.icon}}
+                style={{
+                  height: scale(20),
+                  width: scale(20),
+                  marginLeft:
+                    item?.status === 'Done' || item.status === 'Failed'
+                      ? 5
+                      : scale(0),
+                }}
+              />
               <Label
+                numberOfLines={2}
                 title={item?.name}
                 style={{
                   fontSize: scale(12),
@@ -137,7 +153,11 @@ const CronoCard = ({
                       : darkmodeState
                       ? theme.colors.white
                       : theme.colors.black,
-                  width: '100%',
+                  width: '90%',
+                  marginLeft:
+                    item?.status === 'Done' || item.status === 'Failed'
+                      ? 5
+                      : scale(0),
                 }}
               />
               {selectedType !== 1 && (
@@ -157,11 +177,15 @@ const CronoCard = ({
                 />
               )}
             </View>
-            {item?.meta === 'Achievement' && item?.percentageOfTask && (
+            {item?.meta === 'Achievement' && (
               <ProgressBar
                 progress={
                   selectedType === 3
-                    ? item?.percentageOfTask / 100
+                    ? item?.percentageOfTask == undefined
+                      ? 0
+                      : item?.percentageOfTask / 100
+                    : item?.percentageOfTask == undefined
+                    ? 0
                     : item?.percentageOfTask / 100
                 }
                 color={

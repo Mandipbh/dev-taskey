@@ -341,7 +341,7 @@ const statisticdataone = [
   },
   {
     id: '3',
-    label: 'Perecentage of Successdfsgffds',
+    label: 'Perecentage of Success',
     value: 0,
   },
 ];

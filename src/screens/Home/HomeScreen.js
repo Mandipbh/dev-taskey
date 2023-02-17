@@ -684,7 +684,7 @@ const HomeScreen = () => {
     <SafeAreaView style={styles.container}>
       <ImageBackground source={images.banner} style={styles.header} />
       <View style={styles.container}>
-        <View style={{flexDirection: 'row', height: '7%'}}>
+        <View style={{flexDirection: 'row', height: '7%', marginTop: scale(5)}}>
           {typeFolder?.map((type, index) => {
             return (
               type.id === selectedType && (
@@ -808,7 +808,7 @@ const HomeScreen = () => {
                 contentContainerStyle={{
                   paddingVertical: scale(10),
                   paddingBottom: theme.SCREENHEIGHT * 0.01,
-                  marginTop: scale(10),
+                  // marginTop: scale(10),
                 }}
                 data={Folder}
                 renderItem={rendertasks}

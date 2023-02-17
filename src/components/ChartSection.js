@@ -8,7 +8,7 @@ const ChartSection = props => {
   const {title, data, style} = props;
   return (
     <View style={[styles.chartView, style]}>
-      <View style={{flexDirection: 'row', marginTop: scale(10)}}>
+      <View style={{flexDirection: 'row'}}>
         <CustomChart chartData={data} />
         <View style={{justifyContent: 'center'}}>
           {data.map(i => {
@@ -44,8 +44,8 @@ export default ChartSection;
 
 const styles = StyleSheet.create({
   chartView: {
-    padding: scale(15),
-    marginVertical: scale(5),
+    // padding: scale(15),
+    // marginVertical: scale(5),
     alignSelf: 'center',
   },
   colorBox: {
