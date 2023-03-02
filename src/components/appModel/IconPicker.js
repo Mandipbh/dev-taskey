@@ -22,7 +22,7 @@ const IconPicker = props => {
   useEffect(() => {
     try {
       ApiService.get('icons').then(res => {
-        setIconList(res.data);
+        setIconList(res.data?.reverse());
       });
     } catch (error) {
       console.log('error ', error);
@@ -57,7 +57,9 @@ const IconPicker = props => {
   };
 
   return (
-    <Modal isVisible={isVisible} style={{marginTop: scale(405), margin: 0}}>
+    <Modal
+      isVisible={isVisible}
+      style={{marginTop: theme.SCREENHEIGHT * 0.25, margin: 0}}>
       <View style={styles.container}>
         <Text style={styles.titleText}>Choose Icon</Text>
         <ScrollView

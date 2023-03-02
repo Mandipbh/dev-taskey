@@ -16,7 +16,7 @@ function pad(num) {
   return ('0' + num).slice(-2);
 }
 
-const CronoCard = ({
+const AllTaskCard = ({
   item,
   index,
   move,
@@ -41,7 +41,7 @@ const CronoCard = ({
 
   return (
     <>
-      {index < 4 && item?.status !== 'Delete' && (
+      {item?.status !== 'Delete' && (
         <TouchableOpacity
           onLongPress={move}
           onPressOut={moveEnd}
@@ -134,7 +134,6 @@ const CronoCard = ({
                     item?.status === 'Done' || item.status === 'Failed'
                       ? scale(20)
                       : scale(-5),
-                  padding: scale(2),
                 }}
               />
               <Label
@@ -157,7 +156,7 @@ const CronoCard = ({
                       : darkmodeState
                       ? theme.colors.white
                       : theme.colors.black,
-                  width: '80%',
+                  width: '90%',
                   marginLeft:
                     item?.status === 'Done' || item.status === 'Failed'
                       ? 5
@@ -208,18 +207,10 @@ const CronoCard = ({
           <View style={styles.staticDetails}>
             {selectedType === 3 && (
               <Label
-                title={
-                  item?.meta === 'Achievement'
-                    ? `${
-                        item?.counterIncrementDecrement !== undefined
-                          ? item?.counterIncrementDecrement
-                          : 0
-                      }\n${item?.amount}`
-                    : item?.counterIncrementDecrement
-                }
+                title={item?.counterIncrementDecrement}
                 style={{
                   fontSize: scale(11),
-                  marginLeft: scale(22),
+                  marginLeft: scale(20),
                   color: darkmodeState
                     ? theme.colors.white
                     : theme.colors.black,
@@ -305,7 +296,7 @@ const CronoCard = ({
   );
 };
 
-export default CronoCard;
+export default AllTaskCard;
 
 const styles = StyleSheet.create({
   taskRow: {

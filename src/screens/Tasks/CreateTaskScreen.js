@@ -144,11 +144,12 @@ const CreateTaskScreen = props => {
     setSelFolder('');
     setAmount(null);
     setTitle(null);
+    setIcon(null);
   };
 
   var error = false;
   const handleValidation = () => {
-    if (title === null) {
+    if (title?.trim() === null || title?.trim() === undefined) {
       Toast.show('Please enter name', Toast.SHORT);
       return true;
     } else if (type === 0) {
@@ -188,7 +189,10 @@ const CreateTaskScreen = props => {
         amount: amount,
         status: 'Paused',
         folderId: selectedFolder?._id,
-        icon: selIcon?.iconUrl,
+        icon:
+          selIcon?.iconUrl === undefined
+            ? 'http://35.158.183.225:4000/001-drums.png'
+            : selIcon?.iconUrl,
         // folderFrm.append('icon', null);
       };
       console.log('frmData >> ', frmData);
@@ -197,6 +201,7 @@ const CreateTaskScreen = props => {
       ApiService.post('task', options)
         .then(res => {
           setLoading(false);
+          setIcon(null);
           // navigation.goBack();
           if (res.success) {
             setLoading(false);
@@ -232,6 +237,7 @@ const CreateTaskScreen = props => {
     ApiService.put(`updateTask`, options)
       .then(res => {
         setLoading(false);
+        setIcon(null);
         // navigation.goBack();
         console.log('response << >>> ', res);
         if (res.code === -1) {
@@ -253,6 +259,7 @@ const CreateTaskScreen = props => {
     console.log('removeTask', props?.route?.params?.editData?._id);
     ApiService.delete(`removeTask/${props?.route?.params?.editData?._id}`).then(
       res => {
+        Toast.show('Task delete', Toast.SHORT);
         console.log('remove task <>> ', res.data);
         navigation.goBack();
       },
@@ -529,7 +536,7 @@ const CreateTaskScreen = props => {
                   />
                   <InputBox
                     style={{width: theme.SCREENWIDTH * 0.2, height: scale(35)}}
-                    placeholder="1 min"
+                    placeholder={type === 3 ? '' : '1 min'}
                     inputStyle={{fontSize: 14}}
                     value={amount}
                     keyboardType="numeric"

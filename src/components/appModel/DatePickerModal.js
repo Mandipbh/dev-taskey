@@ -125,7 +125,7 @@ const DatePickerModal = props => {
           <Feather
             name="filter"
             size={scale(30)}
-            color={darkmodeState ? theme.colors.white : theme.colors.black}
+            color={darkmodeState ? theme.colors.black : theme.colors.black}
           />
         </TouchableOpacity>
       </View>

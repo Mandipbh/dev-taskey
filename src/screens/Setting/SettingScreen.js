@@ -227,13 +227,13 @@ const SettingScreen = () => {
             );
           })}
 
-          <Label
+          {/* <Label
             style={[
               styles.titletxt,
               {color: darkmodeState ? theme.colors.white : theme.colors.black},
             ]}
             title="Default Range of Time"
-          />
+          /> */}
           <View
             style={[
               styles.divider,
@@ -245,7 +245,7 @@ const SettingScreen = () => {
             ]}
           />
 
-          <View style={styles.CheckBoxInventory}>
+          {/* <View style={styles.CheckBoxInventory}>
             {TimeRange.map((i, index) => {
               return (
                 <>
@@ -283,7 +283,7 @@ const SettingScreen = () => {
                 </>
               );
             })}
-          </View>
+          </View> */}
 
           <View
             style={{
@@ -321,13 +321,13 @@ const SettingScreen = () => {
             ]}
           />
 
-          <Label
+          {/* <Label
             style={[
               styles.titletxt,
               {color: darkmodeState ? theme.colors.white : theme.colors.black},
             ]}
             title="Administration"
-          />
+          /> */}
           <View
             style={[
               styles.divider,
@@ -338,7 +338,7 @@ const SettingScreen = () => {
               },
             ]}></View>
 
-          <View style={[styles.CheckBoxInventory, {flexDirection: 'column'}]}>
+          {/* <View style={[styles.CheckBoxInventory, {flexDirection: 'column'}]}>
             {AdministrationData.map((i, index) => {
               return (
                 <>
@@ -358,7 +358,7 @@ const SettingScreen = () => {
                       }}
                       checked={check === i?.id}
                       onPress={() => {
-                        // setCheck(i.id);
+                        setCheck(i.id);
                         // dispatch(setAdministration(i.id));
                       }}
                     />
@@ -377,7 +377,7 @@ const SettingScreen = () => {
                 </>
               );
             })}
-          </View>
+          </View> */}
 
           <Label
             style={[

@@ -12,6 +12,12 @@ export const tabs = [
 const folders = [
   {
     id: 0,
+    name: 'All',
+    color: '#ffddf1',
+    notes: 11,
+  },
+  {
+    id: 11,
     name: 'Global List Folder',
     color: '#ffddf1',
     notes: 11,
@@ -30,6 +36,30 @@ const folders = [
   },
   {
     id: 3,
+    name: 'full-stack Folder',
+    color: '#8339de',
+    notes: 22,
+  },
+  {
+    id: 4,
+    name: 'Global List Folder',
+    color: '#ffddf1',
+    notes: 11,
+  },
+  {
+    id: 5,
+    name: 'Front-end Folder',
+    color: '#ddff3d',
+    notes: 5,
+  },
+  {
+    id: 6,
+    name: 'Back-end Folder',
+    color: '#dd1fdf',
+    notes: 3,
+  },
+  {
+    id: 7,
     name: 'full-stack Folder',
     color: '#8339de',
     notes: 22,

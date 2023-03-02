@@ -178,7 +178,20 @@ const HomeScreen = () => {
   ]);
 
   const [Folder, setFolder] = useState([]);
-
+  function pad(num) {
+    return ('0' + num).slice(-2);
+  }
+  const timeModeState = useSelector(state => state.UserReducer.time);
+  function hhmmss(secs) {
+    var minutes = Math.floor(secs / 60);
+    secs = secs % 60;
+    var hours = Math.floor(minutes / 60);
+    minutes = minutes % 60;
+    return timeModeState === 1
+      ? `${pad(minutes)}:${pad(secs)}`
+      : Math.floor(minutes / 60) + ':' + pad(minutes) + ':' + pad(secs);
+    // return pad(hours)+":"+pad(minutes)+":"+pad(secs); for old browsers
+  }
   const handleProgressClose = () => {
     setModel(false);
   };
@@ -214,6 +227,15 @@ const HomeScreen = () => {
           //   }
           // });
         }
+      });
+      ApiService.get('getTotalAmountOfFolder/CRONO').then(res => {
+        // console.log('resss >>> ', res.data);
+
+        const tmpArr = [...typeFolder];
+        console.log('es?.data >> ', res?.data);
+        tmpArr[0].totalTime = res?.data === undefined ? 0 : hhmmss(res?.data);
+
+        setTypeFolder(tmpArr);
       });
     } else if (selectedType === 2) {
       ApiService.get('folder/TIMER')
@@ -443,7 +465,25 @@ const HomeScreen = () => {
 
                 {item?.totalMin !== undefined && (
                   <Label
-                    title={`${item?.totalMin?.toFixed(2)} mins`}
+                    title={
+                      selectedType === 3
+                        ? item?.counterTotalMin
+                        : `${item?.totalMin?.toFixed(2)} min`
+                    }
+                    style={[
+                      styles.headerTitle,
+                      {
+                        color: darkmodeState
+                          ? theme.colors.white
+                          : theme.colors.black,
+                        marginLeft: selectedType === 3 ? scale(30) : 0,
+                      },
+                    ]}
+                  />
+                )}
+                {item?.cronoTotalSec !== undefined && (
+                  <Label
+                    title={`${hhmmss(item?.cronoTotalSec)} min`}
                     style={[
                       styles.headerTitle,
                       {
@@ -496,7 +536,7 @@ const HomeScreen = () => {
                   <Icon2
                     name="award"
                     size={scale(22)}
-                    style={{marginLeft: scale(-40)}}
+                    style={{marginLeft: scale(-5)}}
                     color={
                       darkmodeState ? theme.colors.white : theme.colors.black
                     }
@@ -507,7 +547,7 @@ const HomeScreen = () => {
                   style={[
                     styles.headerTitle,
                     {
-                      left: scale(10),
+                      // left: scale(10),
                       color: darkmodeState
                         ? theme.colors.white
                         : theme.colors.black,
@@ -564,7 +604,7 @@ const HomeScreen = () => {
                         })
                       }
                       style={styles.seeMore}>
-                      {taskItem?.taskList?.length > 3 && (
+                      {taskItem?.taskList?.length > 3 ? (
                         <Label
                           title="See more"
                           style={{
@@ -573,7 +613,7 @@ const HomeScreen = () => {
                               : theme.colors.black,
                           }}
                         />
-                      )}
+                      ) : null}
                     </TouchableOpacity>
                   </>
                 ) : null;
@@ -723,7 +763,7 @@ const HomeScreen = () => {
                           title={type?.title}
                           style={{color: theme.colors.white, fontWeight: '600'}}
                         />
-                        {index !== 0 && type?.totalTime !== undefined && (
+                        {type?.totalTime !== undefined && (
                           <Label
                             title={`Total ${type?.totalTime} min`}
                             style={styles.time}

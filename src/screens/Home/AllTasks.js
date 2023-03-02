@@ -1,7 +1,7 @@
 import {SafeAreaView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {useState} from 'react';
-import {CronoCard, Label, Title} from '../../components';
+import {AllTaskCard, CronoCard, Label, Title} from '../../components';
 import {scale, theme} from '../../utils';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
@@ -74,7 +74,7 @@ const AllTasks = ({route}) => {
   const navigation = useNavigation();
   const tasksrender = ({item, index, move, moveEnd, isActive}) => {
     return (
-      <CronoCard
+      <AllTaskCard
         item={item}
         index={index}
         // move={move}
@@ -185,7 +185,50 @@ const AllTasks = ({route}) => {
         />
         <View style={styles.divider} />
 
-        <HeaderTitle darkmodeState={darkmodeState} />
+        <View style={styles.statusContainer}>
+          <Label
+            title="Status"
+            style={[
+              styles.statustxt,
+              {color: darkmodeState ? theme.colors.white : theme.colors.black},
+            ]}
+          />
+          <Label
+            title="Name"
+            style={[
+              styles.name,
+              {color: darkmodeState ? theme.colors.white : theme.colors.black},
+            ]}
+          />
+          <Feather
+            name="award"
+            size={20}
+            style={{marginLeft: scale(80)}}
+            color={darkmodeState ? theme.colors.white : theme.colors.black}
+          />
+          <Label
+            title="Path"
+            style={[
+              styles.path,
+              {color: darkmodeState ? theme.colors.white : theme.colors.black},
+            ]}
+          />
+          <View style={styles.folder}>
+            <Title
+              title={'% '}
+              style={{
+                fontSize: 11,
+                color: darkmodeState ? theme.colors.white : theme.colors.black,
+              }}
+            />
+            <AntDesign
+              name="folder1"
+              size={20}
+              color={darkmodeState ? theme.colors.white : theme.colors.black}
+            />
+          </View>
+        </View>
+        {/* <HeaderTitle darkmodeState={darkmodeState ? 2 : 1} /> */}
         <View style={styles.divider} />
         <View style={{height: '80%'}}>
           <DraggableFlatList
@@ -236,7 +279,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   statusContainer: {flexDirection: 'row', alignItems: 'center'},
-  statustxt: {marginLeft: scale(8), fontSize: 12, fontWeight: '600'},
+  statustxt: {
+    marginLeft: scale(8),
+    fontSize: 12,
+    fontWeight: '600',
+  },
   name: {marginLeft: scale(20), fontSize: 12, fontWeight: '600'},
   path: {marginLeft: scale(40), fontSize: 12, fontWeight: '600'},
   folder: {

@@ -25,6 +25,7 @@ const theme = {
     orange3: '#f98805',
     lightGreen: '#37cac8',
     main: '#ea8915',
+    progressBar: '#f98c02',
     backgroundColor: '#e4f5ff',
     orange1: '#ffdab9',
     lightOrange: '#F9E6D0',

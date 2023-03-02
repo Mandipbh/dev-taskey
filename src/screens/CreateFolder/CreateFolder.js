@@ -73,6 +73,7 @@ const CreateFolderModel = props => {
       ApiService.post('folder', options)
         .then(res => {
           setLoading(false);
+          setIcon(null);
           navigation.goBack();
           if (res.code === -1) {
           }
@@ -93,6 +94,7 @@ const CreateFolderModel = props => {
       .then(res => {
         Toast.show('edit folder successfully');
         setLoading(false);
+        setIcon(null);
         console.log('respoe >>. ', res);
         navigation.goBack();
         if (res.code === -1) {
@@ -123,7 +125,12 @@ const CreateFolderModel = props => {
 
   var error = false;
   const handleValidation = () => {
-    if (folderName === null) {
+    console.log(' folderName?.trim() ?? ', folderName?.trim());
+    if (
+      folderName?.trim() === '' ||
+      folderName?.trim() === null ||
+      folderName?.trim() === undefined
+    ) {
       Toast.show('Please enter folder name', Toast.SHORT);
       error = true;
     } else if (type === 0) {
