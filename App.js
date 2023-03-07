@@ -6,6 +6,8 @@ import * as Progress from 'react-native-progress';
 import {PersistGate} from 'redux-persist/integration/react';
 import MainStack from './src/navigation/MainStack';
 import {images, scale, theme} from './src/utils';
+import {StripeProvider} from '@stripe/stripe-react-native';
+
 class SplashScreen extends React.Component {
   render() {
     const viewStyles = [styles.container, {backgroundColor: theme.colors.main}];
@@ -82,11 +84,13 @@ export default class App extends React.Component {
     }
 
     return (
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <MainStack />
-        </PersistGate>
-      </Provider>
+      <StripeProvider publishableKey="pk_test_51Mh4VgSIPhHFqvGry91b3XxYfY4R1I5TdMC3zntAthr3NH9cuVk73XSiMLh0tCYTABFJ9gQvsHsOkd5anUEWCumM00zBh0ozeI">
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <MainStack />
+          </PersistGate>
+        </Provider>
+      </StripeProvider>
     );
   }
 }

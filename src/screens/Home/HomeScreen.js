@@ -7,6 +7,7 @@ import {
   Image,
   Platform,
   ImageBackground,
+  Text,
 } from 'react-native';
 import React, {useState} from 'react';
 import Toast from 'react-native-simple-toast';
@@ -29,6 +30,7 @@ import ApiService from '../../utils/ApiService';
 import {postAPICall} from '../../utils/AppApi';
 import moment from 'moment';
 import {useSelector} from 'react-redux';
+import SubscriptionModal from '../../components/appModel/SubscriptionModal';
 const taskType = [
   {
     id: 1,
@@ -54,6 +56,7 @@ const HomeScreen = () => {
   const [openIndex, setOpenIndex] = useState(null);
   const [selectedType, setType] = useState(1);
   const [calenderModel, setCalenderModel] = useState(false);
+  const [planModel, setPlanModel] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [data, setData] = useState(tasksData);
@@ -194,6 +197,10 @@ const HomeScreen = () => {
   }
   const handleProgressClose = () => {
     setModel(false);
+  };
+
+  const handleCloseSub = () => {
+    setPlanModel(false);
   };
 
   useEffect(() => {
@@ -724,7 +731,13 @@ const HomeScreen = () => {
     <SafeAreaView style={styles.container}>
       <ImageBackground source={images.banner} style={styles.header} />
       <View style={styles.container}>
-        <View style={{flexDirection: 'row', height: '7%', marginTop: scale(5)}}>
+        <View
+          style={{
+            height: '7%',
+            marginTop: scale(15),
+            alignSelf: 'center',
+            marginBottom: scale(-15),
+          }}>
           {typeFolder?.map((type, index) => {
             return (
               type.id === selectedType && (
@@ -787,7 +800,13 @@ const HomeScreen = () => {
             );
           })}
 
-          <View style={styles.calendarCon}>
+          <TouchableOpacity
+            onPress={() => setPlanModel(true)}
+            style={{position: 'absolute', marginLeft: 320}}>
+            <Text style={{fontSize: 16}}>Sub</Text>
+          </TouchableOpacity>
+
+          {/* <View style={styles.calendarCon}>
             <TouchableOpacity
               onPress={() => {
                 setCalenderModel(true);
@@ -829,7 +848,7 @@ const HomeScreen = () => {
                 }}
               />
             )}
-          </View>
+          </View> */}
         </View>
 
         <View style={styles.mainCOntainer}>
@@ -881,6 +900,7 @@ const HomeScreen = () => {
           editFolder={editFolder}
         />
       )}
+      <SubscriptionModal isVisible={planModel} close={handleCloseSub} />
       <ComplateTaskModel isVisible={model} close={handleProgressClose} />
     </SafeAreaView>
   );

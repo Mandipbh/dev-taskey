@@ -11,6 +11,7 @@ const images = {
   register: require('./register-icon.png'),
   timer: require('./timer-icon.png'),
   appIcon: require('./appIcon.png'),
+  subscription: require('./background-trial.png'),
 };
 
 export default images;

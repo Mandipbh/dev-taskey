@@ -29,6 +29,7 @@ const SignIn = () => {
   const [otpSend, setSendOtp] = useState(false);
   const [varified, setVarified] = useState(false);
   const [btnValidation, setBtnValidation] = useState(true);
+  const darkmodeState = useSelector(state => state.UserReducer.isDarkMode);
 
   const dispatch = useDispatch();
   const validation = () => {
@@ -148,7 +149,10 @@ const SignIn = () => {
               placeholder: 'Enter a phone number',
             }}
             style={styles.numbrtpicker}
-            textStyle={{height: scale(30)}}
+            textStyle={{
+              height: scale(30),
+              color: darkmodeState ? theme.colors.white : theme.colors.black,
+            }}
             value={mobile}
             onChangePhoneNumber={txt => {
               setMobile(txt);

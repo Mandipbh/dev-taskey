@@ -10,6 +10,7 @@ import {
   Alert,
   Linking,
   Share,
+  Button,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {scale, theme} from '../../utils';
@@ -26,6 +27,9 @@ import {
   setDefaultTime,
   setDefTaskTime,
 } from '../../redux/Actions/UserActions';
+import {useStripe} from '@stripe/stripe-react-native';
+import axios from 'axios';
+import ApiService from '../../utils/ApiService';
 
 const chips = [
   {
@@ -129,6 +133,7 @@ const SettingScreen = () => {
   const [isEnabled, setIsEnabled] = useState(false);
   const dispatch = useDispatch();
   const darkmodeState = useSelector(state => state.UserReducer.isDarkMode);
+  const userDetails = useSelector(state => state.UserReducer.userDetails);
   const defualtTimes = useSelector(state => state.UserReducer?.defaultTime);
   const taskTimes = useSelector(state => state.UserReducer?.time);
   // const Administration = useSelector(state => state.UserReducer?.admin);
@@ -136,7 +141,7 @@ const SettingScreen = () => {
     setIsEnabled(previousState => !previousState);
     dispatch(isDarkMode(!isEnabled));
   };
-
+  console.log('userDetails >> ', userDetails);
   useEffect(() => {
     console.log('data > ', defualtTimes);
     setIsEnabled(darkmodeState);
@@ -144,6 +149,45 @@ const SettingScreen = () => {
     setDefTime(defualtTimes);
     // setCheck(Administration);
   }, []);
+
+  const {initPaymentSheet, presentPaymentSheet} = useStripe();
+  const [clientSecret, setClientSecret] = useState();
+
+  useEffect(() => {
+    initializaPayment();
+  }, []);
+
+  const initializaPayment = async () => {
+    const payload = {
+      name: userDetails?.data?.name,
+      amount: 500,
+    };
+    const options = {payloads: payload};
+    const response = await ApiService.post('makePayment', options);
+    setClientSecret(response?.data);
+    const {error} = await initPaymentSheet({
+      merchantDisplayName: 'Taskey',
+      paymentIntentClientSecret: response?.data,
+    });
+    console.log('response >>> ', response);
+  };
+
+  const openPaymentSheet = async () => {
+    try {
+      const {error} = await presentPaymentSheet({
+        clientSecret: clientSecret,
+      }).then(response => {
+        console.log('response data >>> ', response);
+      });
+      if (error) {
+        Alert.alert('PAYMENT FAILED', error.message);
+      } else {
+        Alert.alert('SUCCESS', 'PAYMENT DONE SUCCESSFULLY...');
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <>
@@ -490,6 +534,7 @@ const SettingScreen = () => {
               backgroundColor={theme.colors.green}
             /> */}
           </View>
+          <Button title="Press me" onPress={openPaymentSheet} />
         </ScrollView>
       </SafeAreaView>
     </>

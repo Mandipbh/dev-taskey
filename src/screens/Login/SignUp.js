@@ -16,7 +16,7 @@ import {scale, theme} from '../../utils';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {useState} from 'react';
 import ApiService from '../../utils/ApiService';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {isLogin, loginAction} from '../../redux/Actions/UserActions';
 import axios from 'axios';
 import {useEffect} from 'react';
@@ -27,6 +27,8 @@ const SignUp = () => {
   const [mobile, setMobile] = useState('');
   const [otp, setOtp] = useState('');
   const [btnValidation, setBtnValidation] = useState(true);
+  const darkmodeState = useSelector(state => state.UserReducer.isDarkMode);
+
   // const
   const [sentOtp, setSendOtp] = useState(false);
   const dispatch = useDispatch();
@@ -149,7 +151,10 @@ const SignUp = () => {
               placeholder: 'Enter a phone number',
             }}
             style={styles.numbrtpicker}
-            textStyle={{height: scale(30)}}
+            textStyle={{
+              height: scale(30),
+              color: darkmodeState ? theme.colors.white : theme.colors.black,
+            }}
             value={mobile}
             onChangePhoneNumber={txt => {
               setMobile(txt);
