@@ -13,6 +13,10 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {images, scale, theme} from '../../utils';
 import {SubscriptionPlan} from '../../utils/mockData';
 import {Title, Label} from '../Label';
+import moment from 'moment';
+import {useSelector} from 'react-redux';
+import {useStripe} from '@stripe/stripe-react-native';
+import ApiService from '../../utils/ApiService';
 
 function ShareBtn(props) {
   const {title, onPress, iconName, style} = props;
@@ -37,17 +41,86 @@ const SubscriptionModal = props => {
 
   const [selectedId, setSelectedId] = useState();
   const [changeColor, setchangeColor] = useState(false);
-  const [currentDate, setCurrentDate] = useState('');
+  const [monthPlan, setMonthPlan] = useState();
+  const [yearPlan, setYearPlan] = useState();
+  const [lifetimePlan, setLifetimePlan] = useState(false);
   const [item, setItem] = useState();
-  console.log('Selected Item', item);
-  console.log('Today Date >>>', currentDate);
+  const userDetails = useSelector(state => state.UserReducer.userDetails);
+
+  const OneMonthPlan = () => {
+    var TodayDate = moment().format('DD-MM-YYYY');
+    var OneMonthDate = moment().add(1, 'M').format('DD-MM-YYYY');
+    setMonthPlan(`${TodayDate}  ${OneMonthDate}`);
+    setLifetimePlan(false);
+    console.log('Month Plan >>', monthPlan);
+  };
+
+  const OneYearPlan = () => {
+    var TodayDate = moment().format('DD-MM-YYYY');
+    var OneMonthDate = moment().add(1, 'y').format('DD-MM-YYYY');
+    setYearPlan(`${TodayDate}  ${OneMonthDate}`);
+    setLifetimePlan(false);
+    console.log('Year Plan >>', yearPlan);
+  };
+
+  const LifeTimePlan = () => {
+    setLifetimePlan(true);
+    console.log('LifeTime Plan >>', lifetimePlan);
+  };
+
+  // Stripe
+
+  const {initPaymentSheet, presentPaymentSheet} = useStripe();
+  const [clientSecret, setClientSecret] = useState();
 
   useEffect(() => {
-    var date = new Date().getDate();
-    var month = new Date().getMonth() + 1;
-    var year = new Date().getFullYear();
-    setCurrentDate(date + '/' + month + '/' + year);
+    initializaPayment();
   }, []);
+
+  const StripeItem = {
+    userName: userDetails?.data?.name,
+    userId: userDetails?.data?._id,
+    amount: item?.price,
+    date: monthPlan,
+  };
+
+  console.log('Selected Item', item);
+  console.log('User Name >> ', userDetails?.data?.name);
+  console.log('User Id >> ', userDetails?.data?._id);
+
+  console.log(item?.price);
+
+  const initializaPayment = async () => {
+    const payload = {
+      name: 'man',
+      amount: 5000,
+    };
+    const options = {payloads: payload};
+    const response = await ApiService.post('makePayment', options);
+    setClientSecret(response?.data);
+    const {error} = await initPaymentSheet({
+      merchantDisplayName: 'Taskey',
+      paymentIntentClientSecret: clientSecret,
+    });
+    console.log('response >>> ', response);
+  };
+
+  const openPaymentSheet = async () => {
+    try {
+      const {error} = await presentPaymentSheet({
+        clientSecret: clientSecret,
+      }).then(response => {
+        console.log('response data >>> ', response);
+      });
+      if (error) {
+        Alert.alert('PAYMENT FAILED', error.message);
+      } else {
+        Alert.alert('SUCCESS', 'PAYMENT DONE SUCCESSFULLY...');
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <Modal animationType={'none'} visible={isVisible}>
@@ -84,6 +157,11 @@ const SubscriptionModal = props => {
                 setSelectedId(item.id);
                 setItem(item);
                 setchangeColor(true);
+                {
+                  item.id === 1 ? OneMonthPlan() : null;
+                  item.id === 2 ? OneYearPlan() : null;
+                  item.id === 3 ? LifeTimePlan() : null;
+                }
               }}
               style={[
                 styles.planContainer,
@@ -137,6 +215,7 @@ const SubscriptionModal = props => {
           );
         })}
         <ShareBtn
+          onPress={openPaymentSheet}
           style={[
             styles.sharebtn,
             {
