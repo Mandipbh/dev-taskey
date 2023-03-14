@@ -18,6 +18,7 @@ import moment from 'moment';
 import {useSelector} from 'react-redux';
 import {useStripe} from '@stripe/stripe-react-native';
 import ApiService from '../../utils/ApiService';
+import {useIsFocused} from '@react-navigation/native';
 
 function ShareBtn(props) {
   const {title, onPress, iconName, style} = props;
@@ -72,35 +73,46 @@ const SubscriptionModal = props => {
   // Stripe
   const {initPaymentSheet, presentPaymentSheet} = useStripe();
   const [clientSecret, setClientSecret] = useState();
+  const [data, setData] = useState(null);
+  const isFcouse = useIsFocused();
 
-  useEffect(() => {
-    initializaPayment();
-  }, []);
-
+  console.log('isFcouse ??? ', isFcouse);
   const string = `${item?.price}`;
   const result = string.substring(4);
-  console.log('Hello world', result);
-  console.log('Selected Item', item);
+
   console.log(item?.price);
 
   const initializaPayment = async () => {
     const payload = {
       name: userDetails?.data?.name,
-      amount: result,
+      amount: (Remaining_Days > 0 ? item?.offerPrice : item?.price)
+        .toFixed(2)
+        .replace('.', ''),
     };
+    console.log('payload ??? ', payload);
     const options = {payloads: payload};
-    const response = await ApiService.post('makePayment', options);
-    setClientSecret(response?.data);
-    const {error} = await initPaymentSheet({
-      merchantDisplayName: 'Taskey',
-      paymentIntentClientSecret: response?.data,
-    });
-    console.log('response >>> ', response);
+    try {
+      const response = await ApiService.post('makePayment', options);
+      console.log('response?.data >> ', response?.data);
+      setClientSecret(response?.data);
+      const {error} = await initPaymentSheet({
+        merchantDisplayName: 'Taskey',
+        paymentIntentClientSecret: response?.data,
+      });
+      setTimeout(() => {
+        openPaymentSheet();
+      }, 800);
+      console.log('response >>> ', response);
+    } catch (error) {
+      console.log('error >>> ', error.response.data);
+    }
   };
 
   const openPaymentSheet = async () => {
+    console.log('calll');
     try {
       const {error} = await presentPaymentSheet({
+        // merchantDisplayName: 'Taskey',
         clientSecret: clientSecret,
       }).then(response => {
         console.log('response data >>> ', response);
@@ -108,17 +120,18 @@ const SubscriptionModal = props => {
       if (error) {
         Alert.alert('PAYMENT FAILED', error.message);
       } else {
+        console.log('error >>> in paymwntseet ', error);
         Alert.alert('SUCCESS', 'PAYMENT DONE SUCCESSFULLY...');
       }
-    } catch (error) {
-      console.log(error.message);
+    } catch (e) {
+      console.log('error of try', e.message);
     }
   };
 
   const StripeItem = {
     userName: userDetails?.data?.name,
     userId: userDetails?.data?._id,
-    amount: item?.price,
+    amount: Remaining_Days < 0 ? item?.offerPrice : item?.price,
     date: monthPlan,
   };
 
@@ -130,8 +143,6 @@ const SubscriptionModal = props => {
   const TodayDate = moment();
   const ExpireDate = moment(userDetails?.data?.trialEndDate);
   const Remaining_Days = ExpireDate.diff(TodayDate, 'days');
-
-  console.log('Remaining Days', Remaining_Days);
 
   const handleLogout = () => {
     const rf_token = {
@@ -146,6 +157,7 @@ const SubscriptionModal = props => {
   useEffect(() => {
     try {
       ApiService.get('validatePlanDetails').then(res => {
+        setData(res);
         console.log('Api call Successfullly :', res);
       });
     } catch (error) {
@@ -219,7 +231,7 @@ const SubscriptionModal = props => {
                   backgroundColor,
                 },
               ]}>
-              {Remaining_Days > 0 ? null : (
+              {Remaining_Days < 0 ? null : (
                 <View
                   style={{
                     flexDirection: 'row',
@@ -249,7 +261,7 @@ const SubscriptionModal = props => {
                   <View>
                     {Remaining_Days < 0 ? (
                       <Label
-                        title={item.offerPrice}
+                        title={`€ ${item.offerPrice}`}
                         style={[
                           styles.offerPrice,
                           {color, textDecorationLine: 'line-through'},
@@ -257,8 +269,11 @@ const SubscriptionModal = props => {
                       />
                     ) : (
                       <Label
-                        title={item.price}
-                        style={[styles.offerPrice, {color}]}
+                        title={`€ ${item.price}`}
+                        style={[
+                          styles.offerPrice,
+                          {color, textDecorationLine: 'line-through'},
+                        ]}
                       />
                     )}
                   </View>
@@ -283,7 +298,7 @@ const SubscriptionModal = props => {
                         color,
                       },
                     ]}
-                    title={item.price}
+                    title={`€ ${item.price}`}
                   />
                 ) : (
                   <Label
@@ -293,7 +308,7 @@ const SubscriptionModal = props => {
                         color,
                       },
                     ]}
-                    title={item.offerPrice}
+                    title={`€ ${item.offerPrice}`}
                   />
                 )}
               </View>
@@ -301,7 +316,9 @@ const SubscriptionModal = props => {
           );
         })}
         <ShareBtn
-          onPress={openPaymentSheet}
+          onPress={() => {
+            initializaPayment();
+          }}
           style={[
             styles.sharebtn,
             {

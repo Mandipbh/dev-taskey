@@ -826,8 +826,8 @@ const HomeScreen = () => {
 
           <TouchableOpacity
             onPress={() => setPlanModel(true)}
-            style={{position: 'absolute', marginLeft: 280}}>
-            <Text style={{fontSize: 16}}>Sub</Text>
+            style={{position: 'absolute', right: 0, top: scale(5)}}>
+            <Icon2 name="layers" size={scale(20)} color={theme.colors.white} />
           </TouchableOpacity>
 
           {/* <View style={styles.calendarCon}>

@@ -323,22 +323,22 @@ const SubscriptionPlan = [
   {
     id: 1,
     title: '1 month',
-    price: '€0.99',
-    offerPrice: '€0.89',
+    price: 0.99,
+    offerPrice: 0.89,
     offerTag: '10% OFF',
   },
   {
     id: 2,
     title: '1 year',
-    price: '€6.99',
-    offerPrice: '€5.95',
+    price: 6.99,
+    offerPrice: 5.95,
     offerTag: '15% OFF',
   },
   {
     id: 3,
     title: 'Lifetime',
-    price: '€14.99',
-    offerPrice: '€11.99',
+    price: 14.99,
+    offerPrice: 11.99,
     offerTag: '20% OFF',
   },
 ];
