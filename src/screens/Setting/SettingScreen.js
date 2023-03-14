@@ -189,6 +189,46 @@ const SettingScreen = () => {
     }
   };
 
+  //logout user
+  // const handleLogout = async () => {
+  //   try {
+  //     const logoutFrm = {
+  //       refreshToken: mobile,
+  //     };
+
+  //     const options = {payloads: logoutFrm};
+  //     const response = await ApiService.delete('logout', options);
+  //     if (response) {
+  //       Toast.show('Login successfully');
+  //       dispatch(isLogin(false));
+  //       navigation.dispatch(
+  //         CommonActions.reset({
+  //           index: 1,
+  //           routes: [{name: 'LoginStack'}],
+  //         }),
+  //       );
+  //     } else {
+  //       // setSendOtp(true);
+  //     }
+  //   } catch (error) {
+  //     Toast.show(error?.response?.data?.message, Toast.SHORT);
+  //   }
+  // };
+
+  // Logout User
+
+  const refresh_Token = userDetails?.refreshToken;
+  console.log('refresh_Token >>>', refresh_Token);
+  const handleLogout = () => {
+    const rf_token = {
+      refreshToken: refresh_Token,
+    };
+    const options = {payloads: rf_token};
+    ApiService.post('logout', options).then(res => {
+      console.log('User Successfullly Logout :', res);
+    });
+  };
+
   return (
     <>
       {Platform.OS === 'ios' && (
@@ -354,7 +394,7 @@ const SettingScreen = () => {
               value={isEnabled}
             />
           </View>
-          <View
+          {/* <View
             style={[
               styles.divider,
               {
@@ -363,7 +403,7 @@ const SettingScreen = () => {
                   : theme.colors.black,
               },
             ]}
-          />
+          /> */}
 
           {/* <Label
             style={[
@@ -527,6 +567,18 @@ const SettingScreen = () => {
             />
           </View>
 
+          <ShareBtn
+            style={[
+              styles.sharebtn,
+              {marginTop: scale(20), alignSelf: 'center'},
+            ]}
+            iconName="logout"
+            title="Logout"
+            onPress={() => {
+              handleLogout();
+            }}
+          />
+
           <View style={{alignItems: 'center', marginTop: scale(25)}}>
             {/* <ShareBtn
               style={[styles.sharebtn, {backgroundColor: theme.colors.green}]}
@@ -534,7 +586,7 @@ const SettingScreen = () => {
               backgroundColor={theme.colors.green}
             /> */}
           </View>
-          <Button title="Press me" onPress={openPaymentSheet} />
+          {/* <Button title="Press me" onPress={openPaymentSheet} /> */}
         </ScrollView>
       </SafeAreaView>
     </>

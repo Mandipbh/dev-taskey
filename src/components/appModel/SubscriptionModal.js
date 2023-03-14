@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   Text,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -69,7 +70,6 @@ const SubscriptionModal = props => {
   };
 
   // Stripe
-
   const {initPaymentSheet, presentPaymentSheet} = useStripe();
   const [clientSecret, setClientSecret] = useState();
 
@@ -77,30 +77,23 @@ const SubscriptionModal = props => {
     initializaPayment();
   }, []);
 
-  const StripeItem = {
-    userName: userDetails?.data?.name,
-    userId: userDetails?.data?._id,
-    amount: item?.price,
-    date: monthPlan,
-  };
-
+  const string = `${item?.price}`;
+  const result = string.substring(4);
+  console.log('Hello world', result);
   console.log('Selected Item', item);
-  console.log('User Name >> ', userDetails?.data?.name);
-  console.log('User Id >> ', userDetails?.data?._id);
-
   console.log(item?.price);
 
   const initializaPayment = async () => {
     const payload = {
-      name: 'man',
-      amount: 5000,
+      name: userDetails?.data?.name,
+      amount: result,
     };
     const options = {payloads: payload};
     const response = await ApiService.post('makePayment', options);
     setClientSecret(response?.data);
     const {error} = await initPaymentSheet({
       merchantDisplayName: 'Taskey',
-      paymentIntentClientSecret: clientSecret,
+      paymentIntentClientSecret: response?.data,
     });
     console.log('response >>> ', response);
   };
@@ -122,24 +115,81 @@ const SubscriptionModal = props => {
     }
   };
 
+  const StripeItem = {
+    userName: userDetails?.data?.name,
+    userId: userDetails?.data?._id,
+    amount: item?.price,
+    date: monthPlan,
+  };
+
+  // console.log('Selected Item', item);
+  // console.log('User Name >> ', userDetails?.data?.name);
+  // console.log('User Id >> ', userDetails?.data?._id);
+  console.log('Login Info', userDetails?.data?.trialEndDate);
+
+  const TodayDate = moment();
+  const ExpireDate = moment(userDetails?.data?.trialEndDate);
+  const Remaining_Days = ExpireDate.diff(TodayDate, 'days');
+
+  console.log('Remaining Days', Remaining_Days);
+
+  const handleLogout = () => {
+    const rf_token = {
+      refreshToken: refresh_Token,
+    };
+    const options = {payloads: rf_token};
+    ApiService.post('logout', options).then(res => {
+      console.log('User Successfullly Logout :', res);
+    });
+  };
+
+  useEffect(() => {
+    try {
+      ApiService.get('validatePlanDetails').then(res => {
+        console.log('Api call Successfullly :', res);
+      });
+    } catch (error) {
+      console.log('catch error in plandetails', error);
+    }
+  }, []);
+
   return (
     <Modal animationType={'none'} visible={isVisible}>
       <TouchableOpacity style={styles.logoutView}>
         <Icon
           style={{color: theme.colors.white}}
-          name="logout"
+          name={Remaining_Days < 0 ? 'logout' : 'close'}
           size={scale(24)}
           onPress={close}
         />
       </TouchableOpacity>
       <Image style={styles.taskeyimg} source={images.subscription} />
       <View style={{backgroundColor: theme.colors.backgroundColor, flex: 1}}>
-        <View style={{alignItems: 'center', marginVertical: scale(20)}}>
-          <Title style={styles.titleTxt} title="Your tril has expired." />
-          <Label
-            style={styles.subtitleTxt}
-            title="Choose your plan now and continue enjoying Taskey"
-          />
+        <View
+          style={{
+            alignItems: 'center',
+            marginVertical: scale(20),
+          }}>
+          {Remaining_Days < 0 ? (
+            <>
+              <Title style={styles.titleTxt} title="Your trial has expired." />
+              <Label
+                style={styles.subtitleTxt}
+                title="Choose your plan now and continue enjoying Taskey"
+              />
+            </>
+          ) : (
+            <>
+              <Title
+                style={styles.titleTxt}
+                title={`You have  ${Remaining_Days} days letf of free trial`}
+              />
+              <Label
+                style={styles.subtitleTxt}
+                title="Choose your plan now and get a discount!"
+              />
+            </>
+          )}
         </View>
         {SubscriptionPlan.map((item, key) => {
           const backgroundColor =
@@ -169,28 +219,52 @@ const SubscriptionModal = props => {
                   backgroundColor,
                 },
               ]}>
-              <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <View>
-                  <View style={styles.offerTag}>
-                    <View
-                      style={[styles.offerView, {backgroundColor: offerColor}]}>
-                      <Label
-                        style={[styles.offerTxt, {txtColor}]}
-                        title={item.offerTag}
+              {Remaining_Days > 0 ? null : (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginBottom: scale(-15),
+                  }}>
+                  <View>
+                    <View style={styles.offerTag}>
+                      <View
+                        style={[
+                          styles.offerView,
+                          {backgroundColor: offerColor},
+                        ]}>
+                        <Label
+                          style={[styles.offerTxt, {color: txtColor}]}
+                          title={item.offerTag}
+                        />
+                      </View>
+                      <View
+                        style={[
+                          styles.triangle,
+                          {borderBottomColor: offerColor},
+                        ]}
                       />
                     </View>
-                    <View
-                      style={[styles.triangle, {borderBottomColor: offerColor}]}
-                    />
+                  </View>
+                  <View>
+                    {Remaining_Days < 0 ? (
+                      <Label
+                        title={item.offerPrice}
+                        style={[
+                          styles.offerPrice,
+                          {color, textDecorationLine: 'line-through'},
+                        ]}
+                      />
+                    ) : (
+                      <Label
+                        title={item.price}
+                        style={[styles.offerPrice, {color}]}
+                      />
+                    )}
                   </View>
                 </View>
-                <View>
-                  <Text style={[styles.offerPrice, {color}]}>
-                    {item.offerPrice}
-                  </Text>
-                </View>
-              </View>
+              )}
+
               <View style={styles.txtContainer}>
                 <Label
                   style={[
@@ -201,15 +275,27 @@ const SubscriptionModal = props => {
                   ]}
                   title={item.title}
                 />
-                <Label
-                  style={[
-                    styles.planText,
-                    {
-                      color,
-                    },
-                  ]}
-                  title={item.price}
-                />
+                {Remaining_Days < 0 ? (
+                  <Label
+                    style={[
+                      styles.planText,
+                      {
+                        color,
+                      },
+                    ]}
+                    title={item.price}
+                  />
+                ) : (
+                  <Label
+                    style={[
+                      styles.planText,
+                      {
+                        color,
+                      },
+                    ]}
+                    title={item.offerPrice}
+                  />
+                )}
               </View>
             </TouchableOpacity>
           );
@@ -255,12 +341,12 @@ const styles = StyleSheet.create({
     marginHorizontal: scale(20),
     elevation: scale(3),
     paddingVertical: scale(5),
-    height: theme.SCREENHEIGHT * 0.11,
   },
   planText: {
     color: theme.colors.black,
     fontSize: scale(20),
     fontWeight: '600',
+    paddingVertical: scale(10),
   },
   txtContainer: {
     flexDirection: 'row',
@@ -269,7 +355,7 @@ const styles = StyleSheet.create({
     marginHorizontal: scale(15),
   },
   titleTxt: {
-    fontSize: scale(22),
+    fontSize: scale(20),
   },
   sharebtn: {
     width: theme.SCREENWIDTH * 0.5,
@@ -282,7 +368,9 @@ const styles = StyleSheet.create({
     marginVertical: scale(15),
     backgroundColor: 'red',
   },
-  subtitleTxt: {},
+  subtitleTxt: {
+    fontSize: scale(13),
+  },
   triangle: {
     width: 0,
     height: 0,

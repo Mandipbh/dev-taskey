@@ -102,7 +102,8 @@ const SignIn = () => {
       const options = {payloads: mobileFrm1};
       const response = await ApiService.post('login', options);
       if (response.success) {
-        axios.defaults.headers.common.Authorization = `Bearer ${response?.token}`;
+        console.log('response >>   ', response?.accessToken);
+        axios.defaults.headers.common.Authorization = `Bearer ${response?.accessToken}`;
         setVarified(true);
         Toast.show('OTP is sent to your mobile number');
         setSendOtp(true);

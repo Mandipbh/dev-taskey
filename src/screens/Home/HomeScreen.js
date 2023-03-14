@@ -31,6 +31,8 @@ import {postAPICall} from '../../utils/AppApi';
 import moment from 'moment';
 import {useSelector} from 'react-redux';
 import SubscriptionModal from '../../components/appModel/SubscriptionModal';
+import axios from 'axios';
+
 const taskType = [
   {
     id: 1,
@@ -179,6 +181,28 @@ const HomeScreen = () => {
       ],
     },
   ]);
+
+  const userDetails = useSelector(state => state.UserReducer.userDetails);
+  console.log('userDetails ??? ', userDetails);
+  // useEffect(() => {
+  //   const refresh_Token = userDetails?.refreshToken;
+
+  //   const rf_token = {
+  //     refreshToken: refresh_Token,
+  //   };
+  //   const options = {payloads: rf_token};
+
+  //   ApiService.post('getNewAccessToken', options)
+  //     .then(res => {
+  //       console.log(
+  //         'new access Token is successfullly arrived : ',
+  //         JSON.stringify(res, null, 4),
+  //       );
+  //     })
+  //     .catch(error => {
+  //       console.log('error for access Toke ', error.response);
+  //     });
+  // }, [userDetails]);
 
   const [Folder, setFolder] = useState([]);
   function pad(num) {
@@ -802,7 +826,7 @@ const HomeScreen = () => {
 
           <TouchableOpacity
             onPress={() => setPlanModel(true)}
-            style={{position: 'absolute', marginLeft: 320}}>
+            style={{position: 'absolute', marginLeft: 280}}>
             <Text style={{fontSize: 16}}>Sub</Text>
           </TouchableOpacity>
 

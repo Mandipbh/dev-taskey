@@ -89,9 +89,10 @@ const SignUp = () => {
         const response = await ApiService.post('register', options);
         console.log('respose .>> ', response);
         if (response.success) {
-          axios.defaults.headers.common.Authorization = `Bearer ${response.token}`;
-          Toast.show('OTP is sent to your mobile number');
+          axios.defaults.headers.common.Authorization = `Bearer ${response.accessToken}`;
+          Toast.show('Signup successfully.');
           dispatch(loginAction(response));
+          navigation.goBack();
           setSendOtp(true);
         } else {
           Toast.show('Phone number exist');
@@ -171,7 +172,7 @@ const SignUp = () => {
             keyboardType="numeric"
             maxLength={10}
           /> */}
-          <TouchableOpacity style={styles.sendOtpBtn} onPress={handleotpSend}>
+          {/* <TouchableOpacity style={styles.sendOtpBtn} onPress={handleotpSend}>
             <Text style={styles.Sendcode}>
               {sentOtp ? 'Re-Send' : 'Send Code'}
             </Text>
@@ -186,20 +187,20 @@ const SignUp = () => {
               setOtp(txt);
             }}
             keyboardType="numeric"
-          />
+          /> */}
           <Button
-            disabled={btnValidation}
+            // disabled={btnValidation}
             style={[
               CommonStyles.btn,
-              {
-                backgroundColor: btnValidation
-                  ? theme.colors.orange1
-                  : theme.colors.orange,
-              },
+              // {
+              //   backgroundColor: btnValidation
+              //     ? theme.colors.orange1
+              //     : theme.colors.orange,
+              // },
             ]}
             title="SignUp"
             onPress={() => {
-              handleSignup();
+              handleotpSend();
             }}
           />
           <View style={CommonStyles.navTxtContainer}>
