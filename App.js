@@ -84,7 +84,7 @@ export default class App extends React.Component {
     }
 
     return (
-      <StripeProvider publishableKey="pk_test_51Mh4VgSIPhHFqvGry91b3XxYfY4R1I5TdMC3zntAthr3NH9cuVk73XSiMLh0tCYTABFJ9gQvsHsOkd5anUEWCumM00zBh0ozeI">
+      <StripeProvider publishableKey="pk_test_51MlxMxGnpcNWnmr4ogYVgxm4N4L2dL8WBQYwQpsrjr3xzx1xGJ6JFDdGtYAYCyaVOUy2o3U5s5ocTOLcpb4Grdsy00Vrd34Miq">
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
             <MainStack />

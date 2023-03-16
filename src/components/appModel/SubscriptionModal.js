@@ -88,7 +88,7 @@ const SubscriptionModal = props => {
     const payload = {
       name: userDetails?.data?.name,
       amount: (Remaining_Days > 0 ? item?.offerPrice : item?.price) * 100,
-      currency: 'inr',
+      currency: 'eur',
     };
     console.log('payload ??? ', payload);
     const options = {payloads: payload};
@@ -110,6 +110,7 @@ const SubscriptionModal = props => {
   };
 
   const openPaymentSheet = async () => {
+    console.log('clientSecret', clientSecret);
     try {
       const {error} = await presentPaymentSheet({
         merchantDisplayName: 'Taskey',
@@ -117,6 +118,7 @@ const SubscriptionModal = props => {
       }).then(response => {
         console.log('response data >>> ', response);
       });
+      console.log('ERROOOR', error);
       if (error) {
         Alert.alert('PAYMENT FAILED', error);
       } else {
@@ -124,7 +126,7 @@ const SubscriptionModal = props => {
         Alert.alert('SUCCESS', 'PAYMENT DONE SUCCESSFULLY...');
       }
     } catch (e) {
-      console.log('error of try', e.error);
+      console.log('error of try', e);
     }
   };
 
