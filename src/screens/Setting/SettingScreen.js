@@ -23,6 +23,7 @@ import {CheckBox} from '../../components';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   isDarkMode,
+  isLogin,
   setAdministration,
   setDefaultTime,
   setDefTaskTime,
@@ -30,6 +31,12 @@ import {
 import {useStripe} from '@stripe/stripe-react-native';
 import axios from 'axios';
 import ApiService from '../../utils/ApiService';
+import {
+  CommonActions,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native';
+import moment from 'moment';
 
 const chips = [
   {
@@ -136,11 +143,13 @@ const SettingScreen = () => {
   const userDetails = useSelector(state => state.UserReducer.userDetails);
   const defualtTimes = useSelector(state => state.UserReducer?.defaultTime);
   const taskTimes = useSelector(state => state.UserReducer?.time);
+  const [data, setData] = useState(null);
   // const Administration = useSelector(state => state.UserReducer?.admin);
   const toggleSwitch = () => {
     setIsEnabled(previousState => !previousState);
     dispatch(isDarkMode(!isEnabled));
   };
+  const navigation = useNavigation();
   console.log('userDetails >> ', userDetails);
   useEffect(() => {
     console.log('data > ', defualtTimes);
@@ -218,17 +227,37 @@ const SettingScreen = () => {
   // Logout User
 
   const refresh_Token = userDetails?.refreshToken;
-  console.log('refresh_Token >>>', refresh_Token);
+
   const handleLogout = () => {
     const rf_token = {
       refreshToken: refresh_Token,
     };
     const options = {payloads: rf_token};
     ApiService.post('logout', options).then(res => {
+      dispatch(isLogin(false));
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [{name: 'LoginStack'}],
+        }),
+      );
       console.log('User Successfullly Logout :', res);
     });
   };
-
+  const isFoucs = useIsFocused();
+  const getPlanDetails = () => {
+    try {
+      ApiService.get('validatePlanDetails').then(res => {
+        setData(res);
+        console.log('Api call Successfullly :', res);
+      });
+    } catch (error) {
+      console.log('catch error in plandetails', error);
+    }
+  };
+  useEffect(() => {
+    getPlanDetails();
+  }, isFoucs);
   return (
     <>
       {Platform.OS === 'ios' && (
@@ -524,7 +553,35 @@ const SettingScreen = () => {
               onPress={onShare}
             />
           </View>
-
+          <Label
+            style={[
+              styles.titletxt,
+              {color: darkmodeState ? theme.colors.white : theme.colors.black},
+            ]}
+            title="Subscription Plan details"
+          />
+          <View
+            style={[
+              styles.divider,
+              {
+                borderColor: darkmodeState
+                  ? theme.colors.white
+                  : theme.colors.black,
+              },
+            ]}
+          />
+          <View
+            style={{
+              // flexDirection: 'row',
+              // justifyContent: 'space-between',
+              paddingHorizontal: scale(22),
+              marginVertical: scale(20),
+            }}>
+            <Label
+              title={`End Date : ${moment(data?.endDate).format('DD-MM-YYYY')}`}
+            />
+            <Label title={`Day Left : ${data?.leftDays}`} />
+          </View>
           <Label
             style={[
               styles.titletxt,

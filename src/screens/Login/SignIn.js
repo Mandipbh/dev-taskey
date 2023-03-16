@@ -4,6 +4,7 @@ import {
   View,
   SafeAreaView,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import Toast from 'react-native-simple-toast';
 
@@ -29,6 +30,7 @@ const SignIn = () => {
   const [otpSend, setSendOtp] = useState(false);
   const [varified, setVarified] = useState(false);
   const [btnValidation, setBtnValidation] = useState(true);
+  const [loginLoad, setLoad] = useState(false);
   const darkmodeState = useSelector(state => state.UserReducer.isDarkMode);
 
   const dispatch = useDispatch();
@@ -59,6 +61,7 @@ const SignIn = () => {
     if (validation()) {
     } else {
       if (otpSend) {
+        setLoad(true);
         try {
           const mobileFrm = {
             phonenumber: mobile,
@@ -68,6 +71,7 @@ const SignIn = () => {
           const options = {payloads: mobileFrm};
           const response = await ApiService.post('verifyOTP', options);
           if (response) {
+            setLoad(false);
             console.log('resposemn >> ', response);
             Toast.show('Login successfully');
 
@@ -79,12 +83,15 @@ const SignIn = () => {
               }),
             );
           } else {
+            setLoad(false);
             // setSendOtp(true);
           }
         } catch (error) {
+          setLoad(false);
           Toast.show(error?.response?.data?.message, Toast.SHORT);
         }
       } else {
+        setLoad(false);
         Toast.show('First press send code', Toast.SHORT);
       }
     }
@@ -190,21 +197,29 @@ const SignIn = () => {
             keyboardType="numeric"
             maxLength={6}
           />
-          <Button
-            style={[
-              CommonStyles.btn,
-              {
-                backgroundColor: btnValidation
-                  ? theme.colors.orange1
-                  : theme.colors.orange,
-              },
-            ]}
-            title="Login"
-            disabled={btnValidation}
-            onPress={() => {
-              handleLogin();
-            }}
-          />
+          {loginLoad ? (
+            <ActivityIndicator
+              color={theme.colors.progressBar}
+              size="large"
+              style={{marginTop: scale(5)}}
+            />
+          ) : (
+            <Button
+              style={[
+                CommonStyles.btn,
+                {
+                  backgroundColor: btnValidation
+                    ? theme.colors.orange1
+                    : theme.colors.orange,
+                },
+              ]}
+              title="Login"
+              disabled={btnValidation}
+              onPress={() => {
+                handleLogin();
+              }}
+            />
+          )}
           <View style={CommonStyles.navTxtContainer}>
             <Label title="Are you a new User ?" />
             <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>

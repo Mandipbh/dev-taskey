@@ -29,9 +29,10 @@ import ComplateTaskModel from '../../components/appModel/ComplateTaskModel';
 import ApiService from '../../utils/ApiService';
 import {postAPICall} from '../../utils/AppApi';
 import moment from 'moment';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import SubscriptionModal from '../../components/appModel/SubscriptionModal';
 import axios from 'axios';
+import {loginAction} from '../../redux/Actions/UserActions';
 
 const taskType = [
   {
@@ -70,139 +71,33 @@ const HomeScreen = () => {
   const [today, setToday] = useState(false);
   const navigation = useNavigation();
   const [indexState, setindexState] = useState();
-  const [taskDumyData, setTaskDummy] = useState([
-    {
-      fid: 0,
-      taskslist: [
-        {
-          id: 0,
-          title: 'Task name eyamole',
-          color: '#ffddff',
-          folder: 'global',
-          status: 1,
-          path: 10,
-          percentage: 10,
-        },
-        {
-          id: 1,
-          title: 'Task• example 2',
-          color: '#ffddff',
-          folder: 'global',
-          status: 0,
-          path: 20,
-          percentage: 20,
-        },
-        {
-          id: 2,
-          title: 'Task examole',
-          color: '#ffddff',
-          folder: 'global',
-          status: 1,
-          path: 20,
-          percentage: 20,
-        },
-        // {
-        //   id: 3,
-        //   title: 'Task• example 2',
-        //   color: '#ffddff',
-        //   folder: 'global',
-        //   status: 0,
-        //   path: 20,
-        //   percentage: 20,
-        // },
-        // {
-        //   id: 4,
-        //   title: 'Task examole',
-        //   color: '#ffddff',
-        //   folder: 'global',
-        //   status: 1,
-        //   path: 20,
-        //   percentage: 20,
-        // },
-        // {
-        //   id: 5,
-        //   title: 'Task• example 2',
-        //   color: '#ffddff',
-        //   folder: 'global',
-        //   status: 0,
-        //   path: 20,
-        //   percentage: 20,
-        // },
-        // {
-        //   id: 6,
-        //   title: 'Task example',
-        //   color: '#ffddff',
-        //   folder: 'global',
-        //   status: 1,
-        //   path: 20,
-        //   percentage: 20,
-        // },
-      ],
-    },
-    {
-      fid: 1,
-      taskslist: [
-        {
-          id: 3,
-          title: 'Task examole 2',
-          color: '#ffddff',
-          folder: 'global',
-          status: 1,
-          path: 20,
-          percentage: 20,
-        },
-        {
-          id: 1,
-          title: 'Task• example 2',
-          color: '#ffddff',
-          folder: 'global',
-          status: 0,
-          path: 20,
-          percentage: 20,
-        },
-        {
-          id: 2,
-          title: 'Task examole',
-          color: '#ffddff',
-          folder: 'global',
-          status: 1,
-          path: 20,
-          percentage: 20,
-        },
-        {
-          id: 3,
-          title: 'Task examole 2',
-          color: '#ffddff',
-          folder: 'global',
-          status: 1,
-          path: 20,
-          percentage: 20,
-        },
-      ],
-    },
-  ]);
 
   const userDetails = useSelector(state => state.UserReducer.userDetails);
-  console.log('userDetails ??? ', userDetails);
-  // useEffect(() => {
-  //   const refresh_Token = userDetails?.refreshToken;
+  const dispatch = useDispatch();
 
-  //   const rf_token = {
-  //     refreshToken: refresh_Token,
-  //   };
-  //   const options = {payloads: rf_token};
+  useEffect(() => {
+    setTimeout(() => {
+      const refresh_Token = userDetails?.refreshToken;
+      let userData = {...userDetails};
+      const rf_token = {
+        refreshToken: refresh_Token,
+      };
+      const options = {payloads: rf_token};
 
-  //   ApiService.post('getNewAccessToken', options)
-  //     .then(res => {
-  //       console.log(
-  //         'new access Token is successfullly arrived : ',
-  //         JSON.stringify(res, null, 4),
-  //       );
-  //     })
-  //     .catch(error => {
-  //       console.log('error for access Toke ', error.response);
-  //     });
-  // }, [userDetails]);
+      ApiService.post('getNewAccessToken', options)
+        .then(res => {
+          userData.accessToken = res.accessToken;
+          dispatch(loginAction(userData));
+          console.log(
+            'new access Token is successfullly arrived : ',
+            JSON.stringify(res, null, 4),
+          );
+        })
+        .catch(error => {
+          console.log('error for access Toke ', error.response);
+        });
+    }, 1200);
+  }, []);
 
   const [Folder, setFolder] = useState([]);
   function pad(num) {
@@ -751,6 +646,7 @@ const HomeScreen = () => {
       }
     }
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground source={images.banner} style={styles.header} />

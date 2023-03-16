@@ -15,10 +15,15 @@ import {images, scale, theme} from '../../utils';
 import {SubscriptionPlan} from '../../utils/mockData';
 import {Title, Label} from '../Label';
 import moment from 'moment';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useStripe} from '@stripe/stripe-react-native';
 import ApiService from '../../utils/ApiService';
-import {useIsFocused} from '@react-navigation/native';
+import {
+  CommonActions,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native';
+import {isLogin} from '../../redux/Actions/UserActions';
 
 function ShareBtn(props) {
   const {title, onPress, iconName, style} = props;
@@ -40,7 +45,7 @@ function ShareBtn(props) {
 
 const SubscriptionModal = props => {
   const {isVisible, close} = props;
-
+  const navigation = useNavigation();
   const [selectedId, setSelectedId] = useState();
   const [changeColor, setchangeColor] = useState(false);
   const [monthPlan, setMonthPlan] = useState();
@@ -74,20 +79,16 @@ const SubscriptionModal = props => {
   const {initPaymentSheet, presentPaymentSheet} = useStripe();
   const [clientSecret, setClientSecret] = useState();
   const [data, setData] = useState(null);
-  const isFcouse = useIsFocused();
 
-  console.log('isFcouse ??? ', isFcouse);
   const string = `${item?.price}`;
   const result = string.substring(4);
-
-  console.log(item?.price);
+  const dispatch = useDispatch();
 
   const initializaPayment = async () => {
     const payload = {
       name: userDetails?.data?.name,
-      amount: (Remaining_Days > 0 ? item?.offerPrice : item?.price)
-        .toFixed(2)
-        .replace('.', ''),
+      amount: (Remaining_Days > 0 ? item?.offerPrice : item?.price) * 100,
+      currency: 'inr',
     };
     console.log('payload ??? ', payload);
     const options = {payloads: payload};
@@ -102,29 +103,28 @@ const SubscriptionModal = props => {
       setTimeout(() => {
         openPaymentSheet();
       }, 800);
-      console.log('response >>> ', response);
+      console.log('error >>> ', error);
     } catch (error) {
       console.log('error >>> ', error.response.data);
     }
   };
 
   const openPaymentSheet = async () => {
-    console.log('calll');
     try {
       const {error} = await presentPaymentSheet({
-        // merchantDisplayName: 'Taskey',
+        merchantDisplayName: 'Taskey',
         clientSecret: clientSecret,
       }).then(response => {
         console.log('response data >>> ', response);
       });
       if (error) {
-        Alert.alert('PAYMENT FAILED', error.message);
+        Alert.alert('PAYMENT FAILED', error);
       } else {
         console.log('error >>> in paymwntseet ', error);
         Alert.alert('SUCCESS', 'PAYMENT DONE SUCCESSFULLY...');
       }
     } catch (e) {
-      console.log('error of try', e.message);
+      console.log('error of try', e.error);
     }
   };
 
@@ -143,17 +143,6 @@ const SubscriptionModal = props => {
   const TodayDate = moment();
   const ExpireDate = moment(userDetails?.data?.trialEndDate);
   const Remaining_Days = ExpireDate.diff(TodayDate, 'days');
-
-  const handleLogout = () => {
-    const rf_token = {
-      refreshToken: refresh_Token,
-    };
-    const options = {payloads: rf_token};
-    ApiService.post('logout', options).then(res => {
-      console.log('User Successfullly Logout :', res);
-    });
-  };
-
   useEffect(() => {
     try {
       ApiService.get('validatePlanDetails').then(res => {
@@ -164,15 +153,45 @@ const SubscriptionModal = props => {
       console.log('catch error in plandetails', error);
     }
   }, []);
+  const handleLogoutbtn = () => {
+    if (Remaining_Days < 0) {
+      handleLogoutAction();
+    } else {
+      close();
+    }
+  };
+  const refresh_Token = userDetails?.refreshToken;
+  const handleLogoutAction = () => {
+    const rf_token = {
+      refreshToken: refresh_Token,
+    };
+    close();
+    const options = {payloads: rf_token};
+    ApiService.post('logout', options).then(res => {
+      console.log('response of logoiut >>> ', res);
 
+      dispatch(isLogin(false));
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [{name: 'LoginStack'}],
+        }),
+      );
+      console.log('User Successfullly Logout :', res);
+    });
+  };
   return (
     <Modal animationType={'none'} visible={isVisible}>
-      <TouchableOpacity style={styles.logoutView}>
+      <TouchableOpacity
+        style={styles.logoutView}
+        onPress={() => {
+          handleLogoutbtn();
+        }}>
         <Icon
           style={{color: theme.colors.white}}
           name={Remaining_Days < 0 ? 'logout' : 'close'}
           size={scale(24)}
-          onPress={close}
+          // onPress={close}
         />
       </TouchableOpacity>
       <Image style={styles.taskeyimg} source={images.subscription} />

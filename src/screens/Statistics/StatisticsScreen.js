@@ -206,14 +206,17 @@ const StatisticsScreen = () => {
           : moment(endDate).add(1, 'day').format('YYYY/MM/DD'),
       type: value === null || value === 'All' ? 'All' : value?.toUpperCase(),
     };
-
+    console.log('value ?? ', value);
     const options = {payloads: payload};
     ApiService.post('statistics', options)
       .then(res => {
         if (res.success) {
+          console.log('res?.outputData.totalMin ?? ', res?.outputData.totalMin);
           // console.log('statics response >>> ', res);
           let staticdummy = [...statisticData];
-
+          var floor = Math.floor;
+          const countData = hhmmss(res?.outputData.totalCount);
+          console.log('type >> ', typeof countData);
           staticdummy[0].value =
             res?.outputData.numberOfTask === undefined
               ? '-'
@@ -224,6 +227,12 @@ const StatisticsScreen = () => {
               : timeModeState === 1
               ? res?.outputData.totalMin
               : hhmmss(res?.outputData.totalMin);
+          staticdummy[2].value =
+            res?.outputData.totalCount === undefined
+              ? '-'
+              : value === 'Counter'
+              ? res?.outputData.totalCount
+              : Math.floor(Number(countData));
           setstatisticData(staticdummy);
           let staticdummyone = [...statisticDataone];
           staticdummyone[0].value =

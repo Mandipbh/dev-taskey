@@ -141,7 +141,7 @@ const CronoCard = ({
                 numberOfLines={2}
                 title={item?.name}
                 style={{
-                  fontSize: scale(12),
+                  fontSize: scale(11),
                   color: darkmodeState
                     ? theme.colors.white
                     : theme.colors.black,
@@ -172,11 +172,11 @@ const CronoCard = ({
                       : item?.percentageOfTask?.toFixed(2)
                   }
                   style={{
-                    fontSize: scale(11),
+                    fontSize: scale(10),
                     color: darkmodeState
                       ? theme.colors.white
                       : theme.colors.black,
-                    marginLeft: scale(-20),
+                    marginLeft: scale(0),
                   }}
                 />
               )}
@@ -218,7 +218,7 @@ const CronoCard = ({
                     : item?.counterIncrementDecrement
                 }
                 style={{
-                  fontSize: scale(11),
+                  fontSize: scale(10),
                   marginLeft: scale(22),
                   color: darkmodeState
                     ? theme.colors.white
@@ -278,7 +278,7 @@ const CronoCard = ({
                       }\n${item?.amount === null ? 0 : item?.amount}`
                 }
                 style={{
-                  fontSize: scale(11),
+                  fontSize: scale(10),
                   marginLeft: scale(18),
                   color: darkmodeState
                     ? theme.colors.white
@@ -293,7 +293,7 @@ const CronoCard = ({
                   : item?.percentageFolderWise?.toFixed(2)
               }
               style={{
-                fontSize: scale(11),
+                fontSize: scale(10),
                 color: darkmodeState ? theme.colors.white : theme.colors.black,
                 textAlign: 'center',
               }}
