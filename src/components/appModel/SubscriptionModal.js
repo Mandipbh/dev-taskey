@@ -112,12 +112,7 @@ const SubscriptionModal = props => {
   const openPaymentSheet = async () => {
     console.log('clientSecret', clientSecret);
     try {
-      const {error} = await presentPaymentSheet({
-        merchantDisplayName: 'Taskey',
-        clientSecret: clientSecret,
-      }).then(response => {
-        console.log('response data >>> ', response);
-      });
+      const {error} = await presentPaymentSheet({clientSecret});
       console.log('ERROOOR', error);
       if (error) {
         Alert.alert('PAYMENT FAILED', error);
@@ -126,7 +121,7 @@ const SubscriptionModal = props => {
         Alert.alert('SUCCESS', 'PAYMENT DONE SUCCESSFULLY...');
       }
     } catch (e) {
-      console.log('error of try', e);
+      console.log('error of try', e.error);
     }
   };
 

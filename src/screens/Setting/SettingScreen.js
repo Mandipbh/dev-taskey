@@ -144,6 +144,7 @@ const SettingScreen = () => {
   const defualtTimes = useSelector(state => state.UserReducer?.defaultTime);
   const taskTimes = useSelector(state => state.UserReducer?.time);
   const [data, setData] = useState(null);
+  const [pdata, setPData] = useState(null);
   // const Administration = useSelector(state => state.UserReducer?.admin);
   const toggleSwitch = () => {
     setIsEnabled(previousState => !previousState);
@@ -257,7 +258,18 @@ const SettingScreen = () => {
   };
   useEffect(() => {
     getPlanDetails();
+    getPlanData();
   }, isFoucs);
+  const getPlanData = () => {
+    try {
+      ApiService.get('getUserDetails').then(res => {
+        setPData(res);
+        console.log('Api call Successfullly :', res);
+      });
+    } catch (error) {
+      console.log('catch error in plandetails', error);
+    }
+  };
   return (
     <>
       {Platform.OS === 'ios' && (
@@ -577,6 +589,7 @@ const SettingScreen = () => {
               paddingHorizontal: scale(22),
               marginVertical: scale(20),
             }}>
+            <Label title={`Plan name : ${pdata?.data}`} />
             <Label
               title={`End Date : ${moment(data?.endDate).format('DD-MM-YYYY')}`}
             />
