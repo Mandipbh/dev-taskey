@@ -52,31 +52,61 @@ const SubscriptionModal = props => {
   const [yearPlan, setYearPlan] = useState();
   const [lifetimePlan, setLifetimePlan] = useState(false);
   const [item, setItem] = useState();
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const userDetails = useSelector(state => state.UserReducer.userDetails);
+  const [planSave, setPlanSave] = useState({
+    paymentIntentKey: '',
+    plan: null,
+    startDate: null,
+    endDate: null,
+    userId: userDetails?.data?._id,
+  });
 
   const OneMonthPlan = () => {
     var TodayDate = moment().format('DD-MM-YYYY');
     var OneMonthDate = moment().add(1, 'M').format('DD-MM-YYYY');
-    setMonthPlan(`${TodayDate}  ${OneMonthDate}`);
-    setLifetimePlan(false);
-    console.log('Month Plan >>', monthPlan);
+    const tmp = {...planSave};
+    tmp.startDate = TodayDate;
+    tmp.endDate = OneMonthDate;
+    tmp.plan = 'monthly';
+    tmp.userId = userDetails?.data?._id;
+    setPlanSave(tmp);
+    // setMonthPlan(`${TodayDate}  ${OneMonthDate}`);
+    // setLifetimePlan(false);
+    // setStartDate(TodayDate);
+    // setEndDate(moment(OneMonthDate).format('DD-MM-YYYY'));
   };
 
   const OneYearPlan = () => {
     var TodayDate = moment().format('DD-MM-YYYY');
-    var OneMonthDate = moment().add(1, 'y').format('DD-MM-YYYY');
-    setYearPlan(`${TodayDate}  ${OneMonthDate}`);
-    setLifetimePlan(false);
-    console.log('Year Plan >>', yearPlan);
+    var OneYearDate = moment().add(1, 'y').format('DD-MM-YYYY');
+    const tmp = {...planSave};
+    tmp.startDate = TodayDate;
+    tmp.endDate = OneYearDate;
+    tmp.plan = 'yearly';
+    tmp.userId = userDetails?.data?._id;
+    setPlanSave(tmp);
+    // setStartDate(TodayDate);
+    // setEndDate(moment(OneYearDate).format('DD-MM-YYYY'));
+    // setLifetimePlan(false);
+    // setYearPlan(`${TodayDate}  ${OneYearDate}`);
   };
 
   const LifeTimePlan = () => {
     setLifetimePlan(true);
-    console.log('LifeTime Plan >>', lifetimePlan);
+    const tmp = {...planSave};
+    tmp.startDate = moment(TodayDate).format('DD-MM-YYYY');
+    tmp.endDate = '';
+    tmp.islifeTime = true;
+    tmp.plan = 'lifetime';
+    tmp.userId = userDetails?.data?._id;
+    setPlanSave(tmp);
   };
 
   // Stripe
-  const {initPaymentSheet, presentPaymentSheet} = useStripe();
+  const {initPaymentSheet, presentPaymentSheet, confirmPaymentSheetPayment} =
+    useStripe();
   const [clientSecret, setClientSecret] = useState();
   const [data, setData] = useState(null);
 
@@ -90,18 +120,16 @@ const SubscriptionModal = props => {
       amount: (Remaining_Days > 0 ? item?.offerPrice : item?.price) * 100,
       currency: 'eur',
     };
-    console.log('payload ??? ', payload);
     const options = {payloads: payload};
     try {
       const response = await ApiService.post('makePayment', options);
-      console.log('response?.data >> ', response?.data);
       setClientSecret(response?.data);
-      const {error} = await initPaymentSheet({
+      const {error, paymentOption} = await initPaymentSheet({
         merchantDisplayName: 'Taskey',
         paymentIntentClientSecret: response?.data,
       });
       setTimeout(() => {
-        openPaymentSheet();
+        openPaymentSheet(response?.data);
       }, 800);
       console.log('error >>> ', error);
     } catch (error) {
@@ -109,37 +137,37 @@ const SubscriptionModal = props => {
     }
   };
 
-  const openPaymentSheet = async () => {
-    console.log('clientSecret', clientSecret);
+  const openPaymentSheet = async clients => {
     try {
       const {error} = await presentPaymentSheet({clientSecret});
-      console.log('ERROOOR', error);
       if (error) {
         Alert.alert('PAYMENT FAILED', error);
       } else {
-        console.log('error >>> in paymwntseet ', error);
+        console.log('else ???? ');
+        const str = clients?.split('_secret');
+        console.log('str ??? ', str);
+        let str1 = str[0];
+
+        console.log('paymetId ??? ', str1);
+        const tmp = {...planSave};
+        tmp.paymentIntentKey = str1;
+        const options = {payloads: tmp};
+        console.log('options ??? ', tmp);
+        ApiService.post('retrivePayment', options).then(res => {
+          console.log('res >> ', res);
+        });
+
         Alert.alert('SUCCESS', 'PAYMENT DONE SUCCESSFULLY...');
       }
     } catch (e) {
-      console.log('error of try', e.error);
+      console.log('error of try', e);
     }
   };
-
-  const StripeItem = {
-    userName: userDetails?.data?.name,
-    userId: userDetails?.data?._id,
-    amount: Remaining_Days < 0 ? item?.offerPrice : item?.price,
-    date: monthPlan,
-  };
-
-  // console.log('Selected Item', item);
-  // console.log('User Name >> ', userDetails?.data?.name);
-  // console.log('User Id >> ', userDetails?.data?._id);
-  console.log('Login Info', userDetails?.data?.trialEndDate);
 
   const TodayDate = moment();
   const ExpireDate = moment(userDetails?.data?.trialEndDate);
   const Remaining_Days = ExpireDate.diff(TodayDate, 'days');
+
   useEffect(() => {
     try {
       ApiService.get('validatePlanDetails').then(res => {
@@ -150,12 +178,13 @@ const SubscriptionModal = props => {
       console.log('catch error in plandetails', error);
     }
   }, []);
+
   const handleLogoutbtn = () => {
-    if (Remaining_Days < 0) {
-      handleLogoutAction();
-    } else {
-      close();
-    }
+    // if (Remaining_Days < 0) {
+    //   handleLogoutAction();
+    // } else {
+    close();
+    // }
   };
   const refresh_Token = userDetails?.refreshToken;
   const handleLogoutAction = () => {
@@ -177,6 +206,7 @@ const SubscriptionModal = props => {
       console.log('User Successfullly Logout :', res);
     });
   };
+
   return (
     <Modal animationType={'none'} visible={isVisible}>
       <TouchableOpacity

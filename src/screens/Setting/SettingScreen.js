@@ -166,7 +166,13 @@ const SettingScreen = () => {
   useEffect(() => {
     initializaPayment();
   }, []);
-
+  const TodayDate = moment();
+  const ExpireDate = moment(
+    pdata?.userDetails?.monthly !== undefined
+      ? pdata?.userDetails?.monthly
+      : pdata?.userDetails?.yearly,
+  );
+  const Remaining_Days = ExpireDate.diff(TodayDate, 'days');
   const initializaPayment = async () => {
     const payload = {
       name: userDetails?.data?.name,
@@ -582,6 +588,7 @@ const SettingScreen = () => {
               },
             ]}
           />
+          {console.log('pdata??? ', pdata?.yearly)}
           <View
             style={{
               // flexDirection: 'row',
@@ -590,10 +597,28 @@ const SettingScreen = () => {
               marginVertical: scale(20),
             }}>
             <Label title={`Plan name : ${pdata?.data}`} />
-            <Label
-              title={`End Date : ${moment(data?.endDate).format('DD-MM-YYYY')}`}
-            />
-            <Label title={`Day Left : ${data?.leftDays}`} />
+            {pdata?.userDetails?.yearly && (
+              <Label
+                title={`End Date : ${moment(pdata?.userDetails?.yearly).format(
+                  'DD-MM-YYYY',
+                )}`}
+              />
+            )}
+            {pdata?.userDetails?.monthly && (
+              <Label
+                title={`End Date : ${moment(pdata?.userDetails?.monthly).format(
+                  'DD-MM-YYYY',
+                )}`}
+              />
+            )}
+            {pdata?.trial && (
+              <Label
+                title={`End Date : ${moment(
+                  pdata?.userDetails?.trialEndDate,
+                ).format('DD-MM-YYYY')}`}
+              />
+            )}
+            {/* <Label title={`Day Left : ${pdata?.leftDays}`} /> */}
           </View>
           <Label
             style={[

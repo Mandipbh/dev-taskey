@@ -66,17 +66,18 @@ const CronoCard = ({
                   {item.status === 'Paused' ? (
                     <Icon1
                       name="play"
-                      size={scale(25)}
+                      size={scale(27)}
                       color={theme.colors.main}
                       onPress={() => {
                         updateStatus(item, null, index);
                         // timerRef.current.start();
                       }}
+                      style={{left: scale(8)}}
                     />
                   ) : (
                     <Icon3
                       name="md-pause"
-                      size={scale(20)}
+                      size={scale(23)}
                       color={theme.colors.main}
                       style={{marginLeft: scale(-5)}}
                       onPress={() => {
@@ -128,13 +129,18 @@ const CronoCard = ({
                   tintColor: darkmodeState
                     ? theme.colors.white
                     : theme.colors.black,
-                  height: scale(20),
-                  width: scale(20),
+                  height: scale(18),
+                  width: scale(18),
                   marginLeft:
-                    item?.status === 'Done' || item.status === 'Failed'
-                      ? scale(20)
+                    item?.status === 'Done' ||
+                    item.status === 'Failed' ||
+                    selectedType == 3
+                      ? selectedType == 3
+                        ? 5
+                        : scale(20)
                       : scale(-5),
                   padding: scale(2),
+                  marginHorizontal: selectedType == 3 ? 2 : 0,
                 }}
               />
               <Label
@@ -319,8 +325,8 @@ const styles = StyleSheet.create({
   },
   statusView: {
     flexDirection: 'row',
-    width: '15%',
-    justifyContent: 'space-around',
+    width: '13%',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
   staticDetails: {
