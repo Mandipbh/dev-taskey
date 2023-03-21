@@ -61,12 +61,16 @@ const CreateFolderModel = props => {
       // folderFrm.append('color', selColor);
       // folderFrm.append('order', 1);
       // folderFrm.append('icon', null);
+      console.log('selIcon?.iconUrl ?? ', selIcon?.iconUrl);
       let folderFrm = {
         name: folderName,
         type: type === 1 ? 'CRONO' : type === 2 ? 'TIMER' : 'COUNTER',
         color: selColor,
         order: 1,
-        icon: selIcon.iconUrl,
+        icon:
+          selIcon?.iconUrl === null || selIcon?.iconUrl === undefined
+            ? 'http://35.158.183.225:4000/001-drums.png'
+            : selIcon.iconUrl,
       };
       setLoading(true);
       const options = {payloads: folderFrm};

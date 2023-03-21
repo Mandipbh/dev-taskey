@@ -386,7 +386,7 @@ const statisticdataone = [
   },
   {
     id: '2',
-    label: 'Completed Tasks',
+    label: 'Achievement Completed Tasks',
     value: 0,
     // CheckBox: true,
     // ischecked: true,
@@ -394,6 +394,14 @@ const statisticdataone = [
   },
   {
     id: '3',
+    label: 'All Completed Tasks',
+    value: 0,
+    // CheckBox: true,
+    // ischecked: true,
+    // isCheckBox: true,
+  },
+  {
+    id: '4',
     label: 'Perecentage of Success',
     value: 0,
   },

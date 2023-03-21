@@ -206,7 +206,7 @@ const StatisticsScreen = () => {
           : moment(endDate).add(1, 'day').format('YYYY/MM/DD'),
       type: value === null || value === 'All' ? 'All' : value?.toUpperCase(),
     };
-    console.log('value ?? ', value);
+    console.log('value ?? ', payload);
     const options = {payloads: payload};
     ApiService.post('statistics', options)
       .then(res => {
@@ -244,6 +244,10 @@ const StatisticsScreen = () => {
               ? '-'
               : res?.outputData.achievementDoneTask;
           staticdummyone[2].value =
+            res?.outputData.allTaskDone === undefined
+              ? '-'
+              : res?.outputData.allTaskDone?.toFixed(2) + '%';
+          staticdummyone[3].value =
             res?.outputData.percentageOfSuccess === undefined
               ? '-'
               : res?.outputData.percentageOfSuccess?.toFixed(2) + '%';

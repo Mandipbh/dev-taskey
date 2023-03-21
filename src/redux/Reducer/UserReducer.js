@@ -5,7 +5,7 @@ const initialState = {
   onBoarding: false,
   userDetails: '',
   isDarkMode: false,
-  defaultTime: 2,
+  defaultTime: 3,
   time: 1,
   admin: 1,
 };

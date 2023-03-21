@@ -31,7 +31,6 @@ import {postAPICall} from '../../utils/AppApi';
 import moment from 'moment';
 import {useDispatch, useSelector} from 'react-redux';
 import SubscriptionModal from '../../components/appModel/SubscriptionModal';
-import axios from 'axios';
 import {loginAction} from '../../redux/Actions/UserActions';
 
 const taskType = [
@@ -394,7 +393,7 @@ const HomeScreen = () => {
                     title={
                       selectedType === 3
                         ? item?.counterTotalMin
-                        : `${item?.totalMin?.toFixed(2)} min`
+                        : `${item?.totalMin?.toFixed(2)}`
                     }
                     style={[
                       styles.headerTitle,
@@ -409,7 +408,7 @@ const HomeScreen = () => {
                 )}
                 {item?.cronoTotalSec !== undefined && (
                   <Label
-                    title={`${hhmmss(item?.cronoTotalSec)} min`}
+                    title={`${hhmmss(item?.cronoTotalSec)} `}
                     style={[
                       styles.headerTitle,
                       {

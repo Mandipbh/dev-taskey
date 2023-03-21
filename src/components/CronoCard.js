@@ -72,14 +72,14 @@ const CronoCard = ({
                         updateStatus(item, null, index);
                         // timerRef.current.start();
                       }}
-                      style={{left: scale(8)}}
+                      style={{paddingLeft: scale(8)}}
                     />
                   ) : (
                     <Icon3
                       name="md-pause"
                       size={scale(23)}
                       color={theme.colors.main}
-                      style={{marginLeft: scale(-5)}}
+                      // style={{marginLeft: scale(-5)}}
                       onPress={() => {
                         updateStatus(item, null, index);
                         // timerRef.current.pause();
