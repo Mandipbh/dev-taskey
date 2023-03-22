@@ -61,7 +61,7 @@ const HomeScreen = () => {
   const [planModel, setPlanModel] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [data, setData] = useState(tasksData);
+  const [data, setData] = useState();
   const [markedDates, setMarkedDates] = useState(null);
   const [model, setModel] = useState(false);
   const [editFolder, setEditFolder] = useState(null);
@@ -73,6 +73,26 @@ const HomeScreen = () => {
 
   const userDetails = useSelector(state => state.UserReducer.userDetails);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    try {
+      ApiService.get('validatePlanDetails').then(res => {
+        console.log('Api call Successfullly :', res);
+        setData(res);
+        if (res.trial) {
+          setPlanModel(true);
+        } else if (res.planleftDays === undefined || res.planleftDays <= 0) {
+          setPlanModel(true);
+        } else if (!res.trial && res.renewPlan) {
+          setPlanModel(true);
+        } else {
+          setPlanModel(false);
+        }
+      });
+    } catch (error) {
+      console.log('catch error in plandetails', error);
+    }
+  }, []);
 
   useEffect(() => {
     setTimeout(() => {
@@ -719,11 +739,11 @@ const HomeScreen = () => {
             );
           })}
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => setPlanModel(true)}
             style={{position: 'absolute', right: 0, top: scale(5)}}>
             <Icon2 name="layers" size={scale(20)} color={theme.colors.white} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           {/* <View style={styles.calendarCon}>
             <TouchableOpacity

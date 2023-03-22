@@ -160,51 +160,6 @@ const SettingScreen = () => {
     // setCheck(Administration);
   }, []);
 
-  const {initPaymentSheet, presentPaymentSheet} = useStripe();
-  const [clientSecret, setClientSecret] = useState();
-
-  useEffect(() => {
-    initializaPayment();
-  }, []);
-  const TodayDate = moment();
-  const ExpireDate = moment(
-    pdata?.userDetails?.monthly !== undefined
-      ? pdata?.userDetails?.monthly
-      : pdata?.userDetails?.yearly,
-  );
-  const Remaining_Days = ExpireDate.diff(TodayDate, 'days');
-  const initializaPayment = async () => {
-    const payload = {
-      name: userDetails?.data?.name,
-      amount: 500,
-    };
-    const options = {payloads: payload};
-    const response = await ApiService.post('makePayment', options);
-    setClientSecret(response?.data);
-    const {error} = await initPaymentSheet({
-      merchantDisplayName: 'Taskey',
-      paymentIntentClientSecret: response?.data,
-    });
-    console.log('response >>> ', response);
-  };
-
-  const openPaymentSheet = async () => {
-    try {
-      const {error} = await presentPaymentSheet({
-        clientSecret: clientSecret,
-      }).then(response => {
-        console.log('response data >>> ', response);
-      });
-      if (error) {
-        Alert.alert('PAYMENT FAILED', error.message);
-      } else {
-        Alert.alert('SUCCESS', 'PAYMENT DONE SUCCESSFULLY...');
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
   //logout user
   // const handleLogout = async () => {
   //   try {
@@ -251,21 +206,20 @@ const SettingScreen = () => {
       console.log('User Successfullly Logout :', res);
     });
   };
-  const isFoucs = useIsFocused();
-  const getPlanDetails = () => {
+  const validatePlan = () => {
     try {
       ApiService.get('validatePlanDetails').then(res => {
-        setData(res);
+        getPlanData();
         console.log('Api call Successfullly :', res);
       });
     } catch (error) {
       console.log('catch error in plandetails', error);
+      getPlanData();
     }
   };
   useEffect(() => {
-    getPlanDetails();
-    getPlanData();
-  }, isFoucs);
+    validatePlan();
+  }, useIsFocused());
   const getPlanData = () => {
     try {
       ApiService.get('getUserDetails').then(res => {
@@ -531,7 +485,7 @@ const SettingScreen = () => {
             ]}
           />
 
-          {socialData.map((item, index) => {
+          {/* {socialData.map((item, index) => {
             return (
               <>
                 <View
@@ -557,12 +511,12 @@ const SettingScreen = () => {
                 </View>
               </>
             );
-          })}
+          })} */}
 
           <View
             style={{
               alignItems: 'center',
-              marginTop: scale(20),
+              marginVertical: scale(20),
             }}>
             <ShareBtn
               style={styles.sharebtn}
@@ -588,7 +542,7 @@ const SettingScreen = () => {
               },
             ]}
           />
-          {console.log('pdata??? ', pdata?.yearly)}
+          {console.log('pdata??? ', pdata)}
           <View
             style={{
               // flexDirection: 'row',
@@ -596,7 +550,7 @@ const SettingScreen = () => {
               paddingHorizontal: scale(22),
               marginVertical: scale(20),
             }}>
-            <Label title={`Plan name : ${pdata?.data}`} />
+            {pdata?.data && <Label title={`Plan name : ${pdata?.data}`} />}
             {pdata?.userDetails?.yearly && (
               <Label
                 title={`End Date : ${moment(pdata?.userDetails?.yearly).format(
@@ -618,7 +572,9 @@ const SettingScreen = () => {
                 ).format('DD-MM-YYYY')}`}
               />
             )}
-            {/* <Label title={`Day Left : ${pdata?.leftDays}`} /> */}
+            {pdata?.leftDays && (
+              <Label title={`Day Left : ${pdata?.leftDays}`} />
+            )}
           </View>
           <Label
             style={[

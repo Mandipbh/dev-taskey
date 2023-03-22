@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   Text,
   Alert,
+  ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -54,6 +56,7 @@ const SubscriptionModal = props => {
   const [item, setItem] = useState();
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [load, setLoad] = useState(false);
   const userDetails = useSelector(state => state.UserReducer.userDetails);
   const [planSave, setPlanSave] = useState({
     paymentIntentKey: '',
@@ -99,14 +102,13 @@ const SubscriptionModal = props => {
     tmp.startDate = moment(TodayDate).format('DD-MM-YYYY');
     tmp.endDate = '';
     tmp.islifeTime = true;
-    tmp.plan = 'lifetime';
+    tmp.plan = 'lifeTime';
     tmp.userId = userDetails?.data?._id;
     setPlanSave(tmp);
   };
 
   // Stripe
-  const {initPaymentSheet, presentPaymentSheet, confirmPaymentSheetPayment} =
-    useStripe();
+  const {initPaymentSheet, presentPaymentSheet} = useStripe();
   const [clientSecret, setClientSecret] = useState();
   const [data, setData] = useState(null);
 
@@ -122,52 +124,22 @@ const SubscriptionModal = props => {
     };
     const options = {payloads: payload};
     try {
+      setLoad(true);
       const response = await ApiService.post('makePayment', options);
       setClientSecret(response?.data);
-      const {error, paymentOption} = await initPaymentSheet({
+      const {error} = await initPaymentSheet({
         merchantDisplayName: 'Taskey',
         paymentIntentClientSecret: response?.data,
       });
+      setLoad(false);
       setTimeout(() => {
         openPaymentSheet(response?.data);
       }, 800);
-      console.log('error >>> ', error);
+      console.log('error >>> 123', error);
     } catch (error) {
-      console.log('error >>> ', error.response.data);
+      console.log('error >>>123456 ', error.response);
     }
   };
-
-  const openPaymentSheet = async clients => {
-    try {
-      const {error} = await presentPaymentSheet({clientSecret});
-      if (error) {
-        Alert.alert('PAYMENT FAILED', error);
-      } else {
-        console.log('else ???? ');
-        const str = clients?.split('_secret');
-        console.log('str ??? ', str);
-        let str1 = str[0];
-
-        console.log('paymetId ??? ', str1);
-        const tmp = {...planSave};
-        tmp.paymentIntentKey = str1;
-        const options = {payloads: tmp};
-        console.log('options ??? ', tmp);
-        ApiService.post('retrivePayment', options).then(res => {
-          console.log('res >> ', res);
-        });
-
-        Alert.alert('SUCCESS', 'PAYMENT DONE SUCCESSFULLY...');
-      }
-    } catch (e) {
-      console.log('error of try', e);
-    }
-  };
-
-  const TodayDate = moment();
-  const ExpireDate = moment(userDetails?.data?.trialEndDate);
-  const Remaining_Days = ExpireDate.diff(TodayDate, 'days');
-
   useEffect(() => {
     try {
       ApiService.get('validatePlanDetails').then(res => {
@@ -179,12 +151,49 @@ const SubscriptionModal = props => {
     }
   }, []);
 
+  const openPaymentSheet = async clients => {
+    try {
+      const {error} = await presentPaymentSheet({
+        merchantDisplayName: 'Taskey',
+        clientSecret,
+      });
+      if (error) {
+        Alert.alert('Payment is cancel.');
+        // Alert.alert('PAYMENT FAILED', JSON.stringify(error));
+      } else {
+        console.log('else ???? ');
+        const str = clients?.split('_secret');
+        console.log('str ??? ', str);
+        let str1 = str[0];
+        if (str1 !== undefined) {
+          const tmp = {...planSave};
+          tmp.paymentIntentKey = str1;
+          const options = {payloads: tmp};
+          console.log('options Log', tmp);
+          ApiService.post('retrivePayment', options).then(res => {
+            console.log('retrivePayment res >> ', res);
+            clear();
+            close();
+          });
+        }
+
+        Alert.alert('SUCCESS', 'PAYMENT DONE SUCCESSFULLY...');
+      }
+    } catch (e) {
+      console.log('error of try', e);
+    }
+  };
+
+  const TodayDate = moment();
+  const ExpireDate = moment(userDetails?.data?.trialEndDate);
+  const Remaining_Days = data?.leftDays;
+
   const handleLogoutbtn = () => {
-    // if (Remaining_Days < 0) {
-    //   handleLogoutAction();
-    // } else {
-    close();
-    // }
+    if (Remaining_Days < 0) {
+      handleLogoutAction();
+    } else {
+      close();
+    }
   };
   const refresh_Token = userDetails?.refreshToken;
   const handleLogoutAction = () => {
@@ -207,176 +216,198 @@ const SubscriptionModal = props => {
     });
   };
 
+  const clear = () => {
+    setPlanSave({
+      paymentIntentKey: '',
+      plan: null,
+      startDate: null,
+      endDate: null,
+      userId: userDetails?.data?._id,
+    });
+    setSelectedId(null);
+    setItem(null);
+  };
   return (
     <Modal animationType={'none'} visible={isVisible}>
-      <TouchableOpacity
-        style={styles.logoutView}
-        onPress={() => {
-          handleLogoutbtn();
-        }}>
-        <Icon
-          style={{color: theme.colors.white}}
-          name={Remaining_Days < 0 ? 'logout' : 'close'}
-          size={scale(24)}
-          // onPress={close}
-        />
-      </TouchableOpacity>
-      <Image style={styles.taskeyimg} source={images.subscription} />
-      <View style={{backgroundColor: theme.colors.backgroundColor, flex: 1}}>
-        <View
-          style={{
-            alignItems: 'center',
-            marginVertical: scale(20),
+      <ScrollView>
+        <TouchableOpacity
+          style={styles.logoutView}
+          onPress={() => {
+            handleLogoutbtn();
           }}>
-          {Remaining_Days < 0 ? (
-            <>
-              <Title style={styles.titleTxt} title="Your trial has expired." />
-              <Label
-                style={styles.subtitleTxt}
-                title="Choose your plan now and continue enjoying Taskey"
-              />
-            </>
-          ) : (
-            <>
-              <Title
-                style={styles.titleTxt}
-                title={`You have  ${Remaining_Days} days letf of free trial`}
-              />
-              <Label
-                style={styles.subtitleTxt}
-                title="Choose your plan now and get a discount!"
-              />
-            </>
-          )}
-        </View>
-        {SubscriptionPlan.map((item, key) => {
-          const backgroundColor =
-            item.id === selectedId ? theme.colors.orange : theme.colors.white;
-          const offerColor =
-            item.id === selectedId ? theme.colors.white : theme.colors.orange;
-          const color =
-            item.id === selectedId ? theme.colors.white : theme.colors.black;
-          const txtColor =
-            item.id === selectedId ? theme.colors.black : theme.colors.white;
-
-          return (
-            <TouchableOpacity
-              onPress={() => {
-                setSelectedId(item.id);
-                setItem(item);
-                setchangeColor(true);
-                {
-                  item.id === 1 ? OneMonthPlan() : null;
-                  item.id === 2 ? OneYearPlan() : null;
-                  item.id === 3 ? LifeTimePlan() : null;
-                }
-              }}
-              style={[
-                styles.planContainer,
-                {
-                  backgroundColor,
-                },
-              ]}>
-              {Remaining_Days < 0 ? null : (
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    marginBottom: scale(-15),
-                  }}>
-                  <View>
-                    <View style={styles.offerTag}>
-                      <View
-                        style={[
-                          styles.offerView,
-                          {backgroundColor: offerColor},
-                        ]}>
-                        <Label
-                          style={[styles.offerTxt, {color: txtColor}]}
-                          title={item.offerTag}
-                        />
-                      </View>
-                      <View
-                        style={[
-                          styles.triangle,
-                          {borderBottomColor: offerColor},
-                        ]}
-                      />
-                    </View>
-                  </View>
-                  <View>
-                    {Remaining_Days < 0 ? (
-                      <Label
-                        title={`€ ${item.offerPrice}`}
-                        style={[
-                          styles.offerPrice,
-                          {color, textDecorationLine: 'line-through'},
-                        ]}
-                      />
-                    ) : (
-                      <Label
-                        title={`€ ${item.price}`}
-                        style={[
-                          styles.offerPrice,
-                          {color, textDecorationLine: 'line-through'},
-                        ]}
-                      />
-                    )}
-                  </View>
-                </View>
-              )}
-
-              <View style={styles.txtContainer}>
-                <Label
-                  style={[
-                    styles.planText,
-                    {
-                      color,
-                    },
-                  ]}
-                  title={item.title}
-                />
-                {Remaining_Days < 0 ? (
-                  <Label
-                    style={[
-                      styles.planText,
-                      {
-                        color,
-                      },
-                    ]}
-                    title={`€ ${item.price}`}
-                  />
-                ) : (
-                  <Label
-                    style={[
-                      styles.planText,
-                      {
-                        color,
-                      },
-                    ]}
-                    title={`€ ${item.offerPrice}`}
+          <Icon
+            style={{color: theme.colors.white}}
+            name={Remaining_Days < 0 ? 'logout' : 'close'}
+            size={scale(24)}
+            // onPress={close}
+          />
+        </TouchableOpacity>
+        <Image style={styles.taskeyimg} source={images.subscription} />
+        <View style={{backgroundColor: theme.colors.backgroundColor, flex: 1}}>
+          <View
+            style={{
+              alignItems: 'center',
+              marginVertical: scale(20),
+            }}>
+            {Remaining_Days < 0 ? (
+              <>
+                {data?.trial && (
+                  <Title
+                    style={styles.titleTxt}
+                    title="Your trial has expired."
                   />
                 )}
-              </View>
-            </TouchableOpacity>
-          );
-        })}
-        <ShareBtn
-          onPress={() => {
-            initializaPayment();
-          }}
-          style={[
-            styles.sharebtn,
-            {
-              backgroundColor:
-                changeColor === true
-                  ? theme.colors.orange
-                  : theme.colors.lightOrange,
-            },
-          ]}
-          title="Buy now"
-        />
-      </View>
+                <Label
+                  style={styles.subtitleTxt}
+                  title="Choose your plan now and continue enjoying Taskey"
+                />
+              </>
+            ) : (
+              <>
+                <Title
+                  style={styles.titleTxt}
+                  title={`You have  ${Remaining_Days} days letf of free trial`}
+                />
+                <Label
+                  style={styles.subtitleTxt}
+                  title="Choose your plan now and get a discount!"
+                />
+              </>
+            )}
+          </View>
+          {SubscriptionPlan.map((item, key) => {
+            const backgroundColor =
+              item.id === selectedId ? theme.colors.orange : theme.colors.white;
+            const offerColor =
+              item.id === selectedId ? theme.colors.white : theme.colors.orange;
+            const color =
+              item.id === selectedId ? theme.colors.white : theme.colors.black;
+            const txtColor =
+              item.id === selectedId ? theme.colors.black : theme.colors.white;
+
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  setSelectedId(item.id);
+                  setItem(item);
+                  setchangeColor(true);
+                  {
+                    item.id === 1 ? OneMonthPlan() : null;
+                    item.id === 2 ? OneYearPlan() : null;
+                    item.id === 3 ? LifeTimePlan() : null;
+                  }
+                }}
+                style={[
+                  styles.planContainer,
+                  {
+                    backgroundColor,
+                  },
+                ]}>
+                {Remaining_Days < 0 ? null : (
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      marginBottom: scale(-15),
+                    }}>
+                    <View>
+                      <View style={styles.offerTag}>
+                        <View
+                          style={[
+                            styles.offerView,
+                            {backgroundColor: offerColor},
+                          ]}>
+                          <Label
+                            style={[styles.offerTxt, {color: txtColor}]}
+                            title={item.offerTag}
+                          />
+                        </View>
+                        <View
+                          style={[
+                            styles.triangle,
+                            {borderBottomColor: offerColor},
+                          ]}
+                        />
+                      </View>
+                    </View>
+                    <View>
+                      {Remaining_Days < 0 ? (
+                        <Label
+                          title={`€ ${item.offerPrice}`}
+                          style={[
+                            styles.offerPrice,
+                            {color, textDecorationLine: 'line-through'},
+                          ]}
+                        />
+                      ) : (
+                        <Label
+                          title={`€ ${item.price}`}
+                          style={[
+                            styles.offerPrice,
+                            {color, textDecorationLine: 'line-through'},
+                          ]}
+                        />
+                      )}
+                    </View>
+                  </View>
+                )}
+
+                <View style={styles.txtContainer}>
+                  <Label
+                    style={[
+                      styles.planText,
+                      {
+                        color,
+                      },
+                    ]}
+                    title={item.title}
+                  />
+                  {Remaining_Days < 0 ? (
+                    <Label
+                      style={[
+                        styles.planText,
+                        {
+                          color,
+                        },
+                      ]}
+                      title={`€ ${item.price}`}
+                    />
+                  ) : (
+                    <Label
+                      style={[
+                        styles.planText,
+                        {
+                          color,
+                        },
+                      ]}
+                      title={`€ ${item.offerPrice}`}
+                    />
+                  )}
+                </View>
+              </TouchableOpacity>
+            );
+          })}
+          {load ? (
+            <ActivityIndicator size="large" color={theme.colors.orange} />
+          ) : (
+            <ShareBtn
+              onPress={() => {
+                initializaPayment();
+              }}
+              style={[
+                styles.sharebtn,
+                {
+                  backgroundColor:
+                    changeColor === true
+                      ? theme.colors.orange
+                      : theme.colors.lightOrange,
+                },
+              ]}
+              title="Buy now"
+            />
+          )}
+        </View>
+      </ScrollView>
     </Modal>
   );
 };

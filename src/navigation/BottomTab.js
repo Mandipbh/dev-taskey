@@ -92,6 +92,7 @@ const BottomTab = () => {
         name="Settings"
         component={Setting}
         options={{
+          unmountOnBlur: true,
           tabBarLabel: 'settings',
           tabBarIcon: ({focused}) => {
             return (
