@@ -162,11 +162,13 @@ const StatisticsScreen = () => {
 
   const getFolderProgress = () => {
     if (value !== 'All') {
+      let cur = moment();
+      let startD = cur.subtract(2, 'years');
       var startdate = moment();
       startdate = startdate.subtract(1, 'month');
       startdate = startdate.format('YYYY/MM/DD');
       const payload = {
-        startDate: startDate === null ? startdate : startDate,
+        startDate: startD,
         lastDate:
           endDate === null
             ? moment(new Date()).add(1, 'day').format('YYYY/MM/DD')
@@ -190,16 +192,12 @@ const StatisticsScreen = () => {
   };
 
   const getStatasticData = () => {
-    let todayDate = moment().format('YYYY/MM/DD');
-    console.log(
-      'todayDate>>> ',
-      moment(new Date()).add(1, 'day').format('YYYY/MM/DD'),
-    );
-    var startdate = moment();
-    startdate = startdate.subtract(1, 'month');
-    startdate = startdate.format('YYYY/MM/DD');
+    let cur = moment();
+    let startD = cur.subtract(2, 'years');
+    console.log('Last August: ', startD.format('YYYY/MM/DD'));
+
     const payload = {
-      startDate: startDate === null ? startdate : startDate,
+      startDate: startD,
       lastDate:
         endDate === null
           ? moment(new Date()).add(1, 'day').format('YYYY/MM/DD')
@@ -211,12 +209,15 @@ const StatisticsScreen = () => {
     ApiService.post('statistics', options)
       .then(res => {
         if (res.success) {
-          console.log('res?.outputData.totalMin ?? ', res?.outputData.totalMin);
+          console.log(
+            'res?.outputData.totalMin ?? ',
+            res?.outputData.allTaskDone,
+          );
           // console.log('statics response >>> ', res);
           let staticdummy = [...statisticData];
           var floor = Math.floor;
           const countData = hhmmss(res?.outputData.totalCount);
-          console.log('type >> ', typeof countData);
+          console.log('type >> ', countData);
           staticdummy[0].value =
             res?.outputData.numberOfTask === undefined
               ? '-'
@@ -232,7 +233,7 @@ const StatisticsScreen = () => {
               ? '-'
               : value === 'Counter'
               ? res?.outputData.totalCount
-              : Math.floor(Number(countData));
+              : countData;
           setstatisticData(staticdummy);
           let staticdummyone = [...statisticDataone];
           staticdummyone[0].value =
@@ -246,7 +247,7 @@ const StatisticsScreen = () => {
           staticdummyone[2].value =
             res?.outputData.allTaskDone === undefined
               ? '-'
-              : res?.outputData.allTaskDone?.toFixed(2) + '%';
+              : res?.outputData.allTaskDone;
           staticdummyone[3].value =
             res?.outputData.percentageOfSuccess === undefined
               ? '-'
