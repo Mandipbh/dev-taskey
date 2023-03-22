@@ -550,9 +550,23 @@ const SettingScreen = () => {
               paddingHorizontal: scale(22),
               marginVertical: scale(20),
             }}>
-            {pdata?.data && <Label title={`Plan name : ${pdata?.data}`} />}
+            {pdata?.data && (
+              <Label
+                style={{
+                  color: darkmodeState
+                    ? theme.colors.white
+                    : theme.colors.black,
+                }}
+                title={`Plan name : ${pdata?.data}`}
+              />
+            )}
             {pdata?.userDetails?.yearly && (
               <Label
+                style={{
+                  color: darkmodeState
+                    ? theme.colors.white
+                    : theme.colors.black,
+                }}
                 title={`End Date : ${moment(pdata?.userDetails?.yearly).format(
                   'DD-MM-YYYY',
                 )}`}
@@ -560,6 +574,11 @@ const SettingScreen = () => {
             )}
             {pdata?.userDetails?.monthly && (
               <Label
+                style={{
+                  color: darkmodeState
+                    ? theme.colors.white
+                    : theme.colors.black,
+                }}
                 title={`End Date : ${moment(pdata?.userDetails?.monthly).format(
                   'DD-MM-YYYY',
                 )}`}
@@ -567,13 +586,25 @@ const SettingScreen = () => {
             )}
             {pdata?.trial && (
               <Label
+                style={{
+                  color: darkmodeState
+                    ? theme.colors.white
+                    : theme.colors.black,
+                }}
                 title={`End Date : ${moment(
                   pdata?.userDetails?.trialEndDate,
                 ).format('DD-MM-YYYY')}`}
               />
             )}
             {pdata?.leftDays && (
-              <Label title={`Day Left : ${pdata?.leftDays}`} />
+              <Label
+                style={{
+                  color: darkmodeState
+                    ? theme.colors.white
+                    : theme.colors.black,
+                }}
+                title={`Day Left : ${pdata?.leftDays}`}
+              />
             )}
           </View>
           <Label
