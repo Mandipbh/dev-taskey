@@ -717,7 +717,11 @@ const HomeScreen = () => {
                         />
                         {type?.totalTime !== undefined && (
                           <Label
-                            title={`Total ${type?.totalTime} min`}
+                            title={
+                              selectedType === 3
+                                ? `Total ${type?.totalTime}`
+                                : `Total ${type?.totalTime} min`
+                            }
                             style={styles.time}
                           />
                         )}

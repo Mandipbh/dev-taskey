@@ -249,6 +249,8 @@ const CreateTaskScreen = props => {
       })
       .catch(error => {
         setLoading(false);
+        clearData();
+        navigation.goBack();
         // Toast.show(error.response.data.message, Toast.SHORT);
         console.log('error ', error.response.data.message?.message);
       });
@@ -544,6 +546,7 @@ const CreateTaskScreen = props => {
                       setAmount(txt);
                     }}
                   />
+                  {type !== 1 && <Label title="mins" />}
                 </View>
               )}
               {/* <View style={styles.devider} /> */}

@@ -908,20 +908,37 @@ const StatisticsScreen = () => {
                                 }%`,
                               },
                             ]}>
-                            <Label
-                              title={`${
-                                fitem?.folderPercentage > 100
-                                  ? 100
-                                  : fitem?.folderPercentage
-                              }%`}
-                              style={{
-                                fontSize: scale(10),
-                                color: theme.colors.white,
-                                fontWeight: '700',
-                              }}
-                              numberOfLines={1}
-                            />
+                            {/* {fitem?.folderPercentage > 20 && (
+                              <Label
+                                title={`${
+                                  fitem?.folderPercentage > 100
+                                    ? 100
+                                    : fitem?.folderPercentage?.toFixed(2)
+                                }%`}
+                                style={{
+                                  fontSize: scale(10),
+                                  color: theme.colors.white,
+                                  fontWeight: '700',
+                                }}
+                                numberOfLines={1}
+                              />
+                            )} */}
                           </View>
+                          {/* {fitem?.folderPercentage < 20 && ( */}
+                          <Label
+                            title={`${
+                              fitem?.folderPercentage > 100
+                                ? 100
+                                : fitem?.folderPercentage?.toFixed(2)
+                            }%`}
+                            style={{
+                              fontSize: scale(10),
+                              color: theme.colors.black,
+                              fontWeight: '700',
+                            }}
+                            numberOfLines={1}
+                          />
+                          {/* )} */}
                         </View>
                       ) : (
                         selectedFolder === fitem._id && (
@@ -1268,6 +1285,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: '75%',
     marginTop: scale(30),
+    marginBottom: scale(15),
   },
   divider: {
     borderBottomWidth: scale(0.2),

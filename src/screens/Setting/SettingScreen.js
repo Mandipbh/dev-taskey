@@ -195,16 +195,34 @@ const SettingScreen = () => {
       refreshToken: refresh_Token,
     };
     const options = {payloads: rf_token};
-    ApiService.post('logout', options).then(res => {
-      dispatch(isLogin(false));
+    try {
+      ApiService.post('logout', options)
+        .then(res => {
+          dispatch(isLogin(false));
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 1,
+              routes: [{name: 'LoginStack'}],
+            }),
+          );
+          console.log('User Successfullly Logout :', res);
+        })
+        .catch(e => {
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 1,
+              routes: [{name: 'LoginStack'}],
+            }),
+          );
+        });
+    } catch (error) {
       navigation.dispatch(
         CommonActions.reset({
           index: 1,
           routes: [{name: 'LoginStack'}],
         }),
       );
-      console.log('User Successfullly Logout :', res);
-    });
+    }
   };
   const validatePlan = () => {
     try {

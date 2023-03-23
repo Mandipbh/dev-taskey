@@ -9,6 +9,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {scale, theme} from '../utils';
 import {Label} from './Label';
 import {useSelector} from 'react-redux';
+import Toast from 'react-native-simple-toast';
 import moment from 'moment';
 import {Timer, Countdown} from 'react-native-element-timer';
 import {useRef} from 'react';
@@ -66,10 +67,14 @@ const CronoCard = ({
                   {item.status === 'Paused' ? (
                     <Icon1
                       name="play"
-                      size={scale(27)}
+                      size={scale(30)}
                       color={theme.colors.main}
                       onPress={() => {
-                        updateStatus(item, null, index);
+                        item?.percentageOfTask === 100
+                          ? Toast.show(
+                              'Time goal is achieved. Please edit task to set more time or to complete it.',
+                            )
+                          : updateStatus(item, null, index);
                         // timerRef.current.start();
                       }}
                       style={{paddingLeft: scale(8)}}
@@ -77,11 +82,15 @@ const CronoCard = ({
                   ) : (
                     <Icon3
                       name="md-pause"
-                      size={scale(23)}
+                      size={scale(25)}
                       color={theme.colors.main}
                       // style={{marginLeft: scale(-5)}}
                       onPress={() => {
-                        updateStatus(item, null, index);
+                        item?.percentageOfTask === 100
+                          ? Toast.show(
+                              'Time goal is achieved. Please edit task to set more time or to complete it.',
+                            )
+                          : updateStatus(item, null, index);
                         // timerRef.current.pause();
                       }}
                     />
@@ -121,7 +130,7 @@ const CronoCard = ({
               style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
-                marginLeft: selectedType === 3 ? scale(-5) : scale(-15),
+                marginLeft: selectedType === 3 ? scale(-5) : scale(-13),
               }}>
               <Image
                 source={{uri: item?.icon}}
@@ -138,7 +147,7 @@ const CronoCard = ({
                       ? selectedType == 3
                         ? 5
                         : scale(20)
-                      : scale(-5),
+                      : scale(0),
                   padding: scale(2),
                   marginHorizontal: selectedType == 3 ? 2 : 0,
                 }}
@@ -163,29 +172,38 @@ const CronoCard = ({
                       : darkmodeState
                       ? theme.colors.white
                       : theme.colors.black,
-                  width: '80%',
+                  width: '75%',
                   marginLeft:
                     item?.status === 'Done' || item.status === 'Failed'
                       ? 5
                       : scale(3),
+                  left:
+                    selectedType === 3 ||
+                    item?.status === 'Done' ||
+                    item.status === 'Failed'
+                      ? 0
+                      : scale(selectedType == 2 ? -1 : -8),
                 }}
               />
-              {selectedType !== 1 && (
-                <Label
-                  title={
-                    item?.meta === 'Registry'
-                      ? ''
-                      : item?.percentageOfTask?.toFixed(2)
-                  }
-                  style={{
-                    fontSize: scale(10),
-                    color: darkmodeState
-                      ? theme.colors.white
-                      : theme.colors.black,
-                    marginLeft: scale(0),
-                  }}
-                />
-              )}
+              {(selectedType !== 1 && item?.status === 'Done') ||
+                (item.status === 'Failed'
+                  ? null
+                  : item?.percentageOfTask?.toFixed(2) && (
+                      <Label
+                        title={
+                          item?.meta === 'Registry'
+                            ? ''
+                            : item?.percentageOfTask?.toFixed(2) + ' %'
+                        }
+                        style={{
+                          fontSize: scale(10),
+                          color: darkmodeState
+                            ? theme.colors.white
+                            : theme.colors.black,
+                          left: scale(2),
+                        }}
+                      />
+                    ))}
             </View>
             {item?.meta === 'Achievement' && (
               <ProgressBar
@@ -207,6 +225,8 @@ const CronoCard = ({
                   backgroundColor: theme.colors.backgroundColor,
                   height: scale(4),
                   marginTop: scale(5),
+                  width: '85%',
+                  marginLeft: selectedType === 2 ? scale(-13) : 0,
                 }}
               />
             )}
