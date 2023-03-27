@@ -312,7 +312,6 @@ const CreateTaskScreen = props => {
     };
     const options = {payloads: payload};
     ApiService.post('failedTask', options).then(res => {
-      console.log('response >> ', res);
       navigation.goBack();
       Toast.show('Failed task success');
     });
@@ -323,6 +322,13 @@ const CreateTaskScreen = props => {
     setIcon(data);
   };
 
+  useEffect(() => {
+    if (type === 1) {
+      setMeta(2);
+    } else if (type === 2) {
+      setMeta(1);
+    }
+  }, [type]);
   return (
     <>
       <View
