@@ -8,6 +8,15 @@ export const handleResponse = async res => {
   return handleError(res);
 };
 
+export const checkUrlValidity = async url => {
+  try {
+    const response = await fetch(url);
+    return response.status === 200; // check if response status is 200
+  } catch (error) {
+    return false; // return false if there is an error
+  }
+};
+
 export const handleError = async errorMsg => {
   console.log('error >>> ', errorMsg);
   try {

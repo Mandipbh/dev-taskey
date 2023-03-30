@@ -19,6 +19,10 @@ const IconPicker = props => {
   const {isVisible, close} = props;
   const [selected, setSelected] = useState(null);
   const [iconList, setIconList] = useState([]);
+  const [imageError, setImageError] = useState(false);
+  const handleImageError = () => {
+    setImageError(true);
+  };
   useEffect(() => {
     try {
       ApiService.get('icons').then(res => {

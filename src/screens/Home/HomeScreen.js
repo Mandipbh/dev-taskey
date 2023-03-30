@@ -212,7 +212,7 @@ const HomeScreen = () => {
         .catch(e => console.log('error >> ', e));
 
       ApiService.get('getTotalTaskTime/TIMER').then(res => {
-        console.log('resss >>> ', res.data);
+        console.log('resss >>> getTotalTaskTime', res.data);
 
         const tmpArr = [...typeFolder];
         tmpArr[1].totalTime = res?.data === undefined ? 0 : res?.data;
