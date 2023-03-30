@@ -160,6 +160,17 @@ const StatisticsScreen = () => {
     // return pad(hours)+":"+pad(minutes)+":"+pad(secs); for old browsers
   }
 
+  function hhmmss1(secs) {
+    var minutes = Math.floor(secs / 60);
+    secs = secs % 60;
+    var hours = Math.floor(minutes / 60);
+    minutes = minutes % 60;
+    // return timeModeState === 1
+    //   ? `${pad(minutes)}:${pad(secs)}`
+    //   : Math.floor(minutes / 60) + ':' + pad(minutes) + ':' + pad(secs);
+    return pad(hours) + 'H:' + pad(minutes) + 'M:' + pad(secs) + 'S';
+  }
+
   const getFolderProgress = () => {
     if (value !== 'All') {
       let cur = moment();
@@ -209,15 +220,13 @@ const StatisticsScreen = () => {
     ApiService.post('statistics', options)
       .then(res => {
         if (res.success) {
-          console.log(
-            'res?.outputData.totalMin ?? ',
-            res?.outputData.allTaskDone,
-          );
-          // console.log('statics response >>> ', res);
           let staticdummy = [...statisticData];
           var floor = Math.floor;
           const countData = hhmmss(res?.outputData.totalCount);
-          console.log('type >> ', countData);
+          console.log(
+            'res?.outputData.totalCount ??? ',
+            res?.outputData.totalCount,
+          );
           staticdummy[0].value =
             res?.outputData.numberOfTask === undefined
               ? '-'
@@ -226,8 +235,8 @@ const StatisticsScreen = () => {
             res?.outputData.totalMin === undefined
               ? '-'
               : timeModeState === 1
-              ? res?.outputData.totalMin
-              : hhmmss(res?.outputData.totalMin);
+              ? hhmmss1(res?.outputData.totalMin * 60)
+              : hhmmss1(res?.outputData.totalMin * 60);
           staticdummy[2].value =
             res?.outputData.totalCount === undefined
               ? '-'
@@ -904,8 +913,12 @@ const StatisticsScreen = () => {
                                 width: `${
                                   fitem?.folderPercentage > 100
                                     ? 100
-                                    : fitem?.folderPercentage?.toFixed(2)
+                                    : fitem?.folderPercentage === undefined
+                                    ? 0
+                                    : fitem?.folderPercentage
                                 }%`,
+                                borderWidth: scale(1),
+                                borderColor: theme.colors.orange,
                               },
                             ]}>
                             {/* {fitem?.folderPercentage > 20 && (
@@ -958,8 +971,12 @@ const StatisticsScreen = () => {
                                   width: `${
                                     fitem?.folderPercentage > 100
                                       ? 100
+                                      : fitem?.folderPercentage === undefined
+                                      ? 0
                                       : fitem?.folderPercentage
                                   }%`,
+                                  borderWidth: scale(1),
+                                  borderColor: theme.colors.orange,
                                 },
                               ]}>
                               <Label

@@ -413,6 +413,8 @@ const HomeScreen = () => {
                     title={
                       selectedType === 3
                         ? item?.counterTotalMin
+                        : selectedType === 2
+                        ? ''
                         : `${item?.totalMin?.toFixed(2)}`
                     }
                     style={[
@@ -426,19 +428,21 @@ const HomeScreen = () => {
                     ]}
                   />
                 )}
-                {item?.cronoTotalSec !== undefined && (
-                  <Label
-                    title={`${hhmmss(item?.cronoTotalSec)} `}
-                    style={[
-                      styles.headerTitle,
-                      {
-                        color: darkmodeState
-                          ? theme.colors.white
-                          : theme.colors.black,
-                      },
-                    ]}
-                  />
-                )}
+
+                {item?.cronoTotalSec !== undefined &&
+                  item?.type !== 'COMPLETED' && (
+                    <Label
+                      title={`${hhmmss(item?.cronoTotalSec)} `}
+                      style={[
+                        styles.headerTitle,
+                        {
+                          color: darkmodeState
+                            ? theme.colors.white
+                            : theme.colors.black,
+                        },
+                      ]}
+                    />
+                  )}
                 <Label
                   // title={'20%'}
                   style={[
@@ -727,6 +731,7 @@ const HomeScreen = () => {
                         )}
                       </View>
                     </View>
+
                     <View style={{width: '20%'}}>
                       <Icon2
                         name="chevron-right"

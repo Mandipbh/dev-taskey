@@ -402,7 +402,7 @@ const statisticdataone = [
   },
   {
     id: '4',
-    label: 'Perecentage of Success',
+    label: 'Percentage of Success',
     value: 0,
   },
 ];
@@ -415,7 +415,7 @@ const statisticdatatwo = [
   },
   {
     id: '2',
-    label: 'Perecentage of progrees',
+    label: 'Percentage of progrees',
     value: 0,
   },
   {

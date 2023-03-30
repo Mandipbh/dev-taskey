@@ -47,6 +47,7 @@ const CreateTaskScreen = props => {
   const [title, setTitle] = useState(null);
   const [isLoading, setLoading] = useState(false);
   const [isBtn, setBtn] = useState(false);
+  const [isFBtn, setFBtn] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
   const navigation = useNavigation();
@@ -73,12 +74,20 @@ const CreateTaskScreen = props => {
       setTitle(editData?.name);
       if (editData.type === 'CRONO') {
         setBtn(editData?.cronoCompletedTime ? true : false);
+        setFBtn(editData?.status !== 'Failed' ? true : false);
+        // setBtn(editData?.status !== 'Done' ? true : false);
         setType(1);
       } else if (editData.type === 'TIMER') {
         setBtn(editData?.timerCompletedTime ? true : false);
+        setFBtn(editData?.status !== 'Failed' ? true : false);
+        setBtn(editData?.status !== 'Done' ? true : false);
+        setType(1);
         setType(2);
       } else if (editData?.type === 'COUNTER') {
         setBtn(editData?.counterIncrementDecrement ? true : false);
+        setFBtn(editData?.status !== 'Failed' ? true : false);
+        setBtn(editData?.status !== 'Done' ? true : false);
+        setType(1);
         setType(3);
       }
     } else {
@@ -90,7 +99,7 @@ const CreateTaskScreen = props => {
       clearData();
     }
   }, [isFocused]);
-
+  console.log('selIcon ??? ', selIcon);
   useEffect(() => {
     getAllFolders();
   }, [isFocused, type]);
@@ -741,22 +750,28 @@ const CreateTaskScreen = props => {
                       <Text style={styles.createtxt}>{'Closed task'}</Text>
                     </TouchableOpacity>
                   )}
-                  <TouchableOpacity
-                    onPress={() => {
-                      handleFaildTask();
-                    }}
-                    style={[
-                      styles.createTaskbtn,
-                      {backgroundColor: theme.colors.red},
-                    ]}>
-                    <Text style={styles.createtxt}>{'Failed task'}</Text>
-                  </TouchableOpacity>
+                  {isFBtn && (
+                    <TouchableOpacity
+                      onPress={() => {
+                        handleFaildTask();
+                      }}
+                      style={[
+                        styles.createTaskbtn,
+                        {backgroundColor: theme.colors.red},
+                      ]}>
+                      <Text style={styles.createtxt}>{'Failed task'}</Text>
+                    </TouchableOpacity>
+                  )}
                 </View>
               )}
             </View>
           </ScrollView>
         </View>
       </View>
+      {console.log(
+        'props?.route?.params?.editData >> ',
+        props?.route?.params?.editData?.status,
+      )}
       {isLoading && <Loader />}
     </>
   );

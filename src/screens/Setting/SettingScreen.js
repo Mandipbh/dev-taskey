@@ -48,7 +48,7 @@ const chips = [
     id: 1,
   },
   {
-    label: 'One hours',
+    label: 'Only hours',
     id: 2,
   },
   // {
