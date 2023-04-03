@@ -205,31 +205,32 @@ const CronoCard = ({
                       />
                     ))}
             </View>
-            {item?.meta === 'Achievement' && (
-              <ProgressBar
-                progress={
-                  selectedType === 3
-                    ? item?.percentageOfTask == undefined
+            {item?.meta === 'Achievement' &&
+              (item?.status !== 'Done' || item.status === 'Failed') && (
+                <ProgressBar
+                  progress={
+                    selectedType === 3
+                      ? item?.percentageOfTask == undefined
+                        ? 0
+                        : item?.percentageOfTask / 100
+                      : item?.percentageOfTask == undefined
                       ? 0
                       : item?.percentageOfTask / 100
-                    : item?.percentageOfTask == undefined
-                    ? 0
-                    : item?.percentageOfTask / 100
-                }
-                color={
-                  item?.status !== 'Play'
-                    ? theme.colors.gray2
-                    : theme.colors.green
-                }
-                style={{
-                  backgroundColor: theme.colors.backgroundColor,
-                  height: scale(4),
-                  marginTop: scale(5),
-                  width: '85%',
-                  marginLeft: selectedType === 2 ? scale(-13) : 0,
-                }}
-              />
-            )}
+                  }
+                  color={
+                    item?.status !== 'Play'
+                      ? theme.colors.gray2
+                      : theme.colors.green
+                  }
+                  style={{
+                    backgroundColor: theme.colors.backgroundColor,
+                    height: scale(4),
+                    marginTop: scale(5),
+                    width: '85%',
+                    marginLeft: selectedType === 2 ? scale(-13) : 0,
+                  }}
+                />
+              )}
           </View>
           <View style={styles.staticDetails}>
             {selectedType === 3 && (

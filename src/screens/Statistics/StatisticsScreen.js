@@ -25,6 +25,7 @@ import {
   TypeTask_Distribution,
   AchievementTasksStatus,
   TimerSpecificfolders,
+  statisticdataoneDUB,
   folders,
 } from '../../utils/mockData';
 import moment from 'moment';
@@ -175,21 +176,24 @@ const StatisticsScreen = () => {
     if (value !== 'All') {
       let cur = moment();
       let startD = cur.subtract(2, 'years');
-      var startdate = moment();
-      startdate = startdate.subtract(1, 'month');
-      startdate = startdate.format('YYYY/MM/DD');
+      // var startdate = moment();
+      // startdate = startdate.subtract(1, 'month');
+      var startdate = moment(startD).format('YYYY/MM/DD');
+      console.log('startdatestartdate ?>> ', startdate);
       const payload = {
-        startDate: startD,
-        lastDate:
-          endDate === null
-            ? moment(new Date()).add(1, 'day').format('YYYY/MM/DD')
-            : moment(endDate).add(1, 'day').format('YYYY/MM/DD'),
+        // startDate: startdate,
+        // lastDate:
+        //   endDate === null
+        //     ? moment(new Date()).add(1, 'day').format('YYYY/MM/DD')
+        //     : moment(endDate).add(1, 'day').format('YYYY/MM/DD'),
         type: value === null || value === 'All' ? 'All' : value?.toUpperCase(),
       };
+      console.log('payload >>> ', payload);
       const options = {payloads: payload};
       try {
         ApiService.post('folderStatistics', options).then(res => {
           setFolderList(res.data);
+          console.log('>>>>>> ', JSON.stringify(res, null, 4));
           const tmpArray = [{name: 'All', _id: 0, taskList: []}, ...res.data];
           setAllFolderList(tmpArray);
         });
@@ -208,7 +212,7 @@ const StatisticsScreen = () => {
     console.log('Last August: ', startD.format('YYYY/MM/DD'));
 
     const payload = {
-      startDate: startD,
+      startDate: moment(startD).format('YYYY/MM/DD'),
       lastDate:
         endDate === null
           ? moment(new Date()).add(1, 'day').format('YYYY/MM/DD')
@@ -244,40 +248,79 @@ const StatisticsScreen = () => {
               ? res?.outputData.totalCount
               : countData;
           setstatisticData(staticdummy);
-          let staticdummyone = [...statisticDataone];
-          staticdummyone[0].value =
-            res?.outputData.achievementTasks === undefined
-              ? '-'
-              : res?.outputData.achievementTasks;
-          staticdummyone[1].value =
-            res?.outputData.achievementDoneTask === undefined
-              ? '-'
-              : res?.outputData.achievementDoneTask;
-          staticdummyone[2].value =
-            res?.outputData.allTaskDone === undefined
-              ? '-'
-              : res?.outputData.allTaskDone;
-          staticdummyone[3].value =
-            res?.outputData.percentageOfSuccess === undefined
-              ? '-'
-              : res?.outputData.percentageOfSuccess?.toFixed(2) + '%';
-          let three = [...statisticdataFourData];
+          if (value === 'Timer') {
+            //statisticdataoneDUB
+            let staticdummyone = [...statisticdataoneDUB];
+            staticdummyone[0].value =
+              res?.outputData.achievementTasks === undefined
+                ? '-'
+                : res?.outputData.achievementTasks;
+            staticdummyone[1].value =
+              res?.outputData.achievementDoneTask === undefined
+                ? '-'
+                : res?.outputData.achievementDoneTask;
 
-          three[0].value =
-            res?.outputData.deletedTasks === undefined
-              ? '-'
-              : res?.outputData.deletedTasks;
-          three[1].value =
-            res?.outputData.failedTasks === undefined
-              ? '-'
-              : res?.outputData.failedTasks;
-          three[2].value =
-            res?.outputData?.percentageOfFailedTask === undefined
-              ? '-'
-              : res?.outputData.percentageOfFailedTask?.toFixed(2) === undefined
-              ? res?.outputData.percentageOfFailedTask?.toFixed(2)
-              : res?.outputData.percentageOfFailedTask?.toFixed(2) + '%';
-          setStatisticDataOne(staticdummyone);
+            staticdummyone[2].value =
+              res?.outputData.percentageOfSuccess === undefined
+                ? '-'
+                : res?.outputData.percentageOfSuccess?.toFixed(2) + '%';
+            let three = [...statisticdataFourData];
+
+            three[0].value =
+              res?.outputData.deletedTasks === undefined
+                ? '-'
+                : res?.outputData.deletedTasks;
+            three[1].value =
+              res?.outputData.failedTasks === undefined
+                ? '-'
+                : res?.outputData.failedTasks;
+            three[2].value =
+              res?.outputData?.percentageOfFailedTask === undefined
+                ? '-'
+                : res?.outputData.percentageOfFailedTask?.toFixed(2) ===
+                  undefined
+                ? res?.outputData.percentageOfFailedTask?.toFixed(2)
+                : res?.outputData.percentageOfFailedTask?.toFixed(2) + '%';
+
+            setStatisticDataOne(staticdummyone);
+          } else {
+            let staticdummyone = [...statisticDataone];
+            staticdummyone[0].value =
+              res?.outputData.achievementTasks === undefined
+                ? '-'
+                : res?.outputData.achievementTasks;
+            staticdummyone[1].value =
+              res?.outputData.achievementDoneTask === undefined
+                ? '-'
+                : res?.outputData.achievementDoneTask;
+            staticdummyone[2].value =
+              res?.outputData.allTaskDone === undefined
+                ? '-'
+                : res?.outputData.allTaskDone;
+            staticdummyone[3].value =
+              res?.outputData.percentageOfSuccess === undefined
+                ? '-'
+                : res?.outputData.percentageOfSuccess?.toFixed(2) + '%';
+            let three = [...statisticdataFourData];
+
+            three[0].value =
+              res?.outputData.deletedTasks === undefined
+                ? '-'
+                : res?.outputData.deletedTasks;
+            three[1].value =
+              res?.outputData.failedTasks === undefined
+                ? '-'
+                : res?.outputData.failedTasks;
+            three[2].value =
+              res?.outputData?.percentageOfFailedTask === undefined
+                ? '-'
+                : res?.outputData.percentageOfFailedTask?.toFixed(2) ===
+                  undefined
+                ? res?.outputData.percentageOfFailedTask?.toFixed(2)
+                : res?.outputData.percentageOfFailedTask?.toFixed(2) + '%';
+
+            setStatisticDataOne(staticdummyone);
+          }
 
           let staticdummytwo = [...statisticDatafive];
           staticdummytwo[0].value =
@@ -846,6 +889,8 @@ const StatisticsScreen = () => {
                 ]}
               />
             )}
+
+            {/* select folder from the list */}
             <ScrollView
               horizontal
               nestedScrollEnabled
@@ -854,12 +899,7 @@ const StatisticsScreen = () => {
               {allFolderList &&
                 allFolderList?.map((item, idx) => {
                   return (
-                    <View
-                      style={{
-                        padding: scale(1.1),
-                        alignItems: 'center',
-                        marginHorizontal: scale(5),
-                      }}>
+                    <View style={styles.rowOfFolder}>
                       <TouchableOpacity
                         style={styles.checkBox}
                         onPress={() => {
@@ -889,8 +929,10 @@ const StatisticsScreen = () => {
                   );
                 })}
             </ScrollView>
+            {/* Folder View with %  */}
             <View style={styles.folderList}>
               {
+                // All folders
                 <ScrollView nestedScrollEnabled>
                   {folderList &&
                     folderList?.map((fitem, i) => {
@@ -920,23 +962,8 @@ const StatisticsScreen = () => {
                                 borderWidth: scale(1),
                                 borderColor: theme.colors.orange,
                               },
-                            ]}>
-                            {/* {fitem?.folderPercentage > 20 && (
-                              <Label
-                                title={`${
-                                  fitem?.folderPercentage > 100
-                                    ? 100
-                                    : fitem?.folderPercentage?.toFixed(2)
-                                }%`}
-                                style={{
-                                  fontSize: scale(10),
-                                  color: theme.colors.white,
-                                  fontWeight: '700',
-                                }}
-                                numberOfLines={1}
-                              />
-                            )} */}
-                          </View>
+                            ]}
+                          />
                           {/* {fitem?.folderPercentage < 20 && ( */}
                           <Label
                             title={`${
@@ -954,6 +981,7 @@ const StatisticsScreen = () => {
                           {/* )} */}
                         </View>
                       ) : (
+                        // selected folderwise
                         selectedFolder === fitem._id && (
                           <View>
                             <Label
@@ -973,26 +1001,26 @@ const StatisticsScreen = () => {
                                       ? 100
                                       : fitem?.folderPercentage === undefined
                                       ? 0
-                                      : fitem?.folderPercentage
+                                      : fitem?.folderPercentage?.toFixed(2)
                                   }%`,
                                   borderWidth: scale(1),
                                   borderColor: theme.colors.orange,
                                 },
-                              ]}>
-                              <Label
-                                title={`${
-                                  fitem?.folderPercentage > 100
-                                    ? 100
-                                    : fitem?.folderPercentage
-                                }%`}
-                                style={{
-                                  fontSize: scale(10),
-                                  color: theme.colors.white,
-                                  fontWeight: '700',
-                                }}
-                                numberOfLines={1}
-                              />
-                            </View>
+                              ]}
+                            />
+                            <Label
+                              title={`${
+                                fitem?.folderPercentage > 100
+                                  ? 100
+                                  : fitem?.folderPercentage?.toFixed(2)
+                              }%`}
+                              style={{
+                                fontSize: scale(10),
+                                color: theme.colors.black,
+                                fontWeight: '700',
+                              }}
+                              numberOfLines={1}
+                            />
                           </View>
                         )
                       );
@@ -1019,7 +1047,7 @@ const StatisticsScreen = () => {
                   nestedScrollEnabled
                   showsHorizontalScrollIndicator={false}
                   style={{marginTop: scale(10)}}>
-                  {taskList?.taskList?.length > 0 && (
+                  {taskList?.taskList && taskList?.taskList?.length > 0 && (
                     <View
                       style={{
                         padding: scale(1.1),
@@ -1090,43 +1118,26 @@ const StatisticsScreen = () => {
                 </ScrollView>
               </View>
             )}
-            {taskList?.taskList && (
-              <ScrollView style={{marginTop: scale(5)}} nestedScrollEnabled>
-                {taskList?.taskList?.length > 0 &&
-                  taskList?.taskList?.map((titem, i) => {
-                    return selectedTask === 0 ? (
-                      <View style={{marginVertical: scale(5)}}>
-                        <Label
-                          title={titem?.name}
-                          style={{
-                            color: darkmodeState
-                              ? theme.colors.white
-                              : theme.colors.black,
-                          }}
-                        />
-                        <View
-                          style={[
-                            styles.progressBar,
-                            {
-                              width: `${
-                                value === 'Timer'
-                                  ? titem?.percentageOfTask === undefined
-                                    ? 0
-                                    : titem?.percentageOfTask
-                                  : value === 'Counter'
-                                  ? titem?.meta === 'Achievement'
-                                    ? titem?.percentageOfTask
-                                    : titem?.percentageFolderWise
-                                  : titem?.taskPercentage > 100
-                                  ? 100
-                                  : titem?.taskPercentage === undefined
-                                  ? 0
-                                  : titem?.taskPercentage?.toFixed(2)
-                              }%`,
-                            },
-                          ]}>
-                          <Label
-                            title={`${
+
+            <ScrollView style={{marginTop: scale(5)}} nestedScrollEnabled>
+              {taskList?.taskList?.length > 0 &&
+                taskList?.taskList?.map((titem, i) => {
+                  console.log('titem >>> ', titem);
+                  return selectedTask === 0 ? (
+                    <View style={{marginVertical: scale(5)}}>
+                      <Label
+                        title={titem?.name}
+                        style={{
+                          color: darkmodeState
+                            ? theme.colors.white
+                            : theme.colors.black,
+                        }}
+                      />
+                      {/* <View
+                        style={[
+                          styles.progressBar,
+                          {
+                            width: `${
                               value === 'Timer'
                                 ? titem?.percentageOfTask === undefined
                                   ? 0
@@ -1137,42 +1148,128 @@ const StatisticsScreen = () => {
                                   : titem?.percentageFolderWise
                                 : titem?.taskPercentage > 100
                                 ? 100
-                                : titem?.taskPercentage === undefined
-                                ? 0
                                 : titem?.taskPercentage?.toFixed(2)
+                            }%`,
+                          },
+                        ]}
+                      /> */}
+                      {value === 'Crono' && (
+                        <>
+                          <View
+                            style={[
+                              styles.progressBar,
+                              {
+                                width: `${titem?.percentageFolderWise?.toFixed(
+                                  2,
+                                )}%`,
+                              },
+                            ]}
+                          />
+                          <Label
+                            title={`${
+                              titem?.percentageFolderWise === undefined
+                                ? 0
+                                : titem?.percentageFolderWise?.toFixed(2)
                             }%`}
                             style={{
                               fontSize: scale(10),
-                              color: theme.colors.white,
+                              color: theme.colors.black,
                               fontWeight: '700',
                             }}
                             numberOfLines={1}
                           />
-                        </View>
-                      </View>
-                    ) : (
-                      selectedTask === titem._id && (
-                        <View>
-                          <Label title={titem?.name} />
+                        </>
+                      )}
+                      {value === 'Timer' && (
+                        <>
+                          <View
+                            style={[
+                              styles.progressBar,
+                              {
+                                width: `${titem?.percentageOfTask?.toFixed(
+                                  2,
+                                )}%`,
+                              },
+                            ]}
+                          />
+                          <Label
+                            title={`${
+                              titem?.meta === 'Achievement'
+                                ? titem?.percentageOfTask?.toFixed(2)
+                                : titem?.percentageFolderWise?.toFixed(2)
+                            }%`}
+                            style={{
+                              fontSize: scale(10),
+                              color: theme.colors.black,
+                              fontWeight: '700',
+                            }}
+                            numberOfLines={1}
+                          />
+                        </>
+                      )}
+                      {value === 'Counter' && (
+                        <>
                           <View
                             style={[
                               styles.progressBar,
                               {
                                 width: `${
-                                  value === 'Timer'
-                                    ? titem?.percentageOfTask === undefined
-                                      ? 0
-                                      : titem?.percentageOfTask
-                                    : titem?.taskPercentage > 100
-                                    ? 100
-                                    : titem?.taskPercentage === undefined
-                                    ? 0
-                                    : titem?.taskPercentage?.toFixed(2)
+                                  titem?.meta === 'Achievement'
+                                    ? titem?.percentageOfTask?.toFixed(2)
+                                    : titem?.percentageFolderWise?.toFixed(2)
                                 }%`,
                               },
-                            ]}>
-                            <Label
-                              title={`${
+                            ]}
+                          />
+                          <Label
+                            title={`${
+                              titem?.meta === 'Achievement'
+                                ? titem?.percentageOfTask?.toFixed(2)
+                                : titem?.percentageFolderWise?.toFixed(2)
+                            }%`}
+                            style={{
+                              fontSize: scale(10),
+                              color: theme.colors.black,
+                              fontWeight: '700',
+                            }}
+                            numberOfLines={1}
+                          />
+                        </>
+                      )}
+                      {/* <Label
+                        title={`${
+                          
+                          // value === 'Timer'
+                          //   ? titem?.percentageOfTask === undefined
+                          //     ? 0
+                          //     : titem?.percentageOfTask
+                          //   : value === 'Counter'
+                          //   ? titem?.meta === 'Achievement'
+                          //     ? titem?.percentageOfTask
+                          //     : titem?.percentageFolderWise
+                          //   : titem?.taskPercentage > 100
+                          //   ? 100
+                          //   : titem?.taskPercentage === undefined
+                          //   ? 0
+                          //   : titem?.taskPercentage?.toFixed(2)
+                        }%`}
+                        style={{
+                          fontSize: scale(10),
+                          color: theme.colors.black,
+                          fontWeight: '700',
+                        }}
+                        numberOfLines={1}
+                      /> */}
+                    </View>
+                  ) : (
+                    selectedTask === titem?._id && (
+                      <View>
+                        <Label title={titem?.name} />
+                        <View
+                          style={[
+                            styles.progressBar,
+                            {
+                              width: `${
                                 value === 'Timer'
                                   ? titem?.percentageOfTask === undefined
                                     ? 0
@@ -1182,21 +1279,34 @@ const StatisticsScreen = () => {
                                   : titem?.taskPercentage === undefined
                                   ? 0
                                   : titem?.taskPercentage?.toFixed(2)
-                              }%`}
-                              style={{
-                                fontSize: scale(10),
-                                color: theme.colors.white,
-                                fontWeight: '700',
-                              }}
-                              numberOfLines={1}
-                            />
-                          </View>
-                        </View>
-                      )
-                    );
-                  })}
-              </ScrollView>
-            )}
+                              }%`,
+                            },
+                          ]}
+                        />
+                        <Label
+                          title={`${
+                            value === 'Timer'
+                              ? titem?.percentageOfTask === undefined
+                                ? 0
+                                : titem?.percentageOfTask
+                              : titem?.taskPercentage > 100
+                              ? 100
+                              : titem?.taskPercentage === undefined
+                              ? 0
+                              : titem?.taskPercentage?.toFixed(2)
+                          }%`}
+                          style={{
+                            fontSize: scale(10),
+                            color: theme.colors.black,
+                            fontWeight: '700',
+                          }}
+                          numberOfLines={1}
+                        />
+                      </View>
+                    )
+                  );
+                })}
+            </ScrollView>
           </View>
         )}
 
@@ -1345,6 +1455,11 @@ const styles = StyleSheet.create({
   folderTitle: {
     fontSize: scale(16),
     fontWeight: '400',
+  },
+  rowOfFolder: {
+    padding: scale(1.1),
+    alignItems: 'center',
+    marginHorizontal: scale(5),
   },
   checkBox: {
     height: scale(22),

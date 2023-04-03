@@ -61,7 +61,7 @@ const CreateFolderModel = props => {
       // folderFrm.append('color', selColor);
       // folderFrm.append('order', 1);
       // folderFrm.append('icon', null);
-      console.log('selIcon?.iconUrl ?? ', selIcon?.iconUrl);
+
       let folderFrm = {
         name: folderName,
         type: type === 1 ? 'CRONO' : type === 2 ? 'TIMER' : 'COUNTER',
@@ -153,6 +153,8 @@ const CreateFolderModel = props => {
     setModalVisible(false);
     setIcon(data);
   };
+
+  console.log('selIcon?.iconUrl ?? ', selIcon);
   return (
     <>
       <View style={[styles.container]}>

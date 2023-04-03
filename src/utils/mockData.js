@@ -378,6 +378,28 @@ const statisticdata = [
   },
 ];
 
+const statisticdataoneDUB = [
+  {
+    id: '1',
+    label: 'Achievement Tasks',
+    value: 0,
+  },
+  {
+    id: '2',
+    label: 'Achievement Completed Tasks',
+    value: 0,
+    // CheckBox: true,
+    // ischecked: true,
+    // isCheckBox: true,
+  },
+
+  {
+    id: '4',
+    label: 'Percentage of Success',
+    value: 0,
+  },
+];
+
 const statisticdataone = [
   {
     id: '1',
@@ -1116,4 +1138,5 @@ export {
   TimerSpecificfolders,
   Icon_Data,
   SubscriptionPlan,
+  statisticdataoneDUB,
 };

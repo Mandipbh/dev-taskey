@@ -177,7 +177,6 @@ const HomeScreen = () => {
         // console.log('resss >>> ', res.data);
 
         const tmpArr = [...typeFolder];
-        console.log('es?.data >> ', res?.data);
         tmpArr[0].totalTime = res?.data === undefined ? 0 : hhmmss(res?.data);
 
         setTypeFolder(tmpArr);
@@ -848,7 +847,7 @@ const HomeScreen = () => {
           editFolder={editFolder}
         />
       )}
-      <SubscriptionModal isVisible={planModel} close={handleCloseSub} />
+      {/* <SubscriptionModal isVisible={planModel} close={handleCloseSub} /> */}
       <ComplateTaskModel isVisible={model} close={handleProgressClose} />
     </SafeAreaView>
   );

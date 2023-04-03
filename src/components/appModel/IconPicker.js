@@ -20,21 +20,26 @@ const IconPicker = props => {
   const [selected, setSelected] = useState(null);
   const [iconList, setIconList] = useState([]);
   const [imageError, setImageError] = useState(false);
-  const handleImageError = () => {
-    setImageError(true);
+  const removeImage = id => {
+    const newData = iconList.filter(item => item._id !== id);
+    setIconList(newData);
   };
+  useEffect(() => {
+    setSelected(null);
+  }, [isVisible === true]);
   useEffect(() => {
     try {
       ApiService.get('icons').then(res => {
-        setIconList(res.data?.reverse());
+        setIconList(res.data);
       });
     } catch (error) {
       console.log('error ', error);
     }
   }, []);
+  console.log('selected  >> ', selected);
+
   const renderItem = ({item}) => {
     const backgroundColor = selected === item ? theme.colors.orange : null;
-
     return (
       <TouchableOpacity
         onPress={() => setSelected(item)}
@@ -55,6 +60,7 @@ const IconPicker = props => {
             margin: 1,
           }}
           source={{uri: item?.iconUrl}}
+          // onError={() => removeImage(item._id)}
         />
       </TouchableOpacity>
     );

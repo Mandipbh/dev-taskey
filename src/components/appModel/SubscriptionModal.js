@@ -229,7 +229,7 @@ const SubscriptionModal = props => {
   };
   return (
     <Modal animationType={'none'} visible={isVisible}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <TouchableOpacity
           style={styles.logoutView}
           onPress={() => {
