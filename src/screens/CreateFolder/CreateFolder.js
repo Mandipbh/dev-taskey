@@ -33,9 +33,14 @@ const CreateFolderModel = props => {
   const [selIcon, setIcon] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const darkmodeState = useSelector(state => state.UserReducer.isDarkMode);
+
   useEffect(() => {
     if (props?.route?.params) {
       const editData = props?.route?.params;
+      const img = {
+        iconUrl: editData?.icon,
+      };
+      setIcon(img);
       setFolderName(editData?.name);
       if (editData.type === 'CRONO') {
         setType(1);
@@ -51,7 +56,7 @@ const CreateFolderModel = props => {
     setColor(c);
     setColorPicker(false);
   };
-
+  console.log('props?.route?.params?? ', props?.route?.params);
   const handleSave = () => {
     if (!handleValidation()) {
       // close(selColor, folderName);
@@ -67,10 +72,7 @@ const CreateFolderModel = props => {
         type: type === 1 ? 'CRONO' : type === 2 ? 'TIMER' : 'COUNTER',
         color: selColor,
         order: 1,
-        icon:
-          selIcon?.iconUrl === null || selIcon?.iconUrl === undefined
-            ? 'http://35.158.183.225:4000/001-drums.png'
-            : selIcon.iconUrl,
+        icon: selIcon.iconUrl,
       };
       setLoading(true);
       const options = {payloads: folderFrm};
@@ -92,6 +94,10 @@ const CreateFolderModel = props => {
   const editFolderData = () => {
     let folderFrmData = {
       name: folderName,
+      icon:
+        selIcon?.iconUrl === null || selIcon?.iconUrl === undefined
+          ? 'http://35.158.183.225:4000/001-drums.png'
+          : selIcon.iconUrl,
     };
     const options1 = {payloads: folderFrmData};
     ApiService.put('folder/' + props?.route?.params?._id, options1)
@@ -151,10 +157,11 @@ const CreateFolderModel = props => {
 
   const IconClosePicker = data => {
     setModalVisible(false);
-    setIcon(data);
+    if (data) {
+      setIcon(data);
+    }
   };
 
-  console.log('selIcon?.iconUrl ?? ', selIcon);
   return (
     <>
       <View style={[styles.container]}>

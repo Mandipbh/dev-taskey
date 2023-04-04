@@ -82,9 +82,10 @@ export default class App extends React.Component {
     if (this.state.isLoading) {
       return <SplashScreen />;
     }
-
+    // testing key  sk_test_51MlxMxGnpcNWnmr4OsPoJehA4sLw3UQ2Rx5oWVCgGbwFpJyUcAYNGPKKr2FqQr9Vge8BNcACw2092uFxhPBEOFqu00kgUhSkyU
+    // live Key pk_live_51MlxMxGnpcNWnmr4seKYiRzbC7TimouXFpOVNePCSPMxadzLkYYP0NrFYGmOg6l1C2gLd23ES1V6gQ8aJXUdGnpk00D492AeVV
     return (
-      <StripeProvider publishableKey="pk_live_51MlxMxGnpcNWnmr4seKYiRzbC7TimouXFpOVNePCSPMxadzLkYYP0NrFYGmOg6l1C2gLd23ES1V6gQ8aJXUdGnpk00D492AeVV">
+      <StripeProvider publishableKey="pk_test_51MlxMxGnpcNWnmr4ogYVgxm4N4L2dL8WBQYwQpsrjr3xzx1xGJ6JFDdGtYAYCyaVOUy2o3U5s5ocTOLcpb4Grdsy00Vrd34Miq">
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
             <MainStack />

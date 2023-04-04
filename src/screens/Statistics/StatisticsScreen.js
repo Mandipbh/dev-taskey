@@ -863,6 +863,7 @@ const StatisticsScreen = () => {
                 onChange={item => {
                   setvalue(item.label);
                   setOvalue(item);
+                  setSelectedFolder(0);
                 }}
                 value={oValue === null ? null : oValue}
                 ref={ref}
@@ -903,8 +904,8 @@ const StatisticsScreen = () => {
                       <TouchableOpacity
                         style={styles.checkBox}
                         onPress={() => {
-                          setSelectedFolder(item?._id);
                           setTaskList(item);
+                          setSelectedFolder(item?._id);
                         }}>
                         {selectedFolder === item?._id && (
                           <Icon
@@ -1003,8 +1004,6 @@ const StatisticsScreen = () => {
                                       ? 0
                                       : fitem?.folderPercentage?.toFixed(2)
                                   }%`,
-                                  borderWidth: scale(1),
-                                  borderColor: theme.colors.orange,
                                 },
                               ]}
                             />
@@ -1028,96 +1027,97 @@ const StatisticsScreen = () => {
                 </ScrollView>
               }
             </View>
-
-            {taskList?.taskList?.length > 0 && (
-              <View style={{paddingTop: scale(10)}}>
-                <Label
-                  title="Select tasks:"
-                  style={[
-                    styles.folderTitle,
-                    {
-                      color: darkmodeState
-                        ? theme.colors.white
-                        : theme.colors.black,
-                    },
-                  ]}
-                />
-                <ScrollView
-                  horizontal
-                  nestedScrollEnabled
-                  showsHorizontalScrollIndicator={false}
-                  style={{marginTop: scale(10)}}>
-                  {taskList?.taskList && taskList?.taskList?.length > 0 && (
-                    <View
-                      style={{
-                        padding: scale(1.1),
-                        alignItems: 'center',
-                      }}>
-                      <TouchableOpacity
-                        style={styles.checkBox}
-                        onPress={() => {
-                          setSelectedTask(0);
+            {console.log('taskList?.taskList ?? /', taskList?.taskList)}
+            {taskList?.taskList !== undefined &&
+              taskList?.taskList?.length > 0 && (
+                <View style={{paddingTop: scale(10)}}>
+                  <Label
+                    title="Select tasks:"
+                    style={[
+                      styles.folderTitle,
+                      {
+                        color: darkmodeState
+                          ? theme.colors.white
+                          : theme.colors.black,
+                      },
+                    ]}
+                  />
+                  <ScrollView
+                    horizontal
+                    nestedScrollEnabled
+                    showsHorizontalScrollIndicator={false}
+                    style={{marginTop: scale(10)}}>
+                    {taskList?.taskList && taskList?.taskList?.length > 0 && (
+                      <View
+                        style={{
+                          padding: scale(1.1),
+                          alignItems: 'center',
                         }}>
-                        {selectedTask === 0 && (
-                          <Icon
-                            name="check"
-                            size={scale(18)}
-                            color={theme.colors.black}
-                          />
-                        )}
-                      </TouchableOpacity>
-                      <Label
-                        title={'All'}
-                        style={[
-                          styles.checktxt,
-                          {
-                            color: darkmodeState
-                              ? theme.colors.white
-                              : theme.colors.black,
-                          },
-                        ]}
-                      />
-                    </View>
-                  )}
-                  {taskList &&
-                    taskList?.taskList?.map((item, idx) => {
-                      return (
-                        <View
-                          style={{
-                            padding: scale(1.1),
-                            alignItems: 'center',
-                            marginHorizontal: scale(5),
+                        <TouchableOpacity
+                          style={styles.checkBox}
+                          onPress={() => {
+                            setSelectedTask(0);
                           }}>
-                          <TouchableOpacity
-                            style={styles.checkBox}
-                            onPress={() => {
-                              setSelectedTask(item?._id);
+                          {selectedTask === 0 && (
+                            <Icon
+                              name="check"
+                              size={scale(18)}
+                              color={theme.colors.black}
+                            />
+                          )}
+                        </TouchableOpacity>
+                        <Label
+                          title={'All'}
+                          style={[
+                            styles.checktxt,
+                            {
+                              color: darkmodeState
+                                ? theme.colors.white
+                                : theme.colors.black,
+                            },
+                          ]}
+                        />
+                      </View>
+                    )}
+                    {taskList &&
+                      taskList?.taskList?.map((item, idx) => {
+                        return (
+                          <View
+                            style={{
+                              padding: scale(1.1),
+                              alignItems: 'center',
+                              marginHorizontal: scale(5),
                             }}>
-                            {selectedTask === item?._id && (
-                              <Icon
-                                name="check"
-                                size={scale(18)}
-                                color={theme.colors.black}
-                              />
-                            )}
-                          </TouchableOpacity>
-                          <Label
-                            title={item?.name}
-                            style={[
-                              styles.checktxt,
-                              {
-                                color: darkmodeState
-                                  ? theme.colors.white
-                                  : theme.colors.black,
-                              },
-                            ]}
-                          />
-                        </View>
-                      );
-                    })}
-                </ScrollView>
-              </View>
-            )}
+                            <TouchableOpacity
+                              style={styles.checkBox}
+                              onPress={() => {
+                                setSelectedTask(item?._id);
+                              }}>
+                              {selectedTask === item?._id && (
+                                <Icon
+                                  name="check"
+                                  size={scale(18)}
+                                  color={theme.colors.black}
+                                />
+                              )}
+                            </TouchableOpacity>
+                            <Label
+                              title={item?.name}
+                              style={[
+                                styles.checktxt,
+                                {
+                                  color: darkmodeState
+                                    ? theme.colors.white
+                                    : theme.colors.black,
+                                },
+                              ]}
+                            />
+                          </View>
+                        );
+                      })}
+                  </ScrollView>
+                </View>
+              )}
 
             <ScrollView style={{marginTop: scale(5)}} nestedScrollEnabled>
               {taskList?.taskList?.length > 0 &&
@@ -1133,35 +1133,18 @@ const StatisticsScreen = () => {
                             : theme.colors.black,
                         }}
                       />
-                      {/* <View
-                        style={[
-                          styles.progressBar,
-                          {
-                            width: `${
-                              value === 'Timer'
-                                ? titem?.percentageOfTask === undefined
-                                  ? 0
-                                  : titem?.percentageOfTask
-                                : value === 'Counter'
-                                ? titem?.meta === 'Achievement'
-                                  ? titem?.percentageOfTask
-                                  : titem?.percentageFolderWise
-                                : titem?.taskPercentage > 100
-                                ? 100
-                                : titem?.taskPercentage?.toFixed(2)
-                            }%`,
-                          },
-                        ]}
-                      /> */}
+
                       {value === 'Crono' && (
                         <>
                           <View
                             style={[
                               styles.progressBar,
                               {
-                                width: `${titem?.percentageFolderWise?.toFixed(
-                                  2,
-                                )}%`,
+                                width: `${
+                                  titem?.percentageFolderWise === undefined
+                                    ? 0
+                                    : titem?.percentageFolderWise?.toFixed(2)
+                                }%`,
                               },
                             ]}
                           />
@@ -1236,73 +1219,136 @@ const StatisticsScreen = () => {
                           />
                         </>
                       )}
-                      {/* <Label
-                        title={`${
-                          
-                          // value === 'Timer'
-                          //   ? titem?.percentageOfTask === undefined
-                          //     ? 0
-                          //     : titem?.percentageOfTask
-                          //   : value === 'Counter'
-                          //   ? titem?.meta === 'Achievement'
-                          //     ? titem?.percentageOfTask
-                          //     : titem?.percentageFolderWise
-                          //   : titem?.taskPercentage > 100
-                          //   ? 100
-                          //   : titem?.taskPercentage === undefined
-                          //   ? 0
-                          //   : titem?.taskPercentage?.toFixed(2)
-                        }%`}
-                        style={{
-                          fontSize: scale(10),
-                          color: theme.colors.black,
-                          fontWeight: '700',
-                        }}
-                        numberOfLines={1}
-                      /> */}
                     </View>
                   ) : (
                     selectedTask === titem?._id && (
-                      <View>
-                        <Label title={titem?.name} />
-                        <View
-                          style={[
-                            styles.progressBar,
-                            {
-                              width: `${
-                                value === 'Timer'
-                                  ? titem?.percentageOfTask === undefined
-                                    ? 0
-                                    : titem?.percentageOfTask
-                                  : titem?.taskPercentage > 100
-                                  ? 100
-                                  : titem?.taskPercentage === undefined
+                      <>
+                        {value === 'Crono' && (
+                          <>
+                            <View
+                              style={[
+                                styles.progressBar,
+                                {
+                                  width: `${
+                                    titem?.percentageFolderWise === undefined
+                                      ? 0
+                                      : titem?.percentageFolderWise?.toFixed(2)
+                                  }%`,
+                                },
+                              ]}
+                            />
+                            <Label
+                              title={`${
+                                titem?.percentageFolderWise === undefined
                                   ? 0
-                                  : titem?.taskPercentage?.toFixed(2)
-                              }%`,
-                            },
-                          ]}
-                        />
-                        <Label
-                          title={`${
-                            value === 'Timer'
-                              ? titem?.percentageOfTask === undefined
-                                ? 0
-                                : titem?.percentageOfTask
-                              : titem?.taskPercentage > 100
-                              ? 100
-                              : titem?.taskPercentage === undefined
-                              ? 0
-                              : titem?.taskPercentage?.toFixed(2)
-                          }%`}
-                          style={{
-                            fontSize: scale(10),
-                            color: theme.colors.black,
-                            fontWeight: '700',
-                          }}
-                          numberOfLines={1}
-                        />
-                      </View>
+                                  : titem?.percentageFolderWise?.toFixed(2)
+                              }%`}
+                              style={{
+                                fontSize: scale(10),
+                                color: theme.colors.black,
+                                fontWeight: '700',
+                              }}
+                              numberOfLines={1}
+                            />
+                          </>
+                        )}
+                        {value === 'Timer' && (
+                          <>
+                            <View
+                              style={[
+                                styles.progressBar,
+                                {
+                                  width: `${titem?.percentageOfTask?.toFixed(
+                                    2,
+                                  )}%`,
+                                },
+                              ]}
+                            />
+                            <Label
+                              title={`${
+                                titem?.meta === 'Achievement'
+                                  ? titem?.percentageOfTask?.toFixed(2)
+                                  : titem?.percentageFolderWise?.toFixed(2)
+                              }%`}
+                              style={{
+                                fontSize: scale(10),
+                                color: theme.colors.black,
+                                fontWeight: '700',
+                              }}
+                              numberOfLines={1}
+                            />
+                          </>
+                        )}
+                        {value === 'Counter' && (
+                          <>
+                            <View
+                              style={[
+                                styles.progressBar,
+                                {
+                                  width: `${
+                                    titem?.meta === 'Achievement'
+                                      ? titem?.percentageOfTask?.toFixed(2)
+                                      : titem?.percentageFolderWise?.toFixed(2)
+                                  }%`,
+                                },
+                              ]}
+                            />
+                            <Label
+                              title={`${
+                                titem?.meta === 'Achievement'
+                                  ? titem?.percentageOfTask?.toFixed(2)
+                                  : titem?.percentageFolderWise?.toFixed(2)
+                              }%`}
+                              style={{
+                                fontSize: scale(10),
+                                color: theme.colors.black,
+                                fontWeight: '700',
+                              }}
+                              numberOfLines={1}
+                            />
+                          </>
+                        )}
+                      </>
+                      // <View>
+                      //   <Label title={titem?.name} />
+                      //   <View
+                      //     style={[
+                      //       styles.progressBar,
+                      //       {
+                      //         width: `${
+                      //           value === 'Timer'
+                      //             ? titem?.percentageOfTask === undefined
+                      //               ? 0
+                      //               : titem?.percentageOfTask
+                      //             : titem?.taskPercentage > 100
+                      //             ? 100
+                      //             : titem?.taskPercentage === undefined
+                      //             ? 0
+                      //             : titem?.taskPercentage?.toFixed(2)
+                      //         }%`,
+                      //       },
+                      //     ]}
+                      //   />
+                      //   <Label
+                      //     title={`${
+                      //       value === 'Timer'
+                      //         ? titem?.percentageOfTask === undefined
+                      //           ? 0
+                      //           : titem?.percentageOfTask
+                      //         : titem?.taskPercentage > 100
+                      //         ? 100
+                      //         : titem?.taskPercentage === undefined
+                      //         ? 0
+                      //         : titem?.taskPercentage?.toFixed(2)
+                      //     }%`}
+                      //     style={{
+                      //       fontSize: scale(10),
+                      //       color: theme.colors.black,
+                      //       fontWeight: '700',
+                      //     }}
+                      //     numberOfLines={1}
+                      //   />
+                      // </View>
                     )
                   );
                 })}

@@ -28,10 +28,10 @@ import {
 import {isLogin} from '../../redux/Actions/UserActions';
 
 function ShareBtn(props) {
-  const {title, onPress, iconName, style} = props;
+  const {title, onPress, iconName, style, disable} = props;
 
   return (
-    <TouchableOpacity style={style} onPress={onPress}>
+    <TouchableOpacity style={style} onPress={onPress} disabled={disable}>
       <AntDesign name={iconName} size={20} color={theme.colors.white} />
       <Title
         title={title}
@@ -158,7 +158,8 @@ const SubscriptionModal = props => {
         clientSecret,
       });
       if (error) {
-        Alert.alert('Payment is cancel.');
+        Alert.alert('', 'Payment is cancel.');
+        console.log('JSON.stringify(error) ', JSON.stringify(error));
         // Alert.alert('PAYMENT FAILED', JSON.stringify(error));
       } else {
         console.log('else ???? ');
@@ -266,7 +267,9 @@ const SubscriptionModal = props => {
               <>
                 <Title
                   style={styles.titleTxt}
-                  title={`You have  ${Remaining_Days} days letf of free trial`}
+                  title={`You have  ${
+                    Remaining_Days === undefined ? '' : Remaining_Days
+                  } days letf of free trial`}
                 />
                 <Label
                   style={styles.subtitleTxt}
@@ -404,6 +407,7 @@ const SubscriptionModal = props => {
                 },
               ]}
               title="Buy now"
+              disable={!changeColor}
             />
           )}
         </View>

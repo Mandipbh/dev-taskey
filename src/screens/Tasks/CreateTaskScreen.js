@@ -65,17 +65,24 @@ const CreateTaskScreen = props => {
   useEffect(() => {
     if (props?.route?.params?.editData) {
       const {editData} = props?.route?.params;
-      console.log('editData?.icon ?? ', editData);
+      const img = {
+        iconUrl: editData?.icon,
+      };
+      setIcon(img);
+      console.log('editData?.icon ?? ', img);
       const metad = editData.meta;
       setAmount(JSON.stringify(editData?.amount));
-      setIcon(editData?.icon);
       setSelFolder(null);
       setMeta(metad === 'Registry' ? 2 : 1);
       setTitle(editData?.name);
       if (editData.type === 'CRONO') {
-        setBtn(editData?.cronoCompletedTime ? true : false);
+        // console.log(
+        //   'editData?.cronoCompletedTime ?? ',
+        //   editData?.cronoCompletedTime,
+        // );
+        setBtn(editData?.cronoCompletedTime !== undefined ? true : false);
         setFBtn(editData?.status !== 'Failed' ? true : false);
-        // setBtn(editData?.status !== 'Done' ? true : false);
+        setBtn(editData?.status !== 'Done' ? true : false);
         setType(1);
       } else if (editData.type === 'TIMER') {
         setBtn(editData?.timerCompletedTime ? true : false);
@@ -238,6 +245,7 @@ const CreateTaskScreen = props => {
           : selectedFolder?._id,
       taskId: props?.route?.params?.editData?._id,
       type: props?.route?.params?.editData?.type,
+      icon: selIcon?.iconUrl,
     };
     setLoading(true);
     let options = {payloads: frmData};
@@ -328,7 +336,9 @@ const CreateTaskScreen = props => {
 
   const IconClosePicker = data => {
     setModalVisible(false);
-    setIcon(data);
+    if (data) {
+      setIcon(data);
+    }
   };
 
   useEffect(() => {

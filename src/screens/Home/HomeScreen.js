@@ -384,10 +384,12 @@ const HomeScreen = () => {
                       } else if (item?.name === 'GLOBAL COUNTER') {
                       } else if (item?.name === 'GLOBAL CRONO') {
                       } else {
+                        console.log('time >>> ', item?.icon);
                         navigation.navigate('CreateF', {
                           name: item.name,
                           _id: item._id,
                           type: item.type,
+                          icon: item?.icon,
                         });
                       }
                     }}>
@@ -847,7 +849,7 @@ const HomeScreen = () => {
           editFolder={editFolder}
         />
       )}
-      {/* <SubscriptionModal isVisible={planModel} close={handleCloseSub} /> */}
+      <SubscriptionModal isVisible={planModel} close={handleCloseSub} />
       <ComplateTaskModel isVisible={model} close={handleProgressClose} />
     </SafeAreaView>
   );
