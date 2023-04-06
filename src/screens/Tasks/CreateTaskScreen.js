@@ -302,7 +302,6 @@ const CreateTaskScreen = props => {
       const options = {payloads: payload1};
       ApiService.post('completeAchievementTask', options).then(res => {
         navigation.goBack();
-        console.log('response >> ', res);
         Toast.show('Task complate success');
       });
     } else {
