@@ -19,7 +19,6 @@ const MainStack = () => {
   const isLogin = useSelector(state => state.UserReducer.login);
   const userDetails = useSelector(state => state.UserReducer.userDetails);
   const darkmodeState = useSelector(state => state.UserReducer.isDarkMode);
-  console.log('userDetails >>> ', userDetails?.accessToken);
   axios.defaults.headers.common.Authorization = `Bearer ${userDetails?.accessToken}`;
   const customDarkTheme = {
     ...DarkTheme,

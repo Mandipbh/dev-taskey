@@ -92,7 +92,6 @@ export const API = {
 };
 
 export const getAPICall = (url, startOffset, size = 5, isDiscount) => {
-  console.log('get url>>>. ', url);
   return appAPI
     .get(url, {params: {offset: startOffset, size, discounted: isDiscount}})
     .then(res => {
@@ -106,7 +105,6 @@ export const getAPICall = (url, startOffset, size = 5, isDiscount) => {
     });
 };
 export const postAPICall = (url, requestData) => {
-  console.log('post url >>> ', url);
   return appAPI
     .post(url, requestData)
     .then(res => {

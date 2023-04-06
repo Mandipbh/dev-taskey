@@ -87,7 +87,6 @@ const SignUp = () => {
         };
         const options = {payloads: registerFrm};
         const response = await ApiService.post('register', options);
-        console.log('respose .>> ', response);
         if (response.success) {
           axios.defaults.headers.common.Authorization = `Bearer ${response.accessToken}`;
           Toast.show('Signup successfully.');

@@ -51,7 +51,6 @@ const CreateFolderModel = props => {
       ApiService.post('folder', options)
         .then(res => {
           setLoading(false);
-          console.log('respoe >>. ', res);
           if (res.code === -1) {
           }
         })

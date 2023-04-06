@@ -1,7 +1,6 @@
 import NetInfo from '@react-native-community/netinfo';
 
 export const handleResponse = async res => {
-  console.log('rtesposen <<<>>> ', res.data);
   if ((res.status === 200 || res.status === 201 || res.status === 204) && res) {
     return res.data;
   }
@@ -18,7 +17,6 @@ export const checkUrlValidity = async url => {
 };
 
 export const handleError = async errorMsg => {
-  console.log('error >>> ', errorMsg);
   try {
     const state = await NetInfo.fetch();
     if (state.isConnected) {

@@ -36,7 +36,6 @@ const IconPicker = props => {
       console.log('error ', error);
     }
   }, []);
-  console.log('selected  >> ', selected);
 
   const renderItem = ({item}) => {
     const backgroundColor = selected === item ? theme.colors.orange : null;

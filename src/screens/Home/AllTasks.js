@@ -133,8 +133,6 @@ const AllTasks = ({route}) => {
             selTask?.status === 'Paused' ? 'Play' : 'Paused';
           tmpArr.taskList = tmpArr;
           getAPICall(`getByFolder/${selTask?.folderId}`).then(responseData => {
-            console.log('response >> ', responseData.data[0]);
-
             setTask(responseData.data[0]);
           });
         }

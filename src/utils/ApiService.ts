@@ -17,7 +17,6 @@ const execute = async (
 ) => {
   const base = APP_API_URL.replace(/~\/$/, '');
   const url = !fileUpload ? base + path : path;
-  console.log('url for api call ',url)
 //   if (token && !fileUpload) {
 //     headers.Authorization = `Bearer ${token}`;
 //   }
@@ -46,7 +45,6 @@ const execute = async (
     console.info('res ===> ', res);
     return res.data;
   } catch (err: any) {
-    console.log('eror of api call ',err.response)
     // if (err.response?.status === 401) {
     // //   storage.remove();
     // //   navigation.replace('Landing');

@@ -151,9 +151,7 @@ const SettingScreen = () => {
     dispatch(isDarkMode(!isEnabled));
   };
   const navigation = useNavigation();
-  console.log('userDetails >> ', userDetails);
   useEffect(() => {
-    console.log('data > ', defualtTimes);
     setIsEnabled(darkmodeState);
     setTime(taskTimes);
     setDefTime(defualtTimes);
@@ -205,7 +203,6 @@ const SettingScreen = () => {
               routes: [{name: 'LoginStack'}],
             }),
           );
-          console.log('User Successfullly Logout :', res);
         })
         .catch(e => {
           navigation.dispatch(
@@ -228,7 +225,6 @@ const SettingScreen = () => {
     try {
       ApiService.get('validatePlanDetails').then(res => {
         getPlanData();
-        console.log('Api call Successfullly :', res);
       });
     } catch (error) {
       console.log('catch error in plandetails', error);
@@ -242,7 +238,6 @@ const SettingScreen = () => {
     try {
       ApiService.get('getUserDetails').then(res => {
         setPData(res);
-        console.log('Api call Successfullly :', res);
       });
     } catch (error) {
       console.log('catch error in plandetails', error);
@@ -560,7 +555,7 @@ const SettingScreen = () => {
               },
             ]}
           />
-          {console.log('pdata??? ', pdata)}
+
           <View
             style={{
               // flexDirection: 'row',

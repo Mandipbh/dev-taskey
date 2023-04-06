@@ -8,7 +8,6 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case types.GETNOTE: {
-      console.log('note ________reducers >>. ', action.payload);
       return {
         ...state,
         noteData: action.payload,
@@ -21,7 +20,6 @@ export default (state = initialState, action) => {
       };
     }
     case types.NOTELOADING: {
-      console.log('add note ________loading >>. ', action.payload);
       return {
         isLoadding: action.payload,
       };

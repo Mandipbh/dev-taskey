@@ -179,7 +179,7 @@ const StatisticsScreen = () => {
       // var startdate = moment();
       // startdate = startdate.subtract(1, 'month');
       var startdate = moment(startD).format('YYYY/MM/DD');
-      console.log('startdatestartdate ?>> ', startdate);
+
       const payload = {
         // startDate: startdate,
         // lastDate:
@@ -188,12 +188,11 @@ const StatisticsScreen = () => {
         //     : moment(endDate).add(1, 'day').format('YYYY/MM/DD'),
         type: value === null || value === 'All' ? 'All' : value?.toUpperCase(),
       };
-      console.log('payload >>> ', payload);
       const options = {payloads: payload};
       try {
         ApiService.post('folderStatistics', options).then(res => {
           setFolderList(res.data);
-          console.log('>>>>>> ', JSON.stringify(res, null, 4));
+
           const tmpArray = [{name: 'All', _id: 0, taskList: []}, ...res.data];
           setAllFolderList(tmpArray);
         });
@@ -209,7 +208,6 @@ const StatisticsScreen = () => {
   const getStatasticData = () => {
     let cur = moment();
     let startD = cur.subtract(2, 'years');
-    console.log('Last August: ', startD.format('YYYY/MM/DD'));
 
     const payload = {
       startDate: moment(startD).format('YYYY/MM/DD'),
@@ -219,7 +217,6 @@ const StatisticsScreen = () => {
           : moment(endDate).add(1, 'day').format('YYYY/MM/DD'),
       type: value === null || value === 'All' ? 'All' : value?.toUpperCase(),
     };
-    console.log('value ?? ', payload);
     const options = {payloads: payload};
     ApiService.post('statistics', options)
       .then(res => {
@@ -227,10 +224,7 @@ const StatisticsScreen = () => {
           let staticdummy = [...statisticData];
           var floor = Math.floor;
           const countData = hhmmss(res?.outputData.totalCount);
-          console.log(
-            'res?.outputData.totalCount ??? ',
-            res?.outputData.totalCount,
-          );
+
           staticdummy[0].value =
             res?.outputData.numberOfTask === undefined
               ? '-'
@@ -1027,7 +1021,7 @@ const StatisticsScreen = () => {
                 </ScrollView>
               }
             </View>
-            {console.log('taskList?.taskList ?? /', taskList?.taskList)}
+
             {taskList?.taskList !== undefined &&
               taskList?.taskList?.length > 0 && (
                 <View style={{paddingTop: scale(10)}}>
@@ -1122,7 +1116,6 @@ const StatisticsScreen = () => {
             <ScrollView style={{marginTop: scale(5)}} nestedScrollEnabled>
               {taskList?.taskList?.length > 0 &&
                 taskList?.taskList?.map((titem, i) => {
-                  console.log('titem >>> ', titem);
                   return selectedTask === 0 ? (
                     <View style={{marginVertical: scale(5)}}>
                       <Label

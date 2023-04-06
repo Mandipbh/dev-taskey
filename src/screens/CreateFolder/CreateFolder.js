@@ -56,7 +56,6 @@ const CreateFolderModel = props => {
     setColor(c);
     setColorPicker(false);
   };
-  console.log('props?.route?.params?? ', props?.route?.params);
   const handleSave = () => {
     if (!handleValidation()) {
       // close(selColor, folderName);
@@ -108,7 +107,6 @@ const CreateFolderModel = props => {
         Toast.show('edit folder successfully');
         setLoading(false);
         setIcon(null);
-        console.log('respoe >>. ', res);
         navigation.goBack();
         if (res.code === -1) {
         }
@@ -125,7 +123,6 @@ const CreateFolderModel = props => {
       .then(res => {
         Toast.show('edit folder successfully');
         setLoading(false);
-        console.log('respoe >>. ', res);
         navigation.navigate('Tabs');
         if (res.code === -1) {
         }
@@ -138,7 +135,6 @@ const CreateFolderModel = props => {
 
   var error = false;
   const handleValidation = () => {
-    console.log(' folderName?.trim() ?? ', folderName?.trim());
     if (
       folderName?.trim() === '' ||
       folderName?.trim() === null ||

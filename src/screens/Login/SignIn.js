@@ -67,12 +67,11 @@ const SignIn = () => {
             phonenumber: mobile,
             code: otp,
           };
-          console.log('mobileFrm >. ', mobileFrm);
           const options = {payloads: mobileFrm};
           const response = await ApiService.post('verifyOTP', options);
           if (response) {
             setLoad(false);
-            console.log('resposemn >> ', response);
+
             Toast.show('Login successfully');
 
             dispatch(isLogin(true));
@@ -109,7 +108,6 @@ const SignIn = () => {
       const options = {payloads: mobileFrm1};
       const response = await ApiService.post('login', options);
       if (response.success) {
-        console.log('response >>   ', response?.accessToken);
         axios.defaults.headers.common.Authorization = `Bearer ${response?.accessToken}`;
         setVarified(true);
         Toast.show('OTP is sent to your mobile number');

@@ -135,7 +135,6 @@ const SubscriptionModal = props => {
       setTimeout(() => {
         openPaymentSheet(response?.data);
       }, 800);
-      console.log('error >>> 123', error);
     } catch (error) {
       console.log('error >>>123456 ', error.response);
     }
@@ -144,7 +143,6 @@ const SubscriptionModal = props => {
     try {
       ApiService.get('validatePlanDetails').then(res => {
         setData(res);
-        console.log('Api call Successfullly :', res);
       });
     } catch (error) {
       console.log('catch error in plandetails', error);
@@ -159,20 +157,14 @@ const SubscriptionModal = props => {
       });
       if (error) {
         Alert.alert('', 'Payment is cancel.');
-        console.log('JSON.stringify(error) ', JSON.stringify(error));
-        // Alert.alert('PAYMENT FAILED', JSON.stringify(error));
       } else {
-        console.log('else ???? ');
         const str = clients?.split('_secret');
-        console.log('str ??? ', str);
         let str1 = str[0];
         if (str1 !== undefined) {
           const tmp = {...planSave};
           tmp.paymentIntentKey = str1;
           const options = {payloads: tmp};
-          console.log('options Log', tmp);
           ApiService.post('retrivePayment', options).then(res => {
-            console.log('retrivePayment res >> ', res);
             clear();
             close();
           });
@@ -204,8 +196,6 @@ const SubscriptionModal = props => {
     close();
     const options = {payloads: rf_token};
     ApiService.post('logout', options).then(res => {
-      console.log('response of logoiut >>> ', res);
-
       dispatch(isLogin(false));
       navigation.dispatch(
         CommonActions.reset({
@@ -213,7 +203,6 @@ const SubscriptionModal = props => {
           routes: [{name: 'LoginStack'}],
         }),
       );
-      console.log('User Successfullly Logout :', res);
     });
   };
 

@@ -77,7 +77,6 @@ const HomeScreen = () => {
   useEffect(() => {
     try {
       ApiService.get('validatePlanDetails').then(res => {
-        console.log('Api call Successfullly :', res);
         setData(res);
         if (res.trial) {
           setPlanModel(true);
@@ -107,10 +106,6 @@ const HomeScreen = () => {
         .then(res => {
           userData.accessToken = res.accessToken;
           dispatch(loginAction(userData));
-          console.log(
-            'new access Token is successfullly arrived : ',
-            JSON.stringify(res, null, 4),
-          );
         })
         .catch(error => {
           console.log('error for access Toke ', error.response);
@@ -211,11 +206,8 @@ const HomeScreen = () => {
         .catch(e => console.log('error >> ', e));
 
       ApiService.get('getTotalTaskTime/TIMER').then(res => {
-        console.log('resss >>> getTotalTaskTime', res.data);
-
         const tmpArr = [...typeFolder];
         tmpArr[1].totalTime = res?.data === undefined ? 0 : res?.data;
-        console.log('tmpArr>>> ', tmpArr);
         setTypeFolder(tmpArr);
       });
     } else if (selectedType === 3) {
@@ -228,7 +220,7 @@ const HomeScreen = () => {
               return a?.order - b?.order;
             });
             setFolder([...OrderWiseData, ...res?.completedData]);
-            console.log('res?.completedData ?? ', res?.completedData);
+
             // setFolder(OrderWiseData);
             // ApiService.get('folder/COMPLETED').then(resData => {
             //   setLoader(false);
@@ -384,7 +376,6 @@ const HomeScreen = () => {
                       } else if (item?.name === 'GLOBAL COUNTER') {
                       } else if (item?.name === 'GLOBAL CRONO') {
                       } else {
-                        console.log('time >>> ', item?.icon);
                         navigation.navigate('CreateF', {
                           name: item.name,
                           _id: item._id,
@@ -656,7 +647,6 @@ const HomeScreen = () => {
               await data?.map(item => {
                 taskArr.push(item?.folderId);
               });
-              console.log('filter arr ', taskArr);
               setFolder(taskArr);
             } else {
               Toast.show(res.message);

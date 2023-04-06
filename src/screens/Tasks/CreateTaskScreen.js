@@ -69,7 +69,6 @@ const CreateTaskScreen = props => {
         iconUrl: editData?.icon,
       };
       setIcon(img);
-      console.log('editData?.icon ?? ', img);
       const metad = editData.meta;
       setAmount(JSON.stringify(editData?.amount));
       setSelFolder(null);
@@ -106,7 +105,6 @@ const CreateTaskScreen = props => {
       clearData();
     }
   }, [isFocused]);
-  console.log('selIcon ??? ', selIcon);
   useEffect(() => {
     getAllFolders();
   }, [isFocused, type]);
@@ -211,7 +209,6 @@ const CreateTaskScreen = props => {
             : selIcon?.iconUrl,
         // folderFrm.append('icon', null);
       };
-      console.log('frmData >> ', frmData);
       setLoading(true);
       let options = {payloads: frmData};
       ApiService.post('task', options)
@@ -249,14 +246,10 @@ const CreateTaskScreen = props => {
     };
     setLoading(true);
     let options = {payloads: frmData};
-    console.log('frmData >> ', frmData);
-    console.log('props >> .', props?.route?.params?.editData?.folderId);
     ApiService.put(`updateTask`, options)
       .then(res => {
         setLoading(false);
         setIcon(null);
-        // navigation.goBack();
-        console.log('response << >>> ', res);
         if (res.code === -1) {
         } else {
           setLoading(false);
@@ -275,11 +268,9 @@ const CreateTaskScreen = props => {
 
   //delete task
   const deleteTask = () => {
-    console.log('removeTask', props?.route?.params?.editData?._id);
     ApiService.delete(`removeTask/${props?.route?.params?.editData?._id}`)
       .then(res => {
         Toast.show('Task delete', Toast.SHORT);
-        console.log('remove task <>> ', res.data);
         navigation.goBack();
       })
       .catch(e => {
@@ -299,11 +290,9 @@ const CreateTaskScreen = props => {
       };
       const options = {payloads: payload};
       ApiService.post('completeRegistryTask', options).then(res => {
-        console.log('response >> ', res);
         navigation.goBack();
         Toast.show('Task complate success');
       });
-      console.log('pay load >> ', payload);
     } else if (taskMeta === 'Achievement') {
       const payload1 = {
         id: props?.route?.params?.editData?._id,
@@ -316,7 +305,6 @@ const CreateTaskScreen = props => {
         console.log('response >> ', res);
         Toast.show('Task complate success');
       });
-      console.log('pay load >> ', payload1);
     } else {
     }
   };
@@ -779,10 +767,7 @@ const CreateTaskScreen = props => {
           </ScrollView>
         </View>
       </View>
-      {console.log(
-        'props?.route?.params?.editData >> ',
-        props?.route?.params?.editData?.status,
-      )}
+
       {isLoading && <Loader />}
     </>
   );
