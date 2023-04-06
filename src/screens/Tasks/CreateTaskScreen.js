@@ -81,19 +81,19 @@ const CreateTaskScreen = props => {
         //   editData?.cronoCompletedTime,
         // );
         setBtn(editData?.cronoCompletedTime !== undefined ? true : false);
-        setFBtn(editData?.status !== 'Failed' ? true : false);
-        setBtn(editData?.status !== 'Done' ? true : false);
+        // setFBtn(editData?.status !== 'Failed' ? true : false);
+        // setBtn(editData?.status !== 'Done' ? true : false);
         setType(1);
       } else if (editData.type === 'TIMER') {
         setBtn(editData?.timerCompletedTime ? true : false);
-        setFBtn(editData?.status !== 'Failed' ? true : false);
-        setBtn(editData?.status !== 'Done' ? true : false);
+        // setFBtn(editData?.status !== 'Failed' ? true : false);
+        // setBtn(editData?.status !== 'Done' ? true : false);
         setType(1);
         setType(2);
       } else if (editData?.type === 'COUNTER') {
         setBtn(editData?.counterIncrementDecrement ? true : false);
-        setFBtn(editData?.status !== 'Failed' ? true : false);
-        setBtn(editData?.status !== 'Done' ? true : false);
+        // setFBtn(editData?.status !== 'Failed' ? true : false);
+        // setBtn(editData?.status !== 'Done' ? true : false);
         setType(1);
         setType(3);
       }
@@ -276,13 +276,15 @@ const CreateTaskScreen = props => {
   //delete task
   const deleteTask = () => {
     console.log('removeTask', props?.route?.params?.editData?._id);
-    ApiService.delete(`removeTask/${props?.route?.params?.editData?._id}`).then(
-      res => {
+    ApiService.delete(`removeTask/${props?.route?.params?.editData?._id}`)
+      .then(res => {
         Toast.show('Task delete', Toast.SHORT);
         console.log('remove task <>> ', res.data);
         navigation.goBack();
-      },
-    );
+      })
+      .catch(e => {
+        navigation.goBack();
+      });
   };
 
   //complate task
@@ -760,18 +762,17 @@ const CreateTaskScreen = props => {
                       <Text style={styles.createtxt}>{'Closed task'}</Text>
                     </TouchableOpacity>
                   )}
-                  {isFBtn && (
-                    <TouchableOpacity
-                      onPress={() => {
-                        handleFaildTask();
-                      }}
-                      style={[
-                        styles.createTaskbtn,
-                        {backgroundColor: theme.colors.red},
-                      ]}>
-                      <Text style={styles.createtxt}>{'Failed task'}</Text>
-                    </TouchableOpacity>
-                  )}
+
+                  <TouchableOpacity
+                    onPress={() => {
+                      handleFaildTask();
+                    }}
+                    style={[
+                      styles.createTaskbtn,
+                      {backgroundColor: theme.colors.red},
+                    ]}>
+                    <Text style={styles.createtxt}>{'Failed task'}</Text>
+                  </TouchableOpacity>
                 </View>
               )}
             </View>

@@ -72,7 +72,10 @@ const CreateFolderModel = props => {
         type: type === 1 ? 'CRONO' : type === 2 ? 'TIMER' : 'COUNTER',
         color: selColor,
         order: 1,
-        icon: selIcon.iconUrl,
+        icon:
+          selIcon?.iconUrl === null || selIcon?.iconUrl === undefined
+            ? 'http://35.158.183.225:4000/001-drums.png'
+            : selIcon.iconUrl,
       };
       setLoading(true);
       const options = {payloads: folderFrm};

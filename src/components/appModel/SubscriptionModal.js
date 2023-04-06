@@ -269,7 +269,7 @@ const SubscriptionModal = props => {
                   style={styles.titleTxt}
                   title={`You have  ${
                     Remaining_Days === undefined ? '' : Remaining_Days
-                  } days letf of free trial`}
+                  } days left of free trial`}
                 />
                 <Label
                   style={styles.subtitleTxt}
